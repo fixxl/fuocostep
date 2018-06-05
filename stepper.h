@@ -27,6 +27,8 @@
 #define TALON_TIME         200
 #define IGNITER_TIME       EMATCH_TIME
 
+#define TRIGGERVAL		   60000
+
 // Ceiled duration of byte transmission in microseconds
 #define   BYTE_DURATION_US (8 * (1000000UL + BITRATE) / BITRATE)
 

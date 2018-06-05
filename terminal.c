@@ -116,7 +116,7 @@ void channel_setup(uint16_t *variable_intervalls, uint16_t *fixed_intervalls, ui
                 fixedspace(i + 2, 'd', 2);
                 uart_puts_P(PSTR("): "));
 
-                if(variable_intervalls[swpos * 15 + i]) {
+                if(variable_intervalls[swpos * 15 + i] != TRIGGERVAL) {
                     timedisplay(variable_intervalls[swpos * 15 + i], darstellung);
                     uart_puts(darstellung);
                 }
@@ -224,7 +224,7 @@ void list_complete(uint16_t *variable_intervalls, uint16_t *fixed_intervalls, ui
 
         if(use_variable_intervalls[i]) {
             for (uint8_t j = 0; j < 15; j++) {
-                if(!variable_intervalls[i * 15 + j]) {
+                if(variable_intervalls[i * 15 + j] == TRIGGERVAL) {
                     uart_puts_P(PSTR("Trigger"));
                 }
                 else {

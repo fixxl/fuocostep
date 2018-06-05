@@ -275,7 +275,7 @@ class COM_Port_Lister():
                             if ("Neuer Wert" in ' '.join(test)):
                                 ival = str(self.intfields["Int%s"%(ii)].GetValue())
                                 if ival.lower() in ["trigger", "t", "tr", "tri", "trig", "trigg", "trigge", "triggere", "triggered"]:
-                                    ival = "0"
+                                    ival = "10:00.00"
                                 self.serialtransfer(ser, (ival + '\r'))
                                 self.serialtransfer(ser, str(str(ii) + '\r'))
                                 break   
@@ -287,7 +287,7 @@ class COM_Port_Lister():
                         self.serialtransfer(ser, str(str(ii) + '\r'))
                         ival = str(self.intfields["Int%s"%(ii)].GetValue())
                         if ival.lower() in ["trigger", "t", "tr", "tri", "trig", "trigg", "trigge", "triggere", "triggered"]:
-                            ival = "0"
+                            ival = "10:00.00"
                         self.serialtransfer(ser, (ival + '\r'))
                         self.serialtransfer(ser, '\r')
                     

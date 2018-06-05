@@ -390,20 +390,20 @@ int main(void) {
         if (flags.b.step && stepper_mode && (fire_channel > 1)) {
             // Variable or fixed intervalls?
             if (use_variable_intervals[stepper_mode - 1]) {
-                if (variable_intervals[(stepper_mode - 1) * 15 + fire_channel - 2] && (timerval >= variable_intervals[(stepper_mode - 1) * 15 + fire_channel - 2])) {
+                if (variable_intervals[(stepper_mode - 1) * 15 + fire_channel - 2] != TRIGGERVAL && (timerval >= variable_intervals[(stepper_mode - 1) * 15 + fire_channel - 2])) {
                     flags.b.fire = 1;
                 }
 
-                if (!variable_intervals[(stepper_mode - 1) * 15 + fire_channel - 2]) {
+                if (variable_intervals[(stepper_mode - 1) * 15 + fire_channel - 2] == TRIGGERVAL) {
                     flags.b.step = 0;
                 }
             }
             else {
-                if (fixed_intervals[stepper_mode - 1] && (timerval >= fixed_intervals[stepper_mode - 1])) {
+                if (fixed_intervals[stepper_mode - 1] != TRIGGERVAL && (timerval >= fixed_intervals[stepper_mode - 1])) {
                     flags.b.fire = 1;
                 }
 
-                if (!fixed_intervals[stepper_mode - 1]) {
+                if (fixed_intervals[stepper_mode - 1] == TRIGGERVAL) {
                     flags.b.step = 0;
                 }
             }

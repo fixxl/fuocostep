@@ -74,7 +74,9 @@ uint16_t timecalc(char* timestring) {
 		}
 	}
 
-	if((min && (sec > 59)) || (min > 9) || (hun > 99) ) {
+	if(min > 9) return TRIGGERVAL;
+
+	if((min && (sec > 59)) || (hun > 99) ) {
 		uart_puts_P(PSTR("Invalid Format"));
 		return RETURNERROR;
 	}
