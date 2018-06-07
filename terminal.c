@@ -65,6 +65,11 @@ static uint16_t entertime(void) {
     for (uint8_t i = 0; i < 9; i++) {
         num = uart_getc();
 
+        if((num | 0x20) == 't') {
+            uart_putc('T');
+            return TRIGGERVAL;
+        }
+
         if((num >= '0' && num <= '9') || (num == 10) || (num == 13) || (num == ':') || (num == '.') || (num == ',')) entry[i] = num > 13 ? num : 0;
 
         if(!entry[i]) break;
@@ -144,13 +149,20 @@ void channel_setup(uint16_t *variable_intervalls, uint16_t *fixed_intervalls, ui
                 }
 
                 if(ivalnr-- || !use_variable_intervalls[swpos]) {
-                    uart_puts_P(PSTR("\r\nNeuer Wert (Step: 0:00.01 - 9:59.99, 0 für getriggerten Betrieb): "));
+                    uart_puts_P(PSTR("\r\nNeuer Wert (Step: 0:00.00 - 9:59.99, t für getriggerten Betrieb): "));
                     ivaltime = entertime();
 
                     if(ivaltime != 0xFFFF) {
                         uart_puts_P(PSTR("\r\nSetze Intervall auf: "));
-                        timedisplay(ivaltime, darstellung);
-                        uart_puts(darstellung);
+
+                        if(ivaltime != TRIGGERVAL) {
+                            timedisplay(ivaltime, darstellung);
+                            uart_puts(darstellung);
+                        }
+                        else {
+                            uart_puts_P(PSTR("Trigger"));
+                        }
+
                         uart_puts_P(PSTR("\r\n\n"));
 
                         if(use_variable_intervalls[swpos]) {
@@ -245,13 +257,14 @@ void list_complete(uint16_t *variable_intervalls, uint16_t *fixed_intervalls, ui
 }
 
 uint8_t igniter_setup(uint8_t ignition_setting) {
-	uint8_t valid = 0;
+    uint8_t valid = 0;
 
-	uart_puts_P(PSTR("\r\nDerzeit eingestelltes Anzündmittel\r\n==================================\r\n\n"));
-	if(ignition_setting == 200) uart_puts_P(PSTR("TALON (2 s)"));
-	else uart_puts_P(PSTR("E-ANZÜNDER (20 ms)"));
+    uart_puts_P(PSTR("\r\nDerzeit eingestelltes Anzündmittel\r\n==================================\r\n\n"));
 
-	uart_puts_P(PSTR("\r\nAuswahl: (E)-Anzünder, (T)alon, Abbruch mit anderer Taste: "));
+    if(ignition_setting == 200) uart_puts_P(PSTR("TALON (2 s)"));
+    else uart_puts_P(PSTR("E-ANZÜNDER (20 ms)"));
+
+    uart_puts_P(PSTR("\r\nAuswahl: (E)-Anzünder, (T)alon, Abbruch mit anderer Taste: "));
     while (!valid) {
         valid = uart_getc();
     }
@@ -260,14 +273,14 @@ uint8_t igniter_setup(uint8_t ignition_setting) {
     uart_puts_P(PSTR("\r\n"));
 
     switch(valid | 0x20) {
-    	case 'e': {
-    		return 2;
-    	}
-    	case 't': {
-    		return 200;
-    	}
-    	default: {
-    		return ignition_setting;
-    	}
+        case 'e': {
+            return 2;
+        }
+        case 't': {
+            return 200;
+        }
+        default: {
+            return ignition_setting;
+        }
     }
 }

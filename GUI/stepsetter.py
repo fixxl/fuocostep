@@ -9,8 +9,9 @@ class COM_Port_Lister():
         class SecondFrame(wx.Dialog):
             def __init__(self, objMain):
                 """Constructor"""
-                wx.Dialog.__init__(self, None, title="Umrechnung von Absolutzeiten", size=(600, 700), pos=(600, 100))
-                panel = wx.Panel(self)
+                wx.Dialog.__init__(self, None, title="Umrechnung von Absolutzeiten", size=(800, 700), pos=(600, 100))
+		self.SetFont(wx.Font(9, wx.SWISS, wx.NORMAL, wx.NORMAL, False,'Liberation Sans'))                
+		panel = wx.Panel(self)
                 vbox2 = wx.GridSizer(21, 4, 0, 0)
                 self.objMain = objMain
                 self.update = False
@@ -20,7 +21,7 @@ class COM_Port_Lister():
                 self.is_triggered = dict()
                 for ii in range(0, 16):
                     labelstr = "Absolute Startzeit Kanal " + str(ii+1) + ":"
-                    lint = wx.StaticText(panel, -1, label = labelstr) 
+                    lint = wx.StaticText(panel,  label = labelstr) 
                     vbox2.Add(lint, 1, wx.ALIGN_LEFT|wx.ALL,5) 
                     self.tabs = wx.TextCtrl(panel, name="Abstime%s"%(ii), value="")
                     vbox2.Add(self.tabs,1,wx.EXPAND|wx.ALIGN_LEFT|wx.ALL,5)
@@ -34,7 +35,7 @@ class COM_Port_Lister():
                     vbox2.Add(self.cb,1,wx.EXPAND|wx.ALIGN_LEFT|wx.ALL,5)
                     
                     if(ii == 0):
-                        self.tint = wx.StaticText(panel, -1, label="Resultierende Intervalle:")
+                        self.tint = wx.StaticText(panel,  label="Resultierende Intervalle:")
                     else:
                         self.tint = wx.TextCtrl(panel, name="Int%s"%(ii), value="")
                         self.tint.Disable()
@@ -43,15 +44,15 @@ class COM_Port_Lister():
                     
                     self.absfields[str(self.tabs.GetName())] = self.tabs
                 
-                self.btn_takeover = wx.Button(panel,-1,"Werte aus Hauptfenster")
+                self.btn_takeover = wx.Button(panel, label="Werte aus Hauptfenster")
                 self.btn_takeover.Bind(wx.EVT_BUTTON,self.on_takeover_clicked)
-                self.btn_reset = wx.Button(panel,-1,"Felder leeren")
+                self.btn_reset = wx.Button(panel, label="Felder leeren")
                 self.btn_reset.Bind(wx.EVT_BUTTON,self.on_reset_clicked)
-                self.btn_calcints = wx.Button(panel,-1,"Berechne Intervalle")
+                self.btn_calcints = wx.Button(panel, label="Berechne Intervalle")
                 self.btn_calcints.Bind(wx.EVT_BUTTON,self.on_calcints_clicked)               
-                self.btn_setints = wx.Button(panel,-1,"Werte ins Hauptfenster")
+                self.btn_setints = wx.Button(panel, label="Werte ins Hauptfenster")
                 self.btn_setints.Bind(wx.EVT_BUTTON,self.on_setints_clicked)
-                offsettxt = wx.StaticText(panel, -1, label = "Offset Kanal 1:")
+                offsettxt = wx.StaticText(panel,  label = "Offset Kanal 1:")
                 self.offsval = wx.TextCtrl(panel, name="offset", value="0:00.00")
                 
                 
@@ -65,7 +66,7 @@ class COM_Port_Lister():
                 panel.SetSizer(vbox2)
 
                 self.Show() 
-                self.Fit()
+                #self.Fit()
 
             def parse_to_float(self, tstamp):
                 mins = 0
@@ -149,27 +150,27 @@ class COM_Port_Lister():
             
         class displayDialog(wx.Dialog):
             def __init__(self, parent):
-                wx.Dialog.__init__(self, parent, id=-1, title="FUOCO STEP - Einstellungen", size=(400, 700), pos=(200,100))#
-                
+                wx.Dialog.__init__(self, parent, title="FUOCO STEP - Einstellungen", size=(400, 700), pos=(200,100))#
+                self.SetFont(wx.Font(9, wx.SWISS, wx.NORMAL, wx.NORMAL, False,'Liberation Sans'))
                 self.panel = wx.Panel(self) 
                 vbox = wx.GridSizer(21, 2, 0, 0)
                 
                 self.show_abstimes = False
                 self.absframe = None
                 
-                l1 = wx.StaticText(self.panel, -1, label = "COM-Port:") 
+                l1 = wx.StaticText(self.panel,  label = "COM-Port:") 
                 vbox.Add(l1, 1, wx.ALIGN_RIGHT|wx.ALL,5) 
                 ComPortList = [x[0] for x in list(serial.tools.list_ports.comports())]
                 self.t1 = wx.ComboBox(self.panel, choices=ComPortList)
                 self.t1.SetSelection(0)                                
                 vbox.Add(self.t1,1,wx.EXPAND|wx.ALIGN_LEFT|wx.ALL,5)             
                 
-                l3 = wx.StaticText(self.panel, -1, "Schalterposition:") 
+                l3 = wx.StaticText(self.panel, label = "Schalterposition:") 
                 vbox.Add(l3, 1, wx.ALIGN_RIGHT|wx.ALL,5) 
-                self.t3 = wx.TextCtrl(self.panel, -1, style=wx.TE_READONLY, value="")
+                self.t3 = wx.TextCtrl(self.panel,  style=wx.TE_READONLY, value="")
                 vbox.Add(self.t3,1,wx.EXPAND|wx.ALIGN_LEFT|wx.ALL,5)  
                 
-                l2 = wx.StaticText(self.panel, -1, label = "Stepper-Modus:") 
+                l2 = wx.StaticText(self.panel,  label = "Stepper-Modus:") 
                 vbox.Add(l2, 1, wx.ALIGN_RIGHT|wx.ALL,5) 
                 self.t2 = wx.ComboBox(self.panel, choices=['Fest', 'Variabel'])
                 self.t2.SetSelection(0)                                
@@ -183,7 +184,7 @@ class COM_Port_Lister():
                         labelstr = "Intervall " + str(ii) + "/Festintervall:"
                     else:
                         labelstr = "Intervall " + str(ii) + ":"
-                    lint = wx.StaticText(self.panel, -1, label = labelstr) 
+                    lint = wx.StaticText(self.panel,  label = labelstr) 
                     vbox.Add(lint, 1, wx.ALIGN_RIGHT|wx.ALL,5) 
                     self.tint = wx.TextCtrl(self.panel, name="Int%s"%(ii), value="00:00.00")
                     self.tint.Disable()
@@ -192,38 +193,37 @@ class COM_Port_Lister():
                     self.intfields_storage.append(str(self.intfields[str(self.tint.GetName())].GetValue()))
                     
                 
-                self.btn_mode_write = wx.Button(self.panel,-1,"Modus setzen")
+                self.btn_mode_write = wx.Button(self.panel, label="Modus setzen")
                 self.btn_mode_write.Bind(wx.EVT_BUTTON,self.on_mode_write_clicked)
                 vbox.Add(self.btn_mode_write,0, wx.EXPAND)
                 self.btn_mode_write.Disable()
                 
-                self.btn_intervals_write = wx.Button(self.panel,-1,"Intervall(e) setzen")
+                self.btn_intervals_write = wx.Button(self.panel, label="Intervall(e) setzen")
                 self.btn_intervals_write.Bind(wx.EVT_BUTTON,self.on_intervals_write_clicked)
                 vbox.Add(self.btn_intervals_write,0, wx.EXPAND)
                 self.btn_intervals_write.Disable()                
                 
-                self.btn_read = wx.Button(self.panel,-1,"Einstellungen auslesen")
+                self.btn_read = wx.Button(self.panel, label="Einstellungen auslesen")
                 self.btn_read.Bind(wx.EVT_BUTTON,self.on_read_clicked)
                 vbox.Add(self.btn_read,0, wx.EXPAND)
                 
-                self.btn_default = wx.Button(self.panel,-1,"Standardwerte widerherstellen")
+                self.btn_default = wx.Button(self.panel, label="Standardwerte widerherstellen")
                 self.btn_default.Bind(wx.EVT_BUTTON,self.on_default_clicked)
                 vbox.Add(self.btn_default,0, wx.EXPAND) 
                 
-                self.btn_cancel = wx.Button(self.panel,-1,"Beenden")
+                self.btn_cancel = wx.Button(self.panel, label="Beenden")
                 self.btn_cancel.Bind(wx.EVT_BUTTON,self.on_cancel_clicked)
                 vbox.Add(self.btn_cancel, 0, wx.EXPAND)
 
-                self.btn_abstimes = wx.Button(self.panel,-1,"Absolutzeiten <<" if self.show_abstimes else "Absolutzeiten >>")
+                self.btn_abstimes = wx.Button(self.panel, label="Absolutzeiten <<" if self.show_abstimes else "Absolutzeiten >>")
                 self.btn_abstimes.Bind(wx.EVT_BUTTON,self.on_abstimes_clicked)
                 vbox.Add(self.btn_abstimes,0,wx.EXPAND)
-                
 
                 self.panel.SetSizer(vbox)
                 
                 self.Show() 
                 
-                self.Fit()
+                #self.Fit()
 
                 
             
@@ -400,6 +400,8 @@ class COM_Port_Lister():
         
         app = wx.App(False)
         frame = displayDialog(None)
+	font = wx.Font(28, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, "FreeSerif")
+	frame.SetFont(font)
         frame.ShowModal()
     
 if __name__ == "__main__":

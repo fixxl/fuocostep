@@ -10,10 +10,10 @@
 #include "global.h"
 
 // Global Variables
-static volatile uint8_t  trigger_flag    = 0;
-static volatile uint8_t  key_flag        = 0;
+static volatile uint8_t  trigger_flag = 0;
+static volatile uint8_t  key_flag = 0;
 static volatile uint8_t  channel_monitor = 0;
-static volatile uint16_t timerval        = 0;
+static volatile uint16_t timerval = 0;
 static volatile uint16_t active_channels = 0;
 
 void wdt_init(void) {
@@ -30,27 +30,14 @@ void key_init(void) {
     PCICR          |= (1 << KEYPCIE);
     KEYMSK         |= (1 << KEY);
 
-    // OPTOPORT |= (1 << OPTO);
     OPTO_DDR       &= ~(1 << OPTO);
 
-    // Activate Pin-Change Interrupt
+    // Activate Pin-Change Interrupt possibility
     PCICR          |= (1 << OPTOPCIE);
-    OPTOMSK        |= (1 << OPTO);
 
     // Keep low-impedance path between ignition voltage and clamps closed
     MOSSWITCH_PORT &= ~(1 << MOSSWITCH);
     MOSSWITCH_DDR  |= (1 << MOSSWITCH);
-}
-
-// Un-initialise Key-Switch (needed only if a device configured as ignition device gets configured as transmitter while on)
-void key_deinit(void) {
-    KEY_PORT &= ~(1 << KEY);
-    KEY_DDR  &= ~(1 << KEY);
-
-    // Deactivate Pin-Change Interrupt
-    PCICR    &= ~(1 << KEYPCIE);
-    KEYMSK   &= ~(1 << KEY);
-
 }
 
 // Switch debouncing
@@ -80,8 +67,7 @@ uint8_t debounce(volatile uint8_t *port, uint8_t pin) {
     TCCR0B = timer0_regb;
 
     // return 1 for active switch, 0 for inactive
-    return keystate ==
-           0;
+    return (keystate == 0);
 }
 
 // ------------------------------------------------------------------------------------------------------------------------
@@ -97,6 +83,7 @@ int main(void) {
     uint8_t   armed = 0;
     uint8_t   stepper_mode = 0;
     uint8_t   fire_channel = 1;
+    uint8_t   next_channel = 2, additional_channels = 0;
     uint8_t   ignition_time, ign_time_backup;
 
     uint16_t  fixed_intervals[11]        = { 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2500, 3000, 4000 };
@@ -170,22 +157,15 @@ int main(void) {
         }
 
         eewrite(0x00, 1);
-        eewrite(2, 365);
+        eewrite(EMATCH_TIME, 365);
     }
 
-    ignition_time = (eeread(365) == 200) ? 200 : 2;
+    ignition_time = (eeread(365) == TALON_TIME) ? TALON_TIME : EMATCH_TIME;
 
     // ------------------------------------------------------------------------------
 
-    armed         = debounce(&KEY_PIN, KEY);
-    stepper_mode  = adc_read(4);
-
-    if (armed) {
-        led_red_on();
-    }
-    else {
-        led_red_off();
-    }
+    // Manually trigger a key event to ensure proper states
+    key_flag      = 1;
 
     // Enable Interrupts
     sei();
@@ -211,22 +191,22 @@ int main(void) {
             armed     = debounce(&KEY_PIN, KEY);
 
             if (armed) {
-                fire_channel = 1;
-                stepper_mode = adc_read(4);
-                trigger_flag = 0;
-                OPTOMSK     |= (1 << OPTO);
-                led_red_on();
+                fire_channel = 1;                           // Reset fire channel to the start
+                stepper_mode = adc_read(4);                 // Read current mode setting
+                OPTOMSK     |= (1 << OPTO);                 // Allow fire events to be triggered
+                led_red_on();                               // Signalize armed status
             }
             else {
-                MOSSWITCH_PORT        &= ~(1 << MOSSWITCH);
-                flags.b.fire           = 0;
-                flags.b.step           = 0;
-                flags.b.is_fire_active = 0;
-                trigger_flag           = 0;
+                MOSSWITCH_PORT        &= ~(1 << MOSSWITCH); // Block conducting path of the P-FET
+                OPTOMSK               &= ~(1 << OPTO);      // Disallow fire events to be triggered
+                flags.b.fire           = 0;                 // Clear fire status
+                flags.b.step           = 0;                 // Stop running step sequences
+                flags.b.is_fire_active = 0;                 // Stop fire activity
+                trigger_flag           = 0;                 // Unset trigger flag
 
-                scheme                 = 0;
-                anti_scheme            = 0;
-                sr_shiftout(0);
+                scheme                 = 0;                 // Clear all active-channels
+                anti_scheme            = 0;                 // Clear reset scheme
+                sr_shiftout(0);                             // Block all switches
 
                 timer1_reset();
                 timer1_off();
@@ -291,14 +271,7 @@ int main(void) {
             }
 
             // "list" gives a overview over current settings
-            if (uart_strings_equal(uart_field, "list")) {
-                flags.b.list = 1;
-            }
-
-            // "edit" lets you change the current setting
-            if (uart_strings_equal(uart_field, "edit")) {
-                flags.b.edit = 1;
-            }
+            if (uart_strings_equal(uart_field, "list")) flags.b.list = 1;
 
             // "sim" or "simulate" simulates the current fire pattern if not armed
             if (uart_strings_equal(uart_field, "sim") || uart_strings_equal(uart_field, "simulate")) {
@@ -316,14 +289,10 @@ int main(void) {
             }
 
             // "edit" starts the configuration tool
-            if (uart_strings_equal(uart_field, "edit")) {
-                flags.b.edit = 1;
-            }
+            if (uart_strings_equal(uart_field, "edit")) flags.b.edit = 1;
 
             // "trigger" triggers!
-            if (uart_strings_equal(uart_field, "trigger")) {
-                trigger_flag = 1;
-            }
+            if (uart_strings_equal(uart_field, "trigger")) trigger_flag = 1;
 
             // "cls" clears terminal screen
             if (uart_strings_equal(uart_field, "cls")) terminal_reset();
@@ -386,141 +355,186 @@ int main(void) {
 
         // -------------------------------------------------------------------------------------------------------
 
-        // Check if next shot has to be triggered
+        // When device is already in a sequence, periodically check if next shot has to be triggered
         if (flags.b.step && stepper_mode && (fire_channel > 1)) {
-            // Variable or fixed intervalls?
+            // In variable intervall mode
             if (use_variable_intervals[stepper_mode - 1]) {
-                if (variable_intervals[(stepper_mode - 1) * 15 + fire_channel - 2] != TRIGGERVAL && (timerval >= variable_intervals[(stepper_mode - 1) * 15 + fire_channel - 2])) {
-                    flags.b.fire = 1;
+                // Check if the next channel shall be fired based on timing and the intervall value has already been reached
+                if ((variable_intervals[(stepper_mode - 1) * 15 + fire_channel - 2] != TRIGGERVAL) && (timerval >= variable_intervals[(stepper_mode - 1) * 15 + fire_channel - 2])) {
+
+                    // Recognize simultaneously fired channels
+                    next_channel        = fire_channel + 1;
+                    additional_channels = 0;
+
+                    while((next_channel < 17) && (!variable_intervals[(stepper_mode - 1) * 15 + next_channel - 2])) {
+                        additional_channels++;
+                        next_channel++;
+                    }
+                    flags.b.fire        = 1;
                 }
 
+                // Switch off the stepping mode if next channel is triggered by hw-trigger
                 if (variable_intervals[(stepper_mode - 1) * 15 + fire_channel - 2] == TRIGGERVAL) {
                     flags.b.step = 0;
+                    OPTOMSK     |= (1 << OPTO);                         // Stepping is over, allow triggering again
                 }
             }
+            // In fixed intervall mode
             else {
-                if (fixed_intervals[stepper_mode - 1] != TRIGGERVAL && (timerval >= fixed_intervals[stepper_mode - 1])) {
-                    flags.b.fire = 1;
+                // Check if the sequence shall be fired based on timing and the intervall value has already been reached
+                if ((fixed_intervals[stepper_mode - 1] != TRIGGERVAL) && (timerval >= fixed_intervals[stepper_mode - 1])) {
+
+                    next_channel        = fire_channel + 1;
+                    additional_channels = 0;
+
+                    if(!fixed_intervals[stepper_mode - 1] && (next_channel < 17)) {
+                        additional_channels++;
+                        next_channel++;
+                    }
+
+                    flags.b.fire        = 1;
                 }
 
+                // Switch off the stepping mode if sequence is based on hw-trigger
                 if (fixed_intervals[stepper_mode - 1] == TRIGGERVAL) {
                     flags.b.step = 0;
+                    OPTOMSK     |= (1 << OPTO);                         // Stepping is over, allow triggering again
                 }
             }
         }
 
         // Check if we should fire
-        if (trigger_flag && !flags.b.step) {
-            temp_sreg = SREG;
+        if (trigger_flag) {
+            temp_sreg    = SREG;
             cli();
+            trigger_flag = 0;                                           // Clear flag
 
-            led_green_on();
+            // Check if we are not in a sequence yet
+            if(!flags.b.step) {
+                led_green_on();
 
-            if (!key_flag) {
+                // If no key-event is pending...
+                if (!key_flag) {
+                    // Next channel will be fired immediately after trigger if we're armed
+                    if (armed) {
+                        flags.b.fire = 1;
 
-                if (armed) {
-                    flags.b.fire = 1;                                   // Next channel will be fired immediately after trigger
-
-                    if (stepper_mode) {
-                        flags.b.step = 1;
-                        OPTOMSK     &= ~(1 << OPTO);
+                        // If we're not in "S"-position,
+                        // activate step sequence and disallow further triggering
+                        if (stepper_mode) {
+                            flags.b.step = 1;
+                            OPTOMSK     &= ~(1 << OPTO);
+                        }
                     }
+                    // Nothing will be done if we're not armed
+                    else led_green_off();
                 }
-                else {
-                    led_green_off();
-                }
-
-                trigger_flag = 0;
             }
 
-            SREG      = temp_sreg;
+            SREG         = temp_sreg;
         }
 
         // Fire
         if (flags.b.fire) {
             temp_sreg    = SREG;
             cli();
-            flags.b.fire = 0;
+            flags.b.fire = 0;                                           // Clear flag
 
-            if (armed && (fire_channel > 0) && (fire_channel < 17)) {   // If channel number is valid
-                flags.b.is_fire_active = 1;
+            if (armed && (fire_channel > 0) && (fire_channel < 17)) {   // If device is armed and channel number is valid
+                flags.b.is_fire_active = 1;                             // Signalize that we're currently firing
 
-                led_orange_on();
+                led_orange_on();                                        // Signalize firing
                 scheme                 = 0;                             // Set mask-variable to zero
+
+                // Calculate which channel will be the next one to fire
+                // after the upcoming sequence of one or more channels
+                next_channel           = fire_channel + additional_channels + 1;
 
                 for (uint8_t i = 16; i; i--) {
                     scheme <<= 1;                                       // Left-shift mask-variable
 
-                    if (i == fire_channel) scheme |= 1;                 // Set LSB if loop variable equals channel number
+                    if (i == (fire_channel + additional_channels)) {
+                        scheme |= 1;                                    // Set LSB of scheme if loop variable equals number of a channel to fire
 
+                        if (additional_channels) additional_channels--; // Decrement the number of additional channels
+
+                    }
                 }
 
-                scheme                |= active_channels;
+                scheme                |= active_channels;               // Combine newly and already active channels
 
-                MOSSWITCH_PORT        |= (1 << MOSSWITCH);
+                MOSSWITCH_PORT        |= (1 << MOSSWITCH);              // Open or leave open P-FET-channel
                 sr_shiftout(scheme);                                    // Write pattern to shift-register
-                active_channels        = scheme;
-                timerval               = 0;
+                active_channels        = scheme;                        // Re-write list of currently active channels
 
+                // (Re-)Start the interval timer
+                timerval               = 0;
                 timer1_reset();
                 timer1_on();
 
                 // Increase channel counter
-                fire_channel++;
+                fire_channel           = next_channel;
             }
 
-            SREG         = temp_sreg;
+            SREG = temp_sreg;
         }
 
-        // Check if we've fired long enough
-        if (flags.b.is_fire_active && channel_monitor) {
-            anti_scheme     = 0;
-            channel_monitor = 0;
+        // Check the status of active channels
+        if (flags.b.is_fire_active && channel_monitor) {                // If we're currently firing and monitoring is due
+            temp_sreg       = SREG;
+            cli();
+
+            channel_monitor = 0;                                        // Clear the monitoring flag
+            anti_scheme     = 0;                                        // Reset the delete scheme
+
             uint16_t controlvar = 1;
             for (uint8_t i = 0; i < 16; i++) {
-                if(active_channels & controlvar) {
-                    channel_timeout[i]++;
+                if(active_channels & controlvar) {                      // If a given channel is currently active
+                    channel_timeout[i]++;                               // Increment the timeout-value for that channel
 
-                    if(channel_timeout[i] >= ignition_time) {
-                        anti_scheme          |= controlvar;             // Set delete-bit
-                        channel_timeout[i]    = 0;                      // Reset channel-timeout
-                        flags.b.finish_firing = 1;
+                    if(channel_timeout[i] >= ignition_time) {           // If the channel was active for at least the ignition time
+                        anti_scheme          |= controlvar;             // Set delete-bit for this channel
+                        channel_timeout[i]    = 0;                      // Reset channel-timeout value
+                        flags.b.finish_firing = 1;                      // Leave a note that a change in the list of active channels is due
                     }
                 }
 
                 controlvar <<= 1;                                       // Left-shift mask-variable
             }
-            anti_scheme    ^= active_channels;
+            anti_scheme    ^= active_channels;                          // Set channels to zero, which shell be deleted AND are active, others remain active.
+            SREG            = temp_sreg;
         }
 
-        // Stop firing
-        if (flags.b.finish_firing) {
+        // Stop firing if it's due
+        if (flags.b.finish_firing) {                                    // If we have the order to stop firing on at least one channel
             temp_sreg             = SREG;
             cli();
-            flags.b.finish_firing = 0;
+            flags.b.finish_firing = 0;                                  // Mark the order as done
 
             // Lock respective MOSFETs
-            sr_shiftout(anti_scheme);
-            active_channels       = anti_scheme;
+            sr_shiftout(anti_scheme);                                   // Perform the necessary shift-register changes
+            active_channels       = anti_scheme;                        // Re-write the list of currently active channels
 
-            if (!anti_scheme) {
-                MOSSWITCH_PORT        &= ~(1 << MOSSWITCH);
-                flags.b.is_fire_active = 0;
-                led_orange_off();
+            if (!anti_scheme) {                                         // If no more channels are active at the moment
+                MOSSWITCH_PORT        &= ~(1 << MOSSWITCH);             // Block the P-FET-channel
+                flags.b.is_fire_active = 0;                             // Signalize that firing is finished for now
+                led_orange_off();                                       // Also by turning of the "active" LED
             }
 
-            // If all channels are fired
-            if (fire_channel > 16) {
-                flags.b.step = 0;
+            if (fire_channel > 16) {                                    // If all channels are fired
+                flags.b.step = 0;                                       // Stop stepping
+
+                // Turn off the interval timer
                 timer1_off();
                 timer1_reset();
                 timerval     = 0;
-                fire_channel = 1;
+
+                fire_channel = 1;                                       // Reset the channel number
             }
 
-            if (!flags.b.step) {
-                led_green_off();
-                OPTOMSK |= (1 << OPTO);
+            if (!flags.b.step) {										// If stepping is over
+                led_green_off();                                        // Turn off the "triggered" LED
+                OPTOMSK |= (1 << OPTO);                                 // Allow triggering again
             }
 
             SREG                  = temp_sreg;
@@ -534,9 +548,10 @@ int main(void) {
 
 // Interrupt vectors
 ISR(TIMER1_COMPA_vect) {
-    timerval++;                                                         // Raise time value representing hundredths
+    timerval++;                                                         // Raise time value representing hundredths (0.01 s)
 
-    if(active_channels) channel_monitor = 1;
+    if(active_channels) channel_monitor = 1;                            // Set a reminder to monitor the channels
+
 }
 
 #if (COMMONINT)
