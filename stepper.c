@@ -306,6 +306,9 @@ int main(void) {
                 flags.b.reset_device = 1;
             }
 
+            // "adccal" shows current voltage on ADC-pin
+            if (uart_strings_equal(uart_field, "adccal")) adc_cal(4);
+
             led_yellow_off();
 
             if (uart_field[0] && (uart_field[0] != 0xFF)) uart_puts_P(PSTR("\n\r"));
