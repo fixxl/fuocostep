@@ -10,8 +10,8 @@ class COM_Port_Lister():
             def __init__(self, objMain):
                 """Constructor"""
                 wx.Dialog.__init__(self, None, title="Umrechnung von Absolutzeiten", size=(800, 700), pos=(600, 100))
-		self.SetFont(wx.Font(9, wx.SWISS, wx.NORMAL, wx.NORMAL, False,'Liberation Sans'))                
-		panel = wx.Panel(self)
+                self.SetFont(wx.Font(9, wx.SWISS, wx.NORMAL, wx.NORMAL, False,'Liberation Sans'))                
+                panel = wx.Panel(self)
                 vbox2 = wx.GridSizer(21, 4, 0, 0)
                 self.objMain = objMain
                 self.update = False
@@ -265,10 +265,10 @@ class COM_Port_Lister():
                     
                     for ii in range(1, 16):                       
                         # if(self.intfields_storage[ii] != self.intfields["Int%s"%(ii)].GetValue()):
-                        print("Setting interval %s..."%(str(ii)))
+                        print(("Setting interval %s..."%(str(ii))))
                         ser.write('\redit\r')
                         test = self.serialtransfer(ser, 'i')
-                        print(' '.join(test))
+                        print((' '.join(test)))
                         
                         # Case for fixed interval
                         if (ii == 1):
@@ -400,8 +400,8 @@ class COM_Port_Lister():
         
         app = wx.App(False)
         frame = displayDialog(None)
-	font = wx.Font(28, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, "FreeSerif")
-	frame.SetFont(font)
+        font = wx.Font(28, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, "FreeSerif")
+        frame.SetFont(font)
         frame.ShowModal()
     
 if __name__ == "__main__":
