@@ -472,9 +472,9 @@
 	\chapter{Programmierung}
 		\label{sec:gui}
 		\section{Treiberinstallation}
-			Idealerweise erkennt Windows beim Anschließen das Gerät (Microchip USB/UART Combo) von selbst und installiert den benötigten Treiber. Ansonsten muss der entsprechende Treiber einmalig folgendermaßen manuell installiert werden:
+			Idealerweise erkennt Windows beim Anschließen das Gerät von selbst, installiert einen Treiber und stellt es als COM-Port (Serielles USB-Gerät) zur Verfügung. Ansonsten muss der entsprechende Treiber einmalig folgendermaßen manuell installiert werden:
 			\begin{enumerate}
-				\item Die beiden im Softwarepaket enthaltenen Dateien \enquote{mchpcdc.inf} und \enquote{mchpcdc.inf} müssen in einem bekannten Ordner auf der Festplatte liegen, dessen Pfad man sich merken sollte.
+				\item Die gepackten Treiber unter der Adresse \url{http://ww1.microchip.com/downloads/en/DeviceDoc/MCP2221 Windows Driver 2014-10-09.zip} herunterladen und in einen bekannten Ordner entpacken, den man sich merken sollte
 				\item Den Geräte-Manager mit Administratorrechten öffnen
 				\item Einen Rechtsklick auf \enquote{MCP2221 USB/UART Combo} tätigen und \enquote{Treibersoftware aktualisieren} wählen.
 				\item Option \enquote{Auf dem Computer nach Treibersoftware suchen} wählen
@@ -515,23 +515,33 @@
 				
 			\subsubsection*{Intervalle festlegen}	
 				
-				Kanal 1 wird immer unmittelbar beim Triggersignal ausgelöst, Intervall~1 legt also fest, wie viel Zeit zwischen dem Auslösen der Kanäle 1 und 2 vergehen soll, Intervall~2 die Zeit zwischen Kanal 2 und 3, usw. Dementsprechend ergeben sich bei 16 Kanälen 15 Intervalle.
+				Kanal 1 wird immer unmittelbar beim Triggersignal ausgelöst, Intervall~1 legt also fest, wie viel Zeit zwischen dem Auslösen der Kanäle 1 und 2 vergehen soll, Intervall~2 die Zeit zwischen Kanal 2 und 3, usw. Dementsprechend legt Intervall X die Pause vor Kanal X+1 fest und es ergeben sich bei 16 Kanälen 15 Intervalle.
 				
 				Die Eingabe der Zeiten erfolgt typischerweise im Format \enquote{MM:SS.hh} mit Minuten, Sekunden und Hundertsteln, wobei statt des Punktes zwischen Sekunden und -bruchteilen auch das deutsche Dezimalkomma genutzt werden kann. Zahleneingaben ohne Doppelpunkt werden als Sekunden interpretiert, die Eingabe \enquote{1:10.20} beschreibt demnach dasselbe Intervall wie \enquote{70,2}. Bei Eingaben von mehr als zwei Nachkommastellen werden Eingaben abgeschnitten. Möchte man auf ein Triggersignal warten, schreibt man \enquote{T} ins entsprechende Feld. Steht beispielsweise ein \enquote{T} hinter Intervall~5, bedeutet dies, dass vor dem Abfeuern von Kanal~6 wieder auf einen Trigger gewartet wird. Hilfreich kann hier auch das Zusatzfenster \enquote{Absolutzeiten} sein, um das es in Abschnitt~\ref{sec:absolutzeiten} geht.
 				
 				Ungültige Eingaben, die andere Zeichen als die Ziffern 0-9, höchstens einen Doppelpunkt, höchstens einen Punkt oder ein Koma oder das Wort \enquote{Trigger} in allen Groß-, Klein- und Abkürzungsformen enthalten, werden ignoriert, Zeitwerte größer als 9:59.99 werden automatisch zu \enquote{Trigger} gewandelt. Da nach jedem Schreibvorgang, den man mit \enquote{Intervall(e) setzen} auslöst, automatisch ein Auslesevorgang durchgeführt wird, kann immer direkt nachvollzogen werden, ob die Eingabe den gewünschten Effekt hatte.
 				
-				Abbildung~\ref{fig:beispielsequenz} zeigt ein Beispiel für eine variable Stepsequenz, die immer vier Effekte in kurzer Folge auslöst, ehe für die nächste Abfolge auf einen Trigger gewartet wird.
+				Abbildung~\ref{fig:beispielsequenz} zeigt ein Beispiel für eine variable Stepsequenz, die immer vier Effekte in kurzer Folge auslöst, ehe für die nächste Abfolge auf einen Trigger gewartet wird. Die letzten beiden Kanäle werden gemeinsam geschossen.
 				
 				\begin{figure}[tb]
-					\centering\includegraphics[width=.5\textwidth]{gui}
-					\caption{Übersicht über Bedienoberfläche}
+					\centering\includegraphics[width=.5\textwidth]{beispielshow}
+					\caption{Beispielsequenz}
 					\label{fig:beispielsequenz}
 				\end{figure}
 
 			\subsection{Zusatzfenster Absolutzeiten}
 			\label{sec:absolutzeiten}
-				Das Zusatzfenster \enquote{Absolutzeiten} soll ein bequemes Umrechnen von absoluten Zündzeiten, wie man sie in einer Software wie PyroIgnitionControl festlegt, in die von FUOCO~STEP benötigten Intervallzeiten zwischen den einzelnen Kanälen ermöglichen. Hierzu können die Werte in der zweiten Spalte eingefügt und die Zeitabstände der einzelnen Kanäle durch Klick auf \enquote{Berechne Intervalle} ermittelt werden. Über \enquote{Werte ins Hauptfenster} können diese Intervallzeiten ins Hauptfenster übertragen werden. Dabei ist darauf zu achten, dass die aktuelle Schalterposition im passenden Modus konfiguriert sein muss. Ist der feste Intervallmodus eingestellt, wird nur der erste Intervallwert ins Hauptfenster kopiert, beim variablen Intervallmodus alle nicht-leeren Felder. Nach Übertragung ins Hauptfenster müssen die Werte noch durch \enquote{Intervalle setzen} ins Gerät geschrieben werden, um die berechneten Intervalle nutzen zu können.
-
+				Das Zusatzfenster \enquote{Absolutzeiten} soll ein bequemes Umrechnen von absoluten Zündzeiten, wie man sie in einer Software wie PyroIgnitionControl oder PYROTHEK festlegt, in die von FUOCO~STEP benötigten Intervallzeiten zwischen den einzelnen Kanälen ermöglichen.
+				
+				Hierzu können die Werte in der zweiten Spalte eingefügt und die Zeitabstände der einzelnen Kanäle durch Klick auf \enquote{Berechne Intervalle} ermittelt werden. Über \enquote{Werte ins Hauptfenster} können diese Intervallzeiten ins Hauptfenster übertragen werden. Es ist darauf zu achten, dass die aktuelle Schalterposition im passenden Modus konfiguriert sein muss. Ist der feste Intervallmodus eingestellt, wird nur der erste Intervallwert ins Hauptfenster kopiert, beim variablen Intervallmodus alle nicht-leeren Felder. Nach Übertragung ins Hauptfenster müssen die Werte noch durch \enquote{Intervalle setzen} ins Gerät geschrieben werden, um die berechneten Intervalle nutzen zu können.
+				
+				Abbildung~\ref{fig:beispielabsolut} zeigt anhand der Intervalle aus der obigen Beispielsequenz die Funktionsweise des Absolut\-zeiten-Fensters. Da die Kanalreihenfolge nicht veränderbar ist, muss jeder Kanal zur selben Zeit oder später beginnen als sein Vorgänger. Für die getriggerten Kanäle 1, 5, 9 und 13 wurden hier Zeiten vorgeben, um mit der imaginären Showdatei vergleichen zu können, ansonsten würde als Absolutzeit die des Vorgängerkanals übernommen. Für die korrekte Intervallberechnung spielt dies keine Rolle, da Zeitabstände ja nur bei nicht durch Trigger ausgelösten Kanälen von Bedeutung sind.
+				
+				\begin{figure}[tb]
+					\begin{center}\includegraphics[width=.8\textwidth]{beispielzeitvorgabe}{\\}\includegraphics[width=.8\textwidth]{beispielabsolut}\end{center}
+					\caption{Beispiel für die Verwendung des Absolutfensters mit Zeitvorgabe und Intervallberechnung}
+					\label{fig:beispielabsolut}
+				\end{figure}
+			
 				Das Fenster \enquote{Absolutzeiten} kann auch dazu genutzt werden, Einstellungen von einer Schalterstellung auf eine andere zu übertragen. Hierzu die Einstellungen bei der zu kopierenden Schalterposition auslesen und dann nacheinander die Buttons \enquote{Absolutzeiten}, \enquote{Werte aus Hauptfenster} und \enquote{Berechne Intervalle} klicken. Nun die neue Schalterposition auswählen, auslesen, falls nötig den passenden Modus setzen und schließlich durch Klick auf \enquote{Werte ins Hauptfenster} die zu kopierenden Einstellungen setzen.
 \end{document}

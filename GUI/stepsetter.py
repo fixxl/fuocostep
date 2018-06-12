@@ -51,17 +51,12 @@ class COM_Port_Lister():
                 self.btn_calcints = wx.Button(panel, label="Berechne Intervalle")
                 self.btn_calcints.Bind(wx.EVT_BUTTON,self.on_calcints_clicked)               
                 self.btn_setints = wx.Button(panel, label="Werte ins Hauptfenster")
-                self.btn_setints.Bind(wx.EVT_BUTTON,self.on_setints_clicked)
-                offsettxt = wx.StaticText(panel,  label = "Offset Kanal 1:")
-                self.offsval = wx.TextCtrl(panel, name="offset", value="0:00.00")
-                
+                self.btn_setints.Bind(wx.EVT_BUTTON,self.on_setints_clicked)               
                 
                 vbox2.Add(self.btn_takeover,1,wx.EXPAND|wx.ALIGN_LEFT|wx.ALL,5)
                 vbox2.Add(self.btn_reset,1,wx.EXPAND|wx.ALIGN_LEFT|wx.ALL,5)
                 vbox2.Add(self.btn_calcints,1,wx.EXPAND|wx.ALIGN_LEFT|wx.ALL,5)               
-                vbox2.Add(self.btn_setints,1,wx.EXPAND|wx.ALIGN_LEFT|wx.ALL,5)    
-                vbox2.Add(offsettxt,1,wx.EXPAND|wx.ALIGN_LEFT|wx.ALL,5) 
-                vbox2.Add(self.offsval,1,wx.EXPAND|wx.ALIGN_LEFT|wx.ALL,5)                 
+                vbox2.Add(self.btn_setints,1,wx.EXPAND|wx.ALIGN_LEFT|wx.ALL,5)                 
                 
                 panel.SetSizer(vbox2)
 
@@ -89,7 +84,7 @@ class COM_Port_Lister():
                     if(tstamp.count(':') > 1):
                         return 65535
                 except ValueError:
-                    pass
+                    return 65535
                 
                 return (mins * 6000 + int((secs + 0.005)*100))
             
@@ -140,11 +135,19 @@ class COM_Port_Lister():
                             self.objMain.intfields["Int1"].SetValue(self.intfields["Int1"].GetValue())
                             
             def on_takeover_clicked(self, event):
-                self.absfields["Abstime0"].SetValue( self.parse_to_timestring(self.parse_to_float(self.offsval.GetValue())) )
+                if self.parse_to_float(self.absfields["Abstime0"].GetValue()) != 65535:
+                    self.absfields["Abstime0"].SetValue( self.parse_to_timestring(self.parse_to_float(self.absfields["Abstime0"].GetValue())) )
+                else:
+                    self.absfields["Abstime0"].SetValue( self.parse_to_timestring(0) )
                 for x in range(1,16):
                     if(self.objMain.intfields["Int%s"%(x)].GetValue().lower() in ["trigger", "t", "tr", "tri", "trig", "trigg", "trigge", "triggere", "triggered"]):
-                        self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( 0 + self.parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
                         self.is_triggered["IsTrig%s"%(x)].SetValue(True)
+                        
+                        if self.parse_to_float(self.absfields["Abstime%s"%(x)].GetValue()) != 65535:
+                            self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( self.parse_to_float(self.absfields["Abstime%s"%(x)].GetValue()) ))
+                        else:
+                            self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( 0 + self.parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
+                        
                     else:
                         self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( self.parse_to_float(self.objMain.intfields["Int%s"%(x)].GetValue()) + self.parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
             
