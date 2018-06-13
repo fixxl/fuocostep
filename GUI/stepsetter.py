@@ -112,9 +112,21 @@ class COM_Port_Lister():
                         self.intfields["Int%s"%(ii)].SetValue("")
                 
             def on_calcints_clicked(self, event):
-                for ii in range(0, 15):
-                    if self.is_triggered["IsTrig%s"%(ii+1)].GetValue():
-                        self.intfields["Int%s"%(ii+1)].SetValue( "Trigger" )
+                if self.objMain.t2.GetSelection() == 1:
+                    for ii in range(0, 15):
+                        if self.is_triggered["IsTrig%s"%(ii+1)].GetValue():
+                            self.intfields["Int%s"%(ii+1)].SetValue( "Trigger" )
+                        else:
+                            tempvar1 = self.parse_to_float(self.absfields["Abstime%s"%(ii+1)].GetValue())
+                            tempvar2 = self.parse_to_float(self.absfields["Abstime%s"%(ii)].GetValue())
+                            if(tempvar1 != 65535 and tempvar2 != 65535 and tempvar1 >= tempvar2 and tempvar1-tempvar2 < 60000):
+                                self.intfields["Int%s"%(ii+1)].SetValue( self.parse_to_timestring(tempvar1 - tempvar2) )
+                            else:
+                                self.intfields["Int%s"%(ii+1)].SetValue( "" )
+                else:
+                    ii = 0
+                    if self.is_triggered["IsTrig1"].GetValue():
+                        self.intfields["Int1"].SetValue( "Trigger" )    
                     else:
                         tempvar1 = self.parse_to_float(self.absfields["Abstime%s"%(ii+1)].GetValue())
                         tempvar2 = self.parse_to_float(self.absfields["Abstime%s"%(ii)].GetValue())
@@ -140,16 +152,31 @@ class COM_Port_Lister():
                 else:
                     self.absfields["Abstime0"].SetValue( self.parse_to_timestring(0) )
                 for x in range(1,16):
-                    if(self.objMain.intfields["Int%s"%(x)].GetValue().lower() in ["trigger", "t", "tr", "tri", "trig", "trigg", "trigge", "triggere", "triggered"]):
-                        self.is_triggered["IsTrig%s"%(x)].SetValue(True)
-                        
-                        if self.parse_to_float(self.absfields["Abstime%s"%(x)].GetValue()) != 65535:
-                            self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( self.parse_to_float(self.absfields["Abstime%s"%(x)].GetValue()) ))
+                    if self.objMain.t2.GetSelection() == 1:
+                        if(self.objMain.intfields["Int%s"%(x)].GetValue().lower() in ["trigger", "t", "tr", "tri", "trig", "trigg", "trigge", "triggere", "triggered"]):
+                            self.is_triggered["IsTrig%s"%(x)].SetValue(True)
+                            
+                            if self.parse_to_float(self.absfields["Abstime%s"%(x)].GetValue()) != 65535:
+                                self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( self.parse_to_float(self.absfields["Abstime%s"%(x)].GetValue()) ))
+                            else:
+                                self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( 6000 + self.parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
+                            
                         else:
-                            self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( 6000 + self.parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
-                        
+                            self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( self.parse_to_float(self.objMain.intfields["Int%s"%(x)].GetValue()) + self.parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
                     else:
-                        self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( self.parse_to_float(self.objMain.intfields["Int%s"%(x)].GetValue()) + self.parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
+                        if(self.objMain.intfields["Int1"].GetValue().lower() in ["trigger", "t", "tr", "tri", "trig", "trigg", "trigge", "triggere", "triggered"]):
+                            self.is_triggered["IsTrig%s"%(x)].SetValue(True)
+                            
+                            if x == 1:                              
+                                if self.parse_to_float(self.absfields["Abstime0"].GetValue()) != 65535:
+                                    self.absfields["Abstime0"].SetValue(self.parse_to_timestring( self.parse_to_float(self.absfields["Abstime0"].GetValue()) ))
+                                else:
+                                    self.absfields["Abstime0"].SetValue(self.parse_to_timestring(0))
+                            
+                            self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( 6000 + self.parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
+                            
+                        else:
+                            self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( self.parse_to_float(self.objMain.intfields["Int1"].GetValue()) + self.parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
             
         class displayDialog(wx.Dialog):
             def __init__(self, parent):
