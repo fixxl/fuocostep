@@ -61,7 +61,7 @@
 	\vfill
 \end{titlepage}
 \part{Aufbauanleitung}
-	\chapter{Vorbemerkungen}
+	\chapter{Vorbereitung}
 		FUOCO STEP besteht aus zwei Platinen (=PCBs), der Basis (kleine Platine) und dem Panel (große Platine), zum Lieferumfang des Bausatzes gehören neben den Platinen und ihren Lötteilen, die in den Tabellen in den jeweiligen Unterkapiteln aufgeführt wurden:
 		\begin{itemize}
 			\item Koffer Seahorse SE-120
@@ -71,18 +71,18 @@
 			\item Micro-USB-Anschluss für Gehäusemontage
 			\item Schlüsselschalter
 			\item Druckschalter für Durchgangstest
-			\item Drehschalter mit elf Widerständen und drei Kabeln (rot, weiß, schwarz)
+			\item Drehschalter mit elf Widerständen und drei Kabeln (rot, gelb, schwarz)
 			\item Crimpbuchse mit drei Kabeln (rot, weiß, grau)
 			\item Crimpbuchse mit acht Kabeln (blau, schwarz, rot, schwarz, violett, violett, gelb, gelb)
-			\item Je ein rotes und ein schwarzes Kabel mit und ohne Kabelschuh (insg. vier Kabel)
+			\item Je ein rotes und ein schwarzes Kabel mit und ohne Kabelschuh (also insg. vier Kabel)
 			\item Ein Paar Deans-Steckverbinder (Buchse für Anschluss an Batterie, Stecker an PCB)
-			\item Vier Gewindeschrauben M3x16 mit Muttern
-			\item Zwei Gewindeschrauben M3x10 mit Muttern
-			\item Zwei Gewindeschrauben M2x6 mit Muttern
-			\item Sechs Blechschrauben 3x10
-			\item Vier Distanzhülsen der Länge \SI{11}{\milli\metre}
-			\item Schrumpfschlauchabschnitte in \SI{26}{\milli\metre}, \SI{6,4}{\milli\metre} und \SI{3,2}{\milli\metre}
-			\item Isolationsabdeckung für Lötkontakte
+			\item Isolationsabdeckung für Lötkontakte auf der Paneloberseite
+			\item Vier Distanzhülsen der Länge \SI{11}{\milli\metre} als Abstandshalter zwischen Basis und Panel
+			\item Vier Gewindeschrauben M3x16 mit Muttern zur Verschraubung der beiden Platinen
+			\item Zwei Gewindeschrauben M3x10 mit Muttern zur Befestigung der Lötstellenabdeckung am Panel
+			\item Zwei Gewindeschrauben M2x6 mit Muttern zur Befestigung der Spannungsanzeige im Panel
+			\item Sechs Blechschrauben 3x10 zur Verschraubung des Panels mit dem Koffer
+			\item Schrumpfschlauchabschnitte in \SI{26}{\milli\metre}, \SI{6,4}{\milli\metre} und \SI{3,2}{\milli\metre}	
 		\end{itemize}
 
 		\section{Benötigtes Werkzeug}
@@ -100,15 +100,17 @@
 			\end{itemize}
 
 		\section{Wichtige Hinweise}
-			Wenig ist frustrierender als harte Arbeit, die man umsonst verrichtet, vom im wahrsten Sinne des Wortes verbrannten Geld bei Zerstörung von Platine oder Bauteilen ganz zu schweigen. Daher bitte beachten:
+			Wenig ist frustrierender als umsonst verrichtete harte Arbeit, vom im wahrsten Sinne des Wortes verbrannten Geld bei Zerstörung von Platine oder Bauteilen ganz zu schweigen. Daher bitte beachten:
 			\begin{itemize}
-				\item Beim Löten gewissenhaft und gründlich arbeiten. Auf eine saubere Trennung der Lötstellen achten, speziell bei enger Nachbarschaft (Stift- und Buchsenleisten, integrierte Schaltungen, \dots).
-				\item Den Arbeitsbereich übersichtlich halten. Beim Lötkolben ist nicht nur die Spitze heiß, daher alles so arrangieren, dass man auch wirklich nur die Lötstelle berührt und keine frei hängenden Kabel oder andere Bauteile anbrennt/schmilzt.
-				\item In der Elektronik ist es üblich, identische Gehäuse für unterschiedliche Bauteile zu verwenden, in unserem Fall beispielsweise für die Transistoren \texttt{Q19} und \texttt{Q20}, welche optisch nur anhand der Beschriftung auf dem Gehäuse unterscheidbar sind. Daher erst genau schauen, dann löten, denn gerade bei den integrierten Schaltungen mit vier oder mehr Kontakten ist ein nachträgliches Auslöten ziemlich kompliziert und führt häufig zu Schäden an Bauteil und/oder Platine. Immer genau die Bezeichnung überprüfen, damit alles seinen korrekten Platz findet, um eine funktionsfähige Schaltung zu garantieren.
+				\item Beim Löten Zeit lassen, gewissenhaft und gründlich arbeiten. Auf eine saubere Trennung der Lötstellen achten, speziell bei enger Nachbarschaft (Stift- und Buchsenleisten, integrierte Schaltungen, \dots). Ein sehr gutes, wenn auch leider englischsprachiges Lehrvideo zum korrekten Löten gibt es unter \url{https://www.youtube.com/watch?v=IpkkfK937mU}, bei die Löttemperatur sollte bei Verwendung von bleihaltigem Lötzinn nicht höher als \SI{350}{\degreeCelsius} liegen\footnote{Der Grund dafür ist, dass das Flussmittel, welches im Lötzinn enthalten ist und Oxidation in der Lötstelle verhindern soll, bei höheren Temperaturen zu schnell verdampft und seine Aufgabe nicht mehr erfüllen kann.}.
+				\item Den Arbeitsbereich übersichtlich halten. Beim Lötkolben ist nicht nur die Spitze heiß, daher alles so arrangieren, dass man auch wirklich nur die Lötstelle berührt und nicht unbeabsichtigt frei hängenden Kabel oder andere Bauteile anbrennt/schmilzt.
+				\item In der Elektronik ist es üblich, identische Gehäuse für unterschiedliche Bauteile zu verwenden, in unserem Fall beispielsweise für die Transistoren \texttt{Q19} und \texttt{Q20} oder die drei Zementwiderstände, welche optisch nur anhand der Beschriftung auf dem Gehäuse unterscheidbar sind. Daher erst genau schauen, dann löten, denn gerade bei den integrierten Schaltungen mit vier oder mehr Kontakten ist ein nachträgliches Auslöten ziemlich kompliziert und führt häufig zu Schäden an Bauteil und/oder Platine. Immer genau die Bezeichnung überprüfen, damit alles seinen korrekten Platz findet, um eine funktionsfähige Schaltung zu garantieren.
 				\item Was für den Bauteiltyp gilt, gilt auch für die Orientierung. Mit wenigen Ausnahmen muss diese entweder aus Platz- oder Funktionsgründen beachtet werden. Verpolte Elektrolytkondensatoren können zudem sehr spektakulär explodieren und das wollen wir doch lieber den pyrotechnischen Gegenständen überlassen!
 				\item Vor dem Anschließen des Akkus an die Platine noch einmal kritisch prüfen, dass man keine unerwünschten Verbindungen hergestellt hat. Der Akku liefert für einige Sekunden problemlos Strom im zweistelligen Amperebereich, für die manche Bauteile und Leiterzüge nicht ausgelegt sind.
 			\end{itemize}
+	
 	\chapter{Aufbau}
+		
 		\section{Panel}
 
 			\subsection*{Bauteilindex}
