@@ -16,6 +16,13 @@
 \usepackage[unicode=true, colorlinks=false, breaklinks=true, pdfborder={0 0 0}]{hyperref}
 \usepackage{bookmark}
 
+\hypersetup{pdfinfo={
+		Title    = {FUOCO STEP - Aufbau- und Bedienungsanleitung},
+		Subject  = {Handbuch},
+		Author   = {Felix Pflaum}
+}}
+
+
 \newcommand{\origttfamily}{}
 \let\origttfamily=\ttfamily
 \renewcommand{\ttfamily}{\origttfamily \hyphenchar\font=`\-}
@@ -31,6 +38,11 @@
 \newfontfamily\Commons{Commons}
 \newfontfamily\Gost{Gost}
 \defaultfontfeatures{Ligatures=TeX}
+
+% Einstellungen für den Zeilenumbruch von URLs
+\def\UrlBreaks{\do\=\do\.\do\?\do\&\do\a\do\b\do\c\do\d\do\e\do\f\do\g\do\h\do\i\do\j\do\k\do\l\do\m\do\n\do\o\do\p\do\q\do\r\do\s\do\t\do\u\do\v\do\w\do\x\do\y\do\z\do\A\do\B\do\C\do\D\do\E\do\F\do\G\do\H\do\I\do\J\do\K\do\L\do\M\do\N\do\O\do\P\do\Q\do\R\do\S\do\T\do\U\do\V\do\W\do\X\do\Y\do\Z\do\1\do\2\do\3\do\4\do\5\do\6\do\7\do\8\do\9\do\0}
+\Urlmuskip = 0mu plus 1mu
+
 
 \title{Aufbauanleitung FUOCO STEP}
 \author{Felix Pflaum}
@@ -472,11 +484,13 @@
 	\chapter{Programmierung}
 		\label{sec:gui}
 		\section{Treiberinstallation}
-			Idealerweise erkennt Windows beim Anschließen das Gerät von selbst, installiert einen Treiber und stellt es als COM-Port (Serielles USB-Gerät) zur Verfügung. Ansonsten muss der entsprechende Treiber einmalig folgendermaßen manuell installiert werden:
+			Idealerweise erkennt Windows beim Anschließen das Gerät von selbst, installiert einen Treiber und stellt es als COM-Port (Serielles USB-Gerät) zur Verfügung.
+			
+			Sofern kein Treiber installiert werden kann und das Gerät als \enquote{MCP2221 USB-I2C/UART Combo} unter andere Geräte einsortiert wird und das Ausrufezeichen auf gelbem Grund signalisiert, dass es nicht korrekt funktioniert, muss der entsprechende Treiber einmalig folgendermaßen manuell installiert werden:
 			\begin{enumerate}
-				\item Die gepackten Treiber unter der Adresse \url{http://ww1.microchip.com/downloads/en/DeviceDoc/MCP2221 Windows Driver 2014-10-09.zip} herunterladen und in einen bekannten Ordner entpacken, den man sich merken sollte
+				\item Die gepackten Treiber von \url{http://ww1.microchip.com/downloads/en/DeviceDoc/MCP2221 Windows Driver 2014-10-09.zip} herunterladen und in einen bekannten Ordner entpacken, den man sich merken sollte
 				\item Den Geräte-Manager mit Administratorrechten öffnen
-				\item Einen Rechtsklick auf \enquote{MCP2221 USB/UART Combo} tätigen und \enquote{Treibersoftware aktualisieren} wählen.
+				\item Einen Rechtsklick auf \enquote{MCP2221 USB-I2C/UART Combo} tätigen und \enquote{Treibersoftware aktualisieren} wählen.
 				\item Option \enquote{Auf dem Computer nach Treibersoftware suchen} wählen
 				\item Auf \enquote{Aus einer Liste von Gerätetreibern auf dem Computer auswählen} klicken
 				\item Falls sich nun ein Fenster öffnet, welches sagt \enquote{Wählen Sie den Gerätetyp aus der Liste aus.}, einfach \enquote{Alle Geräte anzeigen} wählen und \enquote{Weiter} klicken
@@ -535,7 +549,9 @@
 				
 				Hierzu können die Werte in der zweiten Spalte eingefügt und die Zeitabstände der einzelnen Kanäle durch Klick auf \enquote{Berechne Intervalle} ermittelt werden. Über \enquote{Werte ins Hauptfenster} können diese Intervallzeiten ins Hauptfenster übertragen werden. Es ist darauf zu achten, dass die aktuelle Schalterposition im passenden Modus konfiguriert sein muss. Ist der feste Intervallmodus eingestellt, wird nur der erste Intervallwert ins Hauptfenster kopiert, beim variablen Intervallmodus alle nicht-leeren Felder. Nach Übertragung ins Hauptfenster müssen die Werte noch durch \enquote{Intervalle setzen} ins Gerät geschrieben werden, um die berechneten Intervalle nutzen zu können.
 				
-				Abbildung~\ref{fig:beispielabsolut} zeigt anhand der Intervalle aus der obigen Beispielsequenz die Funktionsweise des Absolut\-zeiten-Fensters. Da die Kanalreihenfolge nicht veränderbar ist, muss jeder Kanal zur selben Zeit oder später beginnen als sein Vorgänger. Für die getriggerten Kanäle 1, 5, 9 und 13 wurden hier Zeiten vorgeben, um mit der imaginären Showdatei vergleichen zu können, ansonsten würde als Absolutzeit die des Vorgängerkanals übernommen. Für die korrekte Intervallberechnung spielt dies keine Rolle, da Zeitabstände ja nur bei nicht durch Trigger ausgelösten Kanälen von Bedeutung sind.
+				Abbildung~\ref{fig:beispielabsolut} zeigt anhand der Intervalle aus der obigen Beispielsequenz die Funktionsweise des Absolut\-zeiten-Fensters. Da die Kanalreihenfolge nicht veränderbar ist, muss jeder Kanal zur selben Zeit oder später beginnen als sein Vorgänger.
+				
+				Für die getriggerten Kanäle 1, 5, 9 und 13 wurden hier vor dem Klick auf \enquote{Werte aus Hauptfenster} Zeiten vorgeben, um die absoluten Zündzeiten mit der imaginären Showdatei abgleichen zu können. Ohne Zeitvorgabe würde standardmäßig ein Intervall von einer Minute auf die Absolutzeit des Vorgängers addiert, was für die korrekte Intervallberechnung aber keine Rolle spielt, da Zeitabstände nur bei nicht durch Trigger ausgelösten Kanälen von Bedeutung sind und die Absolutzeiten lediglich der Veranschaulichung für den Anwender dienen.
 				
 				\begin{figure}[tb]
 					\begin{center}\includegraphics[width=.8\textwidth]{beispielzeitvorgabe}{\\}\includegraphics[width=.8\textwidth]{beispielabsolut}\end{center}

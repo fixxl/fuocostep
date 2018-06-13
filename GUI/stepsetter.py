@@ -146,7 +146,7 @@ class COM_Port_Lister():
                         if self.parse_to_float(self.absfields["Abstime%s"%(x)].GetValue()) != 65535:
                             self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( self.parse_to_float(self.absfields["Abstime%s"%(x)].GetValue()) ))
                         else:
-                            self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( 0 + self.parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
+                            self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( 6000 + self.parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
                         
                     else:
                         self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( self.parse_to_float(self.objMain.intfields["Int%s"%(x)].GetValue()) + self.parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
