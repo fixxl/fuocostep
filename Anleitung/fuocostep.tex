@@ -82,7 +82,7 @@
 			\item Zwei Gewindeschrauben M3x10 mit Muttern zur Befestigung der Lötstellenabdeckung am Panel
 			\item Zwei Gewindeschrauben M2x6 mit Muttern zur Befestigung der Spannungsanzeige im Panel
 			\item Sechs Blechschrauben 3x10 zur Verschraubung des Panels mit dem Koffer
-			\item Schrumpfschlauchabschnitte in \SI{26}{\milli\metre}, \SI{6,4}{\milli\metre} und \SI{3,2}{\milli\metre}	
+			\item Schrumpfschlauchabschnitte der Durchmesser \SI{26}{\milli\metre} (grün), \SI{6,4}{\milli\metre} (blau), \SI{4,8}{\milli\metre} (schwarz) und \SI{3,2}{\milli\metre} (blau)	
 		\end{itemize}
 
 		\section{Benötigtes Werkzeug}
@@ -96,6 +96,7 @@
 				\item Zange oder Maulschlüssel zum Festhalten/Drehen von Muttern
 				\item Heißluftfön zum Schrumpfen von Schrumpfschläuchen
 				\item Gewebeband
+				\item Maßband/Meterstab
 				\item Entlötlitze und -pumpe können sich für die Fehlerkorrektur als hilfreich erweisen, sind aber nicht zwingend notwendig
 			\end{itemize}
 
@@ -220,12 +221,19 @@
 				\end{description}
 
 				Die Bedien- und Anzeigeelemente, welche in der Platine verschraubt sind, müssen nun noch mit den entsprechenden Kabeln verbunden werden, die später den Kontakt zur Steuerplatine herstellen.
+				
+				Hierfür zunächst die Schrumpfschlauchabschnitte vorbereiten:
+				\begin{itemize}
+					\item Vom Schrumpfschlauch mit \SI{6,4}{\milli\metre} Durchmesser drei Teile mit je \SI{15}{\milli\metre} Länge abschneiden (für die Hauptschalterkontakte), den Rest in zwei gleiche Hälften zerschneiden (für die Befestigung am Akku).
+					\item Aus dem Schrumpfschlauch mit \SI{4,8}{\milli\metre} Durchmesser vier gleichlange Teile herstellen (für die Deans-Verbinder)
+					\item Aus dem Schrumpfschlauch mit \SI{3,2}{\milli\metre} Durchmesser sechs gleichlange Teile herstellen (für Ladebuchse, Schlüssel- und Testschalter)
+				\end{itemize}
 
-				Beim dreipoligen Crimpgehäuse zunächst Schrumpfschlauchstücke des Durchmessers \SI{6,3}{\milli\metre} über die losen Kabelenden bis zum Gehäuse schieben und folgendermaßen verlöten: Rotes Kabel an den äußeren silbernen Kontakt des Hauptschalters, weißes Kabel an den Mittelkontakt und graues Kabel an den goldenen Kontakt. Kontakte danach mit den vorher aufgeschobenen Schrumpfschläuchen isolieren.
+				Beim dreipoligen Crimpgehäuse zunächst die drei kurzen Schrumpfschlauchstücke des Durchmessers \SI{6,4}{\milli\metre} über die losen Kabelenden bis zum Gehäuse schieben und folgendermaßen verlöten: Rotes Kabel an den äußeren silbernen Kontakt des Hauptschalters, weißes Kabel an den Mittelkontakt und graues Kabel an den goldenen Kontakt. Kontakte danach mit den vorher aufgeschobenen Schrumpfschläuchen isolieren.
 
-				Beim achtpoligen Crimpgehäuse zunächst Schrumpfschläuche des Durchmessers \SI{3,2}{\milli\metre} über die losen Kabelenden bis zum Gehäuse schieben und folgendermaßen verlöten: Rotes dickes Kabel an den L-förmigen Kontakt der Ladebuchse, welcher mit dem Stift verbunden ist, schwarzes dickes Kabel an den Außenkontakt. Das dünne blaue Kabel muss mit den beiden inneren Kontakten des Displays verbunden werden, das dünne schwarze Kabel mit dem Außenkontakt (siehe Bild):
-
-				Die beiden violetten Kabel an den Schlüsselschalter, die beiden gelben Kabel an den Testschalter löten. Kontakte anschließend mit Schrumpfschlauch isolieren.
+				Beim achtpoligen Crimpgehäuse zunächst Schrumpfschläuche des Durchmessers \SI{3,2}{\milli\metre} über die gelben, violetten sowie das dicke rote und schwarze Kabel bis zum Gehäuse schieben und folgendermaßen verlöten: Rotes dickes Kabel an den L-förmigen Kontakt der Ladebuchse, welcher mit dem Stift verbunden ist, schwarzes dickes Kabel an den Außenkontakt. Die beiden violetten Kabel gehören an den Schlüsselschalter, die beiden gelben Kabel an den Testschalter. Kontakte anschließend mit Schrumpfschlauch isolieren.
+				
+				Das dünne blaue Kabel muss mit den beiden inneren Kontakten des Displays verbunden werden, das dünne schwarze Kabel mit dem Außenkontakt (siehe Abbildung~REFERENZ).				
 
 				\newpage
 		\section{Basis}
@@ -388,14 +396,14 @@
 
 		\section{Batterie}
 
-			Schrumpfschlauch über das offene Ende des roten Kabels mit Kabelschuh schieben, Kabel an den oberen T-Balken der Deans-Buchse löten, Lötstelle mit Schrumpfschlauch isolieren. Analog geht man mit dem Kabel mit schwarzem Kabelschuh und dem zweiten Kontakt der Deans-Buchse vor und wiederholt die Prozedur mit den Kabeln ohne Kabelschuhe und dem Deans-Stecker, so dass es folgendermaßen aussehen sollte wie in Abbildung~\ref{fig:deans}.
+			Schrumpfschlauchstück mit Durchmesser \SI{4,8}{\milli\metre} über das offene Ende des roten Kabels mit Kabelschuh schieben, Kabel an den oberen T-Balken der Deans-Buchse löten, Lötstelle mit Schrumpfschlauch isolieren. Analog geht man mit dem schwarzen Kabel mit Kabelschuh und dem zweiten Kontakt der Deans-Buchse vor und wiederholt die Prozedur mit den Kabeln ohne Kabelschuhe und dem Deans-Stecker, so dass es folgendermaßen aussehen sollte wie in Abbildung~\ref{fig:deans}.
 			\begin{figure}
 				\centering\includegraphics[width=.5\textwidth]{deans}
 				\caption{Korrekte Verwendung des Deans-Verbinder\-paares}
 				\label{fig:deans}
 			\end{figure}
 
-			Nun noch das rote mit dem Stecker verbundene Kabel an BATTERY+ und das schwarze an BATTERY- anlöten. Schrumpfschlauch über die Kabelschuhe schieben, Kabelschuhe an den passenden Batteriekontakten befestigen (rot an +, schwarz an -) und Kontakte mit Schrumpfschlauch isolieren. Die beiden Deans-Verbinder-Teile jetzt noch nicht zusammenstecken!
+			Nun noch das rote mit dem Stecker verbundene Kabel an BATTERY+ und das schwarze an BATTERY- anlöten. Schrumpfschlauch mit Durchmesser \SI{6,4}{\milli\metre} über die Kabelschuhe schieben, Kabelschuhe auf die passenden Batteriekontakte aufschieben (rot an +, schwarz an -), mit etwas Lötzinn fixieren und Kontakte mit Schrumpfschlauch isolieren. Die beiden Deans-Verbinder-Teile jetzt noch nicht zusammenstecken!
 
 
 		\section{Zusammenbau}
@@ -405,7 +413,7 @@
 
 			Nachdem eine stabile mechanische Verbindung besteht, die beiden Crimpbuchsen und den USB-Stecker an der Basisplatine befestigen.
 
-			Die Batterie in den Koffer legen, so dass die Kontakte auf der linken Seite an der vorderen Wand liegen und die verbundenen Platinen passend eingelegt werden können. Die Position des Akkus bezogen auf den Koffer ist in Abbildung~\ref{fig:akkuposition} zu sehen.
+			Die Batterie in den Koffer legen, so dass die Kontakte auf der linken Seite an der vorderen Wand liegen und die verbundenen Platinen passend eingelegt werden können. Die Position des Akkus bezogen auf den Koffer ist in Abbildung~\ref{fig:akkuposition} zu sehen. Zwischen Wand und Akku beträgt der Abstand \SI{37}{\milli\metre}.
 
 			\begin{figure}
 				\centering\includegraphics[width=.9\textwidth]{Akkuposition}
