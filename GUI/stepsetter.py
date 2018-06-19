@@ -86,6 +86,9 @@ class COM_Port_Lister():
                 except ValueError:
                     return 65535
                 
+                if (mins * 6000 + int((secs + 0.005)*100)) > 60000:
+                    return 60000
+                
                 return (mins * 6000 + int((secs + 0.005)*100))
             
             def parse_to_timestring(self, hunval):
@@ -305,9 +308,11 @@ class COM_Port_Lister():
                             if ("Neuer Wert" in ' '.join(test)):
                                 ival = str(self.intfields["Int%s"%(ii)].GetValue())
                                 if ival.lower() in ["trigger", "t", "tr", "tri", "trig", "trigg", "trigge", "triggere", "triggered"]:
-                                    ival = "10:00.00"
-                                self.serialtransfer(ser, (ival + '\r'))
-                                self.serialtransfer(ser, str(str(ii) + '\r'))
+                                    print("Setze Trigger-Mode!")
+                                    self.serialtransfer(ser, 't')
+                                else:
+                                    self.serialtransfer(ser, (ival + '\r'))
+                                self.serialtransfer(ser, '\r')
                                 break   
                             if ("Schalterstellung S" in  ' '.join(test)):
                                 self.serialtransfer(ser, '\r')
@@ -317,7 +322,7 @@ class COM_Port_Lister():
                         self.serialtransfer(ser, str(str(ii) + '\r'))
                         ival = str(self.intfields["Int%s"%(ii)].GetValue())
                         if ival.lower() in ["trigger", "t", "tr", "tri", "trig", "trigg", "trigge", "triggere", "triggered"]:
-                            ival = "10:00.00"
+                            ival = "t"
                         self.serialtransfer(ser, (ival + '\r'))
                         self.serialtransfer(ser, '\r')
                     

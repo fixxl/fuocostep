@@ -106,8 +106,13 @@ void channel_setup(uint16_t *variable_intervalls, uint16_t *fixed_intervalls, ui
     if(swpos != 's') {
         if(!use_variable_intervalls[swpos]) {
             uart_puts_P(PSTR("Festes Intervall: "));
-            timedisplay(fixed_intervalls[swpos], darstellung);
-            uart_puts(darstellung);
+
+            if(fixed_intervalls[swpos] != TRIGGERVAL) {
+                timedisplay(fixed_intervalls[swpos], darstellung);
+                uart_puts(darstellung);
+            }
+            else uart_puts_P(PSTR("Trigger"));
+
             uart_puts_P(PSTR("\r\n\n"));
         }
         else {
@@ -249,8 +254,11 @@ void list_complete(uint16_t *variable_intervalls, uint16_t *fixed_intervalls, ui
             }
         }
         else {
-            timedisplay(fixed_intervalls[i], darstellung);
-            uart_puts(darstellung);
+            if(fixed_intervalls[i] != TRIGGERVAL) {
+        		timedisplay(fixed_intervalls[i], darstellung);
+        		uart_puts(darstellung);
+            }
+            else uart_puts_P(PSTR("Trigger"));
             uart_puts_P(PSTR("\r\n\n"));
         }
     }
