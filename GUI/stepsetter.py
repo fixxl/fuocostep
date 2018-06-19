@@ -186,7 +186,7 @@ class COM_Port_Lister():
                 wx.Dialog.__init__(self, parent, title="FUOCO STEP - Einstellungen", size=(400, 700), pos=(200,100))#
                 self.SetFont(wx.Font(9, wx.SWISS, wx.NORMAL, wx.NORMAL, False,'Liberation Sans'))
                 self.panel = wx.Panel(self) 
-                vbox = wx.GridSizer(21, 2, 0, 0)
+                vbox = wx.GridSizer(23, 2, 0, 0)
                 
                 self.show_abstimes = False
                 self.absframe = None
@@ -251,6 +251,19 @@ class COM_Port_Lister():
                 self.btn_abstimes = wx.Button(self.panel, label="Absolutzeiten <<" if self.show_abstimes else "Absolutzeiten >>")
                 self.btn_abstimes.Bind(wx.EVT_BUTTON,self.on_abstimes_clicked)
                 vbox.Add(self.btn_abstimes,0,wx.EXPAND)
+                
+                filler1 = wx.StaticText(self.panel,  label = "")
+                vbox.Add(filler1,0,wx.EXPAND)
+                filler2 = wx.StaticText(self.panel,  label = "")
+                vbox.Add(filler2,0,wx.EXPAND)
+
+                self.btn_trigger = wx.Button(self.panel, label="Akt. Sequenz feuern/fortsetzen")
+                self.btn_trigger.Bind(wx.EVT_BUTTON,self.on_trigger_clicked)
+                vbox.Add(self.btn_trigger,0,wx.EXPAND) 
+                self.btn_trigger.Disable()
+
+                infotext = wx.StaticText(self.panel,  label = " (vorher scharf schalten!)", style=(wx.ALIGN_LEFT))
+                vbox.Add(infotext,0,wx.EXPAND | wx.TOP, 7)                
 
                 self.panel.SetSizer(vbox)
                 
@@ -334,6 +347,7 @@ class COM_Port_Lister():
                     self.btn_read.Enable()
                     self.btn_default.Enable()
                     self.btn_cancel.Enable()
+                    self.btn_trigger.Enable()
                     
                     self.on_read_clicked(None)
 
@@ -388,12 +402,18 @@ class COM_Port_Lister():
                     self.btn_mode_write.Enable()
                     self.btn_intervals_write.Enable()
                     self.t2.Enable()
+                    self.btn_trigger.Enable()
                     
             def on_default_clicked(self, event):
                 ser = serial.Serial(self.t1.GetString(self.t1.GetSelection()), 9600, timeout=.2)
                 self.serialtransfer(ser, '\rdefault\r')
                 ser.close()
-                
+            
+            def on_trigger_clicked(self, event):
+                ser = serial.Serial(self.t1.GetString(self.t1.GetSelection()), 9600, timeout=.2)
+                self.serialtransfer(ser, '\rtrigger\r')
+                ser.close()                
+            
             def on_abstimes_clicked(self, event):
                 self.show_abstimes = not self.show_abstimes
                 
