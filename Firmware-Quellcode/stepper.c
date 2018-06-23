@@ -324,6 +324,7 @@ int main(void) {
             cli();
 
             flags.b.list = 0;
+            stepper_mode = adc_read(4);
             list_complete(variable_intervals, fixed_intervals, use_variable_intervals);
 
             SREG         = temp_sreg;
@@ -337,6 +338,7 @@ int main(void) {
             cli();
 
             flags.b.edit = 0;
+            stepper_mode = adc_read(4);
             channel_setup(variable_intervals, fixed_intervals, use_variable_intervals);
 
             SREG         = temp_sreg;
