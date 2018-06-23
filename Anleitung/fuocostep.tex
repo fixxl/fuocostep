@@ -1,4 +1,4 @@
-\documentclass[paper=a4, open=any]{scrbook}
+\documentclass[paper=a4, open=any, numbers=noenddot]{scrbook}
 
 \usepackage[hang]{caption}
 \usepackage{microtype}
@@ -22,6 +22,10 @@
 		Author   = {Felix Pflaum}
 }}
 
+
+\makeatletter
+\@addtoreset{chapter}{part}
+\makeatother  
 
 \newcommand{\origttfamily}{}
 \let\origttfamily=\ttfamily
@@ -60,9 +64,10 @@
 	\end{center}
 	\vfill
 \end{titlepage}
+\tableofcontents
 \part{Aufbauanleitung}
 	\chapter{Vorbereitung}
-		FUOCO STEP besteht aus zwei Platinen (=PCBs), der Basis (kleine Platine) und dem Panel (große Platine), zum Lieferumfang des Bausatzes gehören neben den Platinen und ihren Lötteilen, die in den Tabellen in den jeweiligen Unterkapiteln aufgeführt wurden:
+		FUOCO STEP besteht aus zwei Platinen (=PCBs), der Basis (kleine Platine) und dem Panel (große Platine), zum Lieferumfang des Bausatzes gehören neben den Platinen und ihren Lötteilen, die in den Tabellen~\ref{tab:bauteilepanel} und~\ref{tab:bauteilebasis} in den jeweiligen Unterkapiteln aufgeführt wurden:
 		\begin{itemize}
 			\item Koffer Seahorse SE-120
 			\item Blei-Gel-Akku \SI{12}{\volt}/\SI{1,2}{\ampere\hour}
@@ -82,7 +87,7 @@
 			\item Zwei Gewindeschrauben M3x6 mit Muttern zur Befestigung der Lötstellenabdeckung am Panel
 			\item Zwei Gewindeschrauben M2x6 mit Muttern zur Befestigung der Spannungsanzeige im Panel
 			\item Sechs Blechschrauben 3x10 zur Verschraubung des Panels mit dem Koffer
-			\item Schrumpfschlauchabschnitte der Durchmesser \SI{26}{\milli\metre} (grün), \SI{6,4}{\milli\metre} (blau), \SI{4,8}{\milli\metre} (schwarz) und \SI{3,2}{\milli\metre} (blau)	
+			\item Schrumpfschlauchabschnitte der Durchmesser \SI{26}{\milli\metre} (grün), \SI{6,4}{\milli\metre} (blau), \SI{4,8}{\milli\metre} (schwarz) und \SI{3,2}{\milli\metre} (blau)
 		\end{itemize}
 
 		\section{Benötigtes Werkzeug}
@@ -104,14 +109,15 @@
 			Wenig ist frustrierender als umsonst verrichtete harte Arbeit, vom im wahrsten Sinne des Wortes verbrannten Geld bei Zerstörung von Platine oder Bauteilen ganz zu schweigen. Daher bitte beachten:
 			\begin{itemize}
 				\item Beim Löten Zeit lassen, gewissenhaft und gründlich arbeiten. Auf eine saubere Trennung der Lötstellen achten, speziell bei enger Nachbarschaft (Stift- und Buchsenleisten, integrierte Schaltungen, \dots). Ein sehr gutes, wenn auch leider englischsprachiges Lehrvideo zum korrekten Löten gibt es unter \url{https://www.youtube.com/watch?v=IpkkfK937mU}, bei die Löttemperatur sollte bei Verwendung von bleihaltigem Lötzinn nicht höher als \SI{350}{\degreeCelsius} liegen\footnote{Der Grund dafür ist, dass das Flussmittel, welches im Lötzinn enthalten ist und Oxidation in der Lötstelle verhindern soll, bei höheren Temperaturen zu schnell verdampft und seine Aufgabe nicht mehr erfüllen kann.}.
+				\item Es kann sich als hilfreich erweisen, Bauteile zunächst mit einer einzigen Lötstelle in der Platine zu fixieren, damit sie nicht mehr herausfallen können. Anschließend dann die Lötstelle noch einmal erhitzen und, wenn das Zinn flüssig ist, das Bauteil mit der freien Hand in die korrekte Position drücken und festhalten, während man den Lötkolben entfernt und die Lötstelle erkalten lässt. Nun kann man die restlichen Stellen löten und sollte abschließend auch noch einmal die erste Lötstelle mit frischem Zinn versorgen.
 				\item Den Arbeitsbereich übersichtlich halten. Beim Lötkolben ist nicht nur die Spitze heiß, daher alles so arrangieren, dass man auch wirklich nur die Lötstelle berührt und nicht unbeabsichtigt frei hängenden Kabel oder andere Bauteile anbrennt/schmilzt.
 				\item In der Elektronik ist es üblich, identische Gehäuse für unterschiedliche Bauteile zu verwenden, in unserem Fall beispielsweise für die Transistoren \texttt{Q19} und \texttt{Q20} oder die drei Zementwiderstände, welche optisch nur anhand der Beschriftung auf dem Gehäuse unterscheidbar sind. Daher erst genau schauen, dann löten, denn gerade bei den integrierten Schaltungen mit vier oder mehr Kontakten ist ein nachträgliches Auslöten ziemlich kompliziert und führt häufig zu Schäden an Bauteil und/oder Platine. Immer genau die Bezeichnung überprüfen, damit alles seinen korrekten Platz findet, um eine funktionsfähige Schaltung zu garantieren.
 				\item Was für den Bauteiltyp gilt, gilt auch für die Orientierung. Mit wenigen Ausnahmen muss diese entweder aus Platz- oder Funktionsgründen beachtet werden. Verpolte Elektrolytkondensatoren können zudem sehr spektakulär explodieren und das wollen wir doch lieber den pyrotechnischen Gegenständen überlassen!
 				\item Vor dem Anschließen des Akkus an die Platine noch einmal kritisch prüfen, dass man keine unerwünschten Verbindungen hergestellt hat. Der Akku liefert für einige Sekunden problemlos Strom im zweistelligen Amperebereich, für die manche Bauteile und Leiterzüge nicht ausgelegt sind.
 			\end{itemize}
-	
+
 	\chapter{Aufbau}
-		
+
 		\section{Panel}
 
 			\subsection*{Bauteilindex}
@@ -172,6 +178,8 @@
 					TR1       & CH                     & LMZFL\_7-2-135-3.5                 \\
 					\hline
 				\end{longtabu}
+				\captionof{table}{Bauteile des Panels}
+				\label{tab:bauteilepanel}
 
 			\subsection*{Vorgehensweise}
 				Die Bauteile sollten von klein nach groß eingelötet werden und jeweils bündig auf der Platine aufliegen:
@@ -221,7 +229,7 @@
 				\end{description}
 
 				Die Bedien- und Anzeigeelemente, welche in der Platine verschraubt sind, müssen nun noch mit den entsprechenden Kabeln verbunden werden, die später den Kontakt zur Steuerplatine herstellen.
-				
+
 				Hierfür zunächst die Schrumpfschlauchabschnitte vorbereiten:
 				\begin{itemize}
 					\item Vom Schrumpfschlauch mit \SI{6,4}{\milli\metre} Durchmesser drei Teile mit je \SI{15}{\milli\metre} Länge abschneiden (für die Hauptschalterkontakte), den Rest in zwei gleiche Hälften zerschneiden (für die Befestigung am Akku).
@@ -232,8 +240,8 @@
 				Beim dreipoligen Crimpgehäuse zunächst die drei kurzen Schrumpfschlauchstücke des Durchmessers \SI{6,4}{\milli\metre} über die losen Kabelenden bis zum Gehäuse schieben und folgendermaßen verlöten: Rotes Kabel an den äußeren silbernen Kontakt des Hauptschalters, weißes Kabel an den Mittelkontakt und graues Kabel an den goldenen Kontakt. Kontakte danach mit den vorher aufgeschobenen Schrumpfschläuchen isolieren.
 
 				Beim achtpoligen Crimpgehäuse zunächst Schrumpfschläuche des Durchmessers \SI{3,2}{\milli\metre} über die gelben, violetten sowie das dicke rote und schwarze Kabel bis zum Gehäuse schieben und folgendermaßen verlöten: Rotes dickes Kabel an den L-förmigen Kontakt der Ladebuchse, welcher mit dem Stift verbunden ist, schwarzes dickes Kabel an den Außenkontakt. Die beiden violetten Kabel gehören an den Schlüsselschalter, die beiden gelben Kabel an den Testschalter. Kontakte anschließend mit Schrumpfschlauch isolieren.
-				
-				Das dünne blaue Kabel muss mit den beiden inneren Kontakten des Displays verbunden werden, das dünne schwarze Kabel mit dem Außenkontakt (siehe Abbildung~REFERENZ).				
+
+				Das dünne blaue Kabel muss mit den beiden inneren Kontakten des Displays verbunden werden, das dünne schwarze Kabel mit dem Außenkontakt (siehe Abbildung~REFERENZ).
 
 				\newpage
 		\section{Basis}
@@ -338,6 +346,8 @@
 					U8        & XL6009\_Module         & XL6009\_STEP-UP-MODULE                                  \\
 					\hline
 				\end{longtabu}
+				\captionof{table}{Bauteile der Basis}
+				\label{tab:bauteilebasis}
 
 			\subsection*{Vorgehensweise}
 				Die Bauteile sollten auch hier von klein nach groß eingelötet werden und jeweils bündig auf der Platine aufliegen, sofern nichts anderes vermerkt ist:
@@ -350,25 +360,25 @@
 
 					      \begin{table}
 						      \begin{center}
-							      	\begin{minipage}[b]{.6\textwidth}
-							      		\begin{tabu}
-							      			{|r@{\,}l|ccccc|}\hline
-							      			\multicolumn{2}{|c|}{Wert} & 1. Ring        & 2. Ring              & 3. Ring               & 4. Ring & 5. Ring                                   \\ \hline\hline
-							      			270                        & \si{\ohm}      & \color{red}rot       & \color{violet}violett & schwarz & schwarz              & \color{brown}braun \\ \hline
-							      			330                        & \si{\ohm}      & \color{orange}orange & \color{orange}orange  & schwarz & schwarz              & \color{brown}braun \\ \hline
-							      			1                          & \si{\kilo\ohm} & \color{brown}braun   & schwarz               & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
-							      			1,5                        & \si{\kilo\ohm} & \color{brown}braun   & \color{green}grün     & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
-							      			4,7                        & \si{\kilo\ohm} & \color{yellow}gelb   & \color{violet}violett & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
-							      			10                         & \si{\kilo\ohm} & \color{brown}braun   & schwarz               & schwarz & \color{red}rot       & \color{brown}braun \\ \hline
-							      			47                         & \si{\kilo\ohm} & \color{yellow}gelb   & \color{violet}violett & schwarz & \color{red}rot       & \color{brown}braun \\ \hline
-							      			150                        & \si{\kilo\ohm} & \color{brown}braun   & \color{green}grün     & schwarz & \color{orange}orange & \color{brown}braun \\ \hline
-							      		\end{tabu}
-						      		\vspace{0pt}
-							      	\end{minipage}%
-						      	\begin{minipage}[b]{.2\textwidth}
-						      		\vspace{0pt}
-						      		\includegraphics[height=40mm]{Widerstaende}    
-						      	\end{minipage}						  			
+							      \begin{minipage}[b]{.6\textwidth}
+								      \begin{tabu}
+									      {|r@{\,}l|ccccc|}\hline
+									      \multicolumn{2}{|c|}{Wert} & 1. Ring        & 2. Ring              & 3. Ring               & 4. Ring & 5. Ring                                   \\ \hline\hline
+									      270                        & \si{\ohm}      & \color{red}rot       & \color{violet}violett & schwarz & schwarz              & \color{brown}braun \\ \hline
+									      330                        & \si{\ohm}      & \color{orange}orange & \color{orange}orange  & schwarz & schwarz              & \color{brown}braun \\ \hline
+									      1                          & \si{\kilo\ohm} & \color{brown}braun   & schwarz               & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
+									      1,5                        & \si{\kilo\ohm} & \color{brown}braun   & \color{green}grün     & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
+									      4,7                        & \si{\kilo\ohm} & \color{yellow}gelb   & \color{violet}violett & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
+									      10                         & \si{\kilo\ohm} & \color{brown}braun   & schwarz               & schwarz & \color{red}rot       & \color{brown}braun \\ \hline
+									      47                         & \si{\kilo\ohm} & \color{yellow}gelb   & \color{violet}violett & schwarz & \color{red}rot       & \color{brown}braun \\ \hline
+									      150                        & \si{\kilo\ohm} & \color{brown}braun   & \color{green}grün     & schwarz & \color{orange}orange & \color{brown}braun \\ \hline
+								      \end{tabu}
+								      \vspace{0pt}
+							      \end{minipage}%
+							      \begin{minipage}[b]{.2\textwidth}
+								      \vspace{0pt}
+								      \includegraphics[height=40mm]{Widerstaende}
+							      \end{minipage}
 						      \end{center}
 						      \caption{Identifizierung der Widerstandswerte}
 						      \label{tab:widerstandswerte}
@@ -404,7 +414,7 @@
 		\section{Batterie}
 
 			Schrumpfschlauchstück mit Durchmesser \SI{4,8}{\milli\metre} über das offene Ende des roten Kabels mit Kabelschuh schieben, Kabel an den oberen T-Balken der Deans-Buchse löten, Lötstelle mit Schrumpfschlauch isolieren. Analog geht man mit dem schwarzen Kabel mit Kabelschuh und dem zweiten Kontakt der Deans-Buchse vor und wiederholt die Prozedur mit den Kabeln ohne Kabelschuhe und dem Deans-Stecker, so dass es folgendermaßen aussehen sollte wie in Abbildung~\ref{fig:deans}.
-			
+
 			\begin{figure}
 				\centering\includegraphics[width=.4\textwidth]{deans}
 				\caption{Korrekte Verwendung des Deans-Verbinder\-paares}
@@ -430,13 +440,15 @@
 			\end{figure}
 
 			Es ist nicht allzu viel Platz zwischen der Steckerleiste auf der rechten und dem Unterbau des Drehschalters auf der linken Seite, welche den \enquote{Kanal} für den Akku begrenzen. Ist die korrekte Position für den Akku gefunden, wird er mit einem langen Streifen Gewebeband in seiner Position fixiert (siehe Abbildung~\ref{fig:akkuposition}), wer auf Nummer sicher gehen will, kann den Akku auch auf der Unterseite noch mit Teppichklebeband sichern.
-			
+
 			Nun die beiden Teile des Deans-Steckverbinders zusammenstecken, die Kabel der Crimpbuchsen zwischen Akku und oberer Wand hindurch führen und das Panel vorsichtig absenken, bis es komplett auf dem Rand zum Liegen kommt und keine Kabel zwischen Panel und Rand eingeklemmt sind. Nun das Panel mit den sechs 3x10-Spaxschrauben am Koffer befestigen.
 
 			\begin{center}
 				Der Stepper ist nun einsatzbereit!
 			\end{center}
-			\cleardoublepage\part{Bedienungsanleitung}
+
+			\cleardoublepage
+\part{Bedienungsanleitung}
 
 	\chapter{Funktionsübersicht}
 
@@ -505,7 +517,7 @@
 		\label{sec:gui}
 		\section{Treiberinstallation}
 			Idealerweise erkennt Windows beim Anschließen das Gerät von selbst, installiert einen Treiber und stellt es als COM-Port (Serielles USB-Gerät) zur Verfügung.
-			
+
 			Sofern kein Treiber installiert werden kann und das Gerät als \enquote{MCP2221 USB-I2C/UART Combo} unter andere Geräte einsortiert wird und das Ausrufezeichen auf gelbem Grund signalisiert, dass es nicht korrekt funktioniert, muss der entsprechende Treiber einmalig folgendermaßen manuell installiert werden:
 			\begin{enumerate}
 				\item Die gepackten Treiber von \url{http://ww1.microchip.com/downloads/en/DeviceDoc/MCP2221 Windows Driver 2014-10-09.zip} herunterladen und in einen bekannten Ordner entpacken, den man sich merken sollte
@@ -526,58 +538,78 @@
 				Über die Programmieroberfläche \enquote{stepsetter.exe} ist es möglich, die Steppereinstellungen zu modifizieren. Hierzu muss der passende COM-Port ausgewählt und zunächst die Einstellung des aktuell eingestellten Kanals ausgelesen werden.
 
 				\subsubsection*{Rücksetzen auf Standard}
-				Es kann immer nur der Kanal bearbeitet werden, welcher gerade am Stepper per Drehschalter eingestellt ist, Ausnahme ist das Rücksetzen aller Kanäle durch Klick auf \enquote{Standardwerte wiederherstellen}. Bei dieser Aktion werden \underline{alle} Kanäle zurückgesetzt auf festen Intervallmodus mit den Intervallen aus Tabelle~\ref{tab:standardintervalle}.
+					Es kann immer nur der Kanal bearbeitet werden, welcher gerade am Stepper per Drehschalter eingestellt ist, Ausnahme ist das Rücksetzen aller Kanäle durch Klick auf \enquote{Standardwerte wiederherstellen}. Bei dieser Aktion werden \underline{alle} Kanäle zurückgesetzt auf festen Intervallmodus mit den Intervallen aus Tabelle~\ref{tab:standardintervalle}.
 
-				\begin{figure}
-					\begin{center}
-						\begin{longtabu} [c]{c|*{11}c}
-							Schalterposition & 1   & 2   & 3   & 4    & 5    & 6    & 7    & 8    & 9    & 10   & 11   \\ \hline
-							Intervall (s)    & 2.5 & 5.0 & 7.5 & 10.0 & 12.5 & 15.0 & 17.5 & 20.0 & 25.0 & 30.0 & 40.0
-						\end{longtabu}
-					\end{center}
-					\caption{Standardintervalle des Steppers}
-					\label{tab:standardintervalle}
-				\end{figure}
+					\begin{figure}
+						\begin{center}
+							\begin{longtabu} [c]{c|*{11}c}
+								Schalterposition & 1   & 2   & 3   & 4    & 5    & 6    & 7    & 8    & 9    & 10   & 11   \\ \hline
+								Intervall (s)    & 2.5 & 5.0 & 7.5 & 10.0 & 12.5 & 15.0 & 17.5 & 20.0 & 25.0 & 30.0 & 40.0
+							\end{longtabu}
+						\end{center}
+						\caption{Standardintervalle des Steppers}
+						\label{tab:standardintervalle}
+					\end{figure}
 
-				Dies ist auch die einzige Änderung, die bei Schalterstellung \enquote{S} getätigt werden kann, ansonsten werden Eingaben ignoriert, solange der Drehschalter auf \enquote{S} zeigt.
+					Dies ist auch die einzige Änderung, die bei Schalterstellung \enquote{S} getätigt werden kann, ansonsten werden Eingaben ignoriert, solange der Drehschalter auf \enquote{S} zeigt.
 
-			\subsubsection*{Step-Modus einstellen}
-			
-				Schalterstellung \enquote{S} repräsentiert den den Einzelschussmodus, bei dem mit jedem Triggersignal ein Kanal abgefeuert wird. Die maximale Wiederholrate ist dabei von der auslösenden Zündanlage bzw. deren Zündpulslänge abhängig. Bei Cobra dauert ein Puls typischerweise \SI{100}{\milli\second}, ein erneutes Triggern weniger als \SI{100}{\milli\second} nach dem ursprünglichen Trigger würde vom Stepper nicht erkannt und ignoriert werden!
-				
-				Für alle anderen Stellungen als \enquote{S} kann der Step-Modus auf eine der beiden Varianten \enquote{Fest} oder \enquote{Variabel} festgelegt werden: Bei \enquote{Fest} ist das Intervall zwischen allen 16 Kanälen identisch, \enquote{Variabel} bietet die Möglichkeit, jedes einzelne Intervall individuell zu konfigurieren. Über die Schaltfläche \enquote{Modus setzen} kann zwischen den beiden Varianten umgeschaltet werden, im Modus \enquote{Fest} bleiben die Intervalle $2-15$ ausgegraut. Nach dem Klick auf \enquote{Modus setzen} im Anschluss an den Schreibvorgang unmittelbar ein Auslesevorgang durchgeführt, so dass die angezeigten Daten die tatsächlichen Einstellungen wiedergeben.				
-				
-			\subsubsection*{Intervalle festlegen}	
-				
-				Kanal 1 wird immer unmittelbar beim Triggersignal ausgelöst, Intervall~1 legt also fest, wie viel Zeit zwischen dem Auslösen der Kanäle 1 und 2 vergehen soll, Intervall~2 die Zeit zwischen Kanal 2 und 3, usw. Dementsprechend legt Intervall X die Pause vor Kanal X+1 fest und es ergeben sich bei 16 Kanälen 15 Intervalle.
-				
-				Die Eingabe der Zeiten erfolgt typischerweise im Format \enquote{MM:SS.hh} mit Minuten, Sekunden und Hundertsteln, wobei statt des Punktes zwischen Sekunden und -bruchteilen auch das deutsche Dezimalkomma genutzt werden kann. Zahleneingaben ohne Doppelpunkt werden als Sekunden interpretiert, die Eingabe \enquote{1:10.20} beschreibt demnach dasselbe Intervall wie \enquote{70,2}. Bei Eingaben von mehr als zwei Nachkommastellen werden Eingaben abgeschnitten. Möchte man auf ein Triggersignal warten, schreibt man \enquote{T} ins entsprechende Feld. Steht beispielsweise ein \enquote{T} hinter Intervall~5, bedeutet dies, dass vor dem Abfeuern von Kanal~6 wieder auf einen Trigger gewartet wird. Hilfreich kann hier auch das Zusatzfenster \enquote{Absolutzeiten} sein, um das es in Abschnitt~\ref{sec:absolutzeiten} geht.
-				
-				Ungültige Eingaben, die andere Zeichen als die Ziffern 0-9, höchstens einen Doppelpunkt, höchstens einen Punkt oder ein Koma oder das Wort \enquote{Trigger} in allen Groß-, Klein- und Abkürzungsformen enthalten, werden ignoriert, Zeitwerte größer als 9:59.99 werden automatisch zu \enquote{Trigger} gewandelt. Da nach jedem Schreibvorgang, den man mit \enquote{Intervall(e) setzen} auslöst, automatisch ein Auslesevorgang durchgeführt wird, kann immer direkt nachvollzogen werden, ob die Eingabe den gewünschten Effekt hatte.
-				
-				Abbildung~\ref{fig:beispielsequenz} zeigt ein Beispiel für eine variable Stepsequenz, die immer vier Effekte in kurzer Folge auslöst, ehe für die nächste Abfolge auf einen Trigger gewartet wird. Die letzten beiden Kanäle werden gemeinsam geschossen.
-				
-				\begin{figure}[tb]
-					\centering\includegraphics[width=.5\textwidth]{beispielshow}
-					\caption{Beispielsequenz}
-					\label{fig:beispielsequenz}
-				\end{figure}
+				\subsubsection*{Step-Modus einstellen}
+
+					Schalterstellung \enquote{S} repräsentiert den den Einzelschussmodus, bei dem mit jedem Triggersignal ein Kanal abgefeuert wird. Die maximale Wiederholrate ist dabei von der auslösenden Zündanlage bzw. deren Zündpulslänge abhängig. Bei Cobra dauert ein Puls typischerweise \SI{100}{\milli\second}, ein erneutes Triggern weniger als \SI{100}{\milli\second} nach dem ursprünglichen Trigger würde vom Stepper nicht erkannt und ignoriert werden!
+
+					Für alle anderen Stellungen als \enquote{S} kann der Step-Modus auf eine der beiden Varianten \enquote{Fest} oder \enquote{Variabel} festgelegt werden: Bei \enquote{Fest} ist das Intervall zwischen allen 16 Kanälen identisch, \enquote{Variabel} bietet die Möglichkeit, jedes einzelne Intervall individuell zu konfigurieren. Über die Schaltfläche \enquote{Modus setzen} kann zwischen den beiden Varianten umgeschaltet werden, im Modus \enquote{Fest} bleiben die Intervalle $2-15$ ausgegraut. Nach dem Klick auf \enquote{Modus setzen} im Anschluss an den Schreibvorgang unmittelbar ein Auslesevorgang durchgeführt, so dass die angezeigten Daten die tatsächlichen Einstellungen wiedergeben.
+
+				\subsubsection*{Intervalle festlegen}
+
+					Kanal 1 wird immer unmittelbar beim Triggersignal ausgelöst, Intervall~1 legt also fest, wie viel Zeit zwischen dem Auslösen der Kanäle 1 und 2 vergehen soll, Intervall~2 die Zeit zwischen Kanal 2 und 3, usw. Dementsprechend legt Intervall X die Pause vor Kanal X+1 fest und es ergeben sich bei 16 Kanälen 15 Intervalle.
+
+					Die Eingabe der Zeiten erfolgt typischerweise im Format \enquote{MM:SS.hh} mit Minuten, Sekunden und Hundertsteln, wobei statt des Punktes zwischen Sekunden und -bruchteilen auch das deutsche Dezimalkomma genutzt werden kann. Zahleneingaben ohne Doppelpunkt werden als Sekunden interpretiert, die Eingabe \enquote{1:10.20} beschreibt demnach dasselbe Intervall wie \enquote{70,2}. Bei Eingaben von mehr als zwei Nachkommastellen werden Eingaben abgeschnitten. Möchte man auf ein Triggersignal warten, schreibt man \enquote{T} ins entsprechende Feld. Steht beispielsweise ein \enquote{T} hinter Intervall~5, bedeutet dies, dass vor dem Abfeuern von Kanal~6 wieder auf einen Trigger gewartet wird. Hilfreich kann hier auch das Zusatzfenster \enquote{Absolutzeiten} sein, um das es in Abschnitt~\ref{sec:absolutzeiten} geht.
+
+					Ungültige Eingaben, die andere Zeichen als die Ziffern 0-9, höchstens einen Doppelpunkt, höchstens einen Punkt oder ein Koma oder das Wort \enquote{Trigger} in allen Groß-, Klein- und Abkürzungsformen enthalten, werden ignoriert, Zeitwerte größer als 9:59.99 werden automatisch zu \enquote{Trigger} gewandelt. Da nach jedem Schreibvorgang, den man mit \enquote{Intervall(e) setzen} auslöst, automatisch ein Auslesevorgang durchgeführt wird, kann immer direkt nachvollzogen werden, ob die Eingabe den gewünschten Effekt hatte.
+
+					Abbildung~\ref{fig:beispielsequenz} zeigt ein Beispiel für eine variable Stepsequenz, die immer vier Effekte in kurzer Folge auslöst, ehe für die nächste Abfolge auf einen Trigger gewartet wird. Die letzten beiden Kanäle werden gemeinsam geschossen.
+
+					\begin{figure}[tb]
+						\centering\includegraphics[width=.5\textwidth]{beispielshow}
+						\caption{Beispielsequenz}
+						\label{fig:beispielsequenz}
+					\end{figure}
 
 			\subsection{Zusatzfenster Absolutzeiten}
-			\label{sec:absolutzeiten}
+				\label{sec:absolutzeiten}
 				Das Zusatzfenster \enquote{Absolutzeiten} soll ein bequemes Umrechnen von absoluten Zündzeiten, wie man sie in einer Software wie PyroIgnitionControl oder PYROTHEK festlegt, in die von FUOCO~STEP benötigten Intervallzeiten zwischen den einzelnen Kanälen ermöglichen.
-				
+
 				Hierzu können die Werte in der zweiten Spalte eingefügt und die Zeitabstände der einzelnen Kanäle durch Klick auf \enquote{Berechne Intervalle} ermittelt werden. Über \enquote{Werte ins Hauptfenster} können diese Intervallzeiten ins Hauptfenster übertragen werden. Es ist darauf zu achten, dass die aktuelle Schalterposition im passenden Modus konfiguriert sein muss. Ist der feste Intervallmodus eingestellt, wird nur der erste Intervallwert ins Hauptfenster kopiert, beim variablen Intervallmodus alle nicht-leeren Felder. Nach Übertragung ins Hauptfenster müssen die Werte noch durch \enquote{Intervalle setzen} ins Gerät geschrieben werden, um die berechneten Intervalle nutzen zu können.
-				
+
 				Abbildung~\ref{fig:beispielabsolut} zeigt anhand der Intervalle aus der obigen Beispielsequenz die Funktionsweise des Absolut\-zeiten-Fensters. Da die Kanalreihenfolge nicht veränderbar ist, muss jeder Kanal zur selben Zeit oder später beginnen als sein Vorgänger.
-				
+
 				Für die getriggerten Kanäle 1, 5, 9 und 13 wurden hier vor dem Klick auf \enquote{Werte aus Hauptfenster} Zeiten vorgeben, um die absoluten Zündzeiten mit der imaginären Showdatei abgleichen zu können. Ohne Zeitvorgabe würde standardmäßig ein Intervall von einer Minute auf die Absolutzeit des Vorgängers addiert, was für die korrekte Intervallberechnung aber keine Rolle spielt, da Zeitabstände nur bei nicht durch Trigger ausgelösten Kanälen von Bedeutung sind und die Absolutzeiten lediglich der Veranschaulichung für den Anwender dienen.
-				
+
 				\begin{figure}[tb]
 					\begin{center}\includegraphics[width=.8\textwidth]{beispielzeitvorgabe}{\\}\includegraphics[width=.8\textwidth]{beispielabsolut}\end{center}
 					\caption{Beispiel für die Verwendung des Absolutfensters mit Zeitvorgabe und Intervallberechnung}
 					\label{fig:beispielabsolut}
 				\end{figure}
-			
+
 				Das Fenster \enquote{Absolutzeiten} kann auch dazu genutzt werden, Einstellungen von einer Schalterstellung auf eine andere zu übertragen. Hierzu die Einstellungen bei der zu kopierenden Schalterposition auslesen und dann nacheinander die Buttons \enquote{Absolutzeiten}, \enquote{Werte aus Hauptfenster} und \enquote{Berechne Intervalle} klicken. Nun die neue Schalterposition auswählen, auslesen, falls nötig den passenden Modus setzen und schließlich durch Klick auf \enquote{Werte ins Hauptfenster} die zu kopierenden Einstellungen setzen.
+
+	\chapter{Softwarepaket}
+
+		\section{Herunterladen der Dateien}
+
+			Alle Dateien zu FUOCO STEP liegen in einem Git-Repository unter \url{https://github.com/fixxl/fuocostep}. Um den aktuellen Stand von Firmware, Bootloader, Bedienoberfläche und Handbuch herunterzuladen, kann folgender Link genutzt werden:
+			\begin{center}
+				\url{https://github.com/fixxl/fuocostep/archive/master.zip}
+			\end{center}
+			Im Paket sind zusätzlich der komplette Quellcode sowie das Aktualisierungsprogramm für die Firmware enthalten.
+
+			Wer mit der Nutzung des Versionierungstools Git vertraut ist, kann natürlich das Repository auf seine Festplatte klonen und hat dann den Vorteil, nicht immer das komplette Paket herunterladen zu müssen, sondern gezielt nur die aktualisierten Dateien zu beziehen.
+
+		\section{Firmware-Update}
+
+			Die Firmware ist das \enquote{Betriebssystem} von FUOCO STEP. Wie bei allen Systemen kann es hin und wieder nötig sein, neue Funktionen, welche dem Bedienkomfort und/oder der Sicherheit dienen, einzubauen oder Fehler, welche erst im Betrieb bemerkt werden, auszumerzen. Damit dafür der Koffer nicht hin und her geschickt und aufgeschraubt werden muss, ist eine Aktualisierung der Firmware bequem über USB möglich.
+
+			Im Softwarepaket ist hierfür im Unterverzeichnis \enquote{Firmware-Updater} die Anwendung \enquote{UpdateLoader-win32} enthalten, die Ausführung eines Updates funktioniert folgendermaßen:
+
+			Vor dem Start von \enquote{UpdateLoader-win32} sollte FUOCO STEP mit dem PC verbunden werden. Die Firmware-Datei wird automatisch geladen, es muss nur überprüft werden, ob der korrekte Port für den Stepper eingestellt ist, sofern mehrere COM-Ports vorhanden sind. Nach einem Klick auf \enquote{Update starten!} sollten Update und Verifizierung in unter einer Minute abgeschlossen und die neue Firmware einsatzbereit sein. Eingestellte Stepsequenzen bleiben beim Update üblicherweise erhalten, sollten allerdings vor dem erneuten Einsatz des Steppers sicherheitshalber überprüft werden.
 \end{document}
