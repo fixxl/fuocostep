@@ -99,8 +99,8 @@
 				\item Cuttermesser
 				\item Kreuzschraubendreher PH1 oder PZ1
 				\item Zange oder Maulschlüssel zum Festhalten/Drehen von Muttern
-				\item Heißluftfön zum Schrumpfen von Schrumpfschläuchen
-				\item Gewebeband
+				\item Heißluftfön zum Schrumpfen von Schrumpfschläuchen; ein normaler Fön reicht und ist dem Feuerzeug vorzuziehen
+				\item Gewebeband und/oder Teppichklebeband zum Fixieren des Akkus im Koffer
 				\item Maßband/Meterstab
 				\item Multimeter, Entlötlitze und -pumpe können sich für die Fehlerkorrektur als hilfreich erweisen, sind aber nicht zwingend notwendig
 			\end{itemize}
@@ -396,8 +396,8 @@
 					\item Die Elektrolytkondensatoren \texttt{C9} und \texttt{C10}. Äußerst wichtig: Der Draht an der weißen Markierung am Gehäuse (kennzeichnet den Minus-Pol) muss jeweils in das Loch im weißen Bereich. Drähte nach dem Einlöten kürzen.
 					\item Die Feldeffekttransistoren \texttt{Q1} bis \texttt{Q16} und \texttt{Q18} (Vorsicht, Q18 ist ein anderes Modell als die 16 anderen Transistoren!), auf korrekte Orientierung und Beschriftung achten. Beinchen nach dem Einlöten kürzen.
 					\item Der Spannungsregler \texttt{U4}, auf korrekte Orientierung achten. Beinchen nach dem Einlöten kürzen.
-					\item Die großen Zementwiderstände -- die Werte der Widerstände sind auf dem Gehäuse aufgedruckt; darauf achten, die richtigen Werte an der richtigen Stelle einzulöten. Orientierung ist durch verfügbaren Platz und Bestückungsdruck vorgegeben, auch wenn die Polarität bei Widerständen keine Rolle spielt. Die Drähte nehmen nahe am Gehäuse Lötzinn nicht so leicht auf, daher geduldig sein und Lötzinn nachführen, bis sich eine schöne kegelförmige Lötstelle bildet. Drähte nach dem Einlöten kürzen.
 					\item Die großen 4700-\si{\micro\farad}-Kondensatoren \texttt{C13} und \texttt{C14}, der Draht an der weißen \enquote{-}-Markierung am Gehäuse muss jeweils in das Loch im weißen Bereich. Drähte nach dem Einlöten kürzen.
+					\item Die großen Zementwiderstände -- die Werte der Widerstände sind auf dem Gehäuse aufgedruckt; darauf achten, die richtigen Werte an der richtigen Stelle einzulöten. Orientierung ist durch verfügbaren Platz und Bestückungsdruck vorgegeben, auch wenn die Polarität bei Widerständen keine Rolle spielt. Die Drähte nehmen nahe am Gehäuse Lötzinn nicht so leicht auf, daher geduldig sein und Lötzinn nachführen, bis sich eine schöne kegelförmige Lötstelle bildet. Drähte nach dem Einlöten kürzen.
 				\end{enumerate}
 
 				Die Micro-USB-Buchse J7 sollte bereits vorbestückt gewesen sein, die beiden Stiftleisten J4 und J6, müssen nicht bestückt werden. Auch der Wannenstecker J5 wird im Normalfall nicht benötigt. Keineswegs verbunden werden dürfen die Kontakte von JP1, da man sonst Ein- und Ausgang des Step-Up-Konverters kurzschließt!
@@ -429,7 +429,7 @@
 
 			Anschließend unter Verwendung der 11-mm-Distanzhülsen die beiden Platinen über die vier Löcher an den Ecken der Basis mit M3x16-Schrauben und zugehörigen Muttern verschrauben. Die Schrauben aus optischen Gründen von der Panelseite stecken, so dass die Muttern später im Gehäuse verschwinden und auf dem Panel die Schraubenköpfe zu sehen sind.
 
-			Nachdem eine stabile mechanische Verbindung besteht, die beiden Crimpbuchsen und den USB-Stecker an der Basisplatine befestigen. Beim USB-Kabel darauf achten, dass möglichst wenig Zug auf die Platinenbuchse ausgeübt wird.
+			Nachdem eine stabile mechanische Verbindung besteht, die beiden Crimpbuchsen und den USB-Stecker an der Basisplatine befestigen. Beim USB-Kabel darauf achten, dass möglichst wenig Zug auf die Platinenbuchse ausgeübt wird; am besten einen Knoten ins Kabel machen, um es entsprechend kurz zu halten und nicht dauerhaften Zug auszuüben. Die Kabel der Crimpbuchsen und die Batteriekabel können per Kabelbinder zu einem Strang zusammegefasst werden, das erleichtert das spätere Verstauen zwischen Akku und Kofferwand.
 
 			Die Batterie in den Koffer legen, so dass die Kontakte auf der linken Seite an der vorderen Wand liegen und die verbundenen Platinen passend eingelegt werden können. Die Position des Akkus bezogen auf den Koffer ist in Abbildung~\ref{fig:akkuposition} zu sehen. Zwischen Wand und Akku beträgt der Abstand \SI{37}{\milli\metre}.
 
@@ -439,7 +439,7 @@
 				\label{fig:akkuposition}
 			\end{figure}
 
-			Es ist nicht allzu viel Platz zwischen der Steckerleiste auf der rechten und dem Unterbau des Drehschalters auf der linken Seite, welche den \enquote{Kanal} für den Akku begrenzen. Ist die korrekte Position für den Akku gefunden, wird er mit einem langen Streifen Gewebeband in seiner Position fixiert (siehe Abbildung~\ref{fig:akkuposition}), wer auf Nummer sicher gehen will, kann den Akku auch auf der Unterseite noch mit Teppichklebeband sichern.
+			Es ist nicht allzu viel Platz zwischen der Steckerleiste auf der rechten und dem Unterbau des Drehschalters auf der linken Seite, welche den \enquote{Kanal} für den Akku begrenzen. Ist die korrekte Position für den Akku gefunden, wird er mit einem langen Streifen Gewebeband in seiner Position fixiert (siehe Abbildung~\ref{fig:akkuposition}), wer auf Nummer sicher gehen will, sollte den Akku auf der Unterseite noch mit Teppichklebeband sichern, damit er sich wirklich nicht mehr bewegt.
 
 			Nun die beiden Teile des Deans-Steckverbinders zusammenstecken, die Kabel der Crimpbuchsen zwischen Akku und oberer Wand hindurch führen und das Panel vorsichtig absenken, bis es komplett auf dem Rand zum Liegen kommt und keine Kabel zwischen Panel und Rand eingeklemmt sind. Nun das Panel mit den sechs 3x10-Spaxschrauben am Koffer befestigen.
 
