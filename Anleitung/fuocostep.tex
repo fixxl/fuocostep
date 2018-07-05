@@ -189,6 +189,7 @@
 				\label{tab:bauteilepanel}
 
 			\subsection*{Vorgehensweise}
+				
 				Die Bauteile sollten von klein nach groß eingelötet werden und jeweils bündig auf der Platine aufliegen:
 				\begin{enumerate}
 					\item Die 3-mm-LEDs, hierbei ist auf korrekte Polarität zu achten: Der kürzere Draht an der abgeflachten Seite der LED gehört ins quadratische Lötpad, der längere Draht ins runde. Drähte nach dem Einlöten kürzen.
@@ -205,12 +206,13 @@
 				\end{enumerate}
 
 				Der Zwischenstand sollte dann in etwa so aussehen wie in Abbildung~\ref{fig:panel3d}, wobei die LEDs nicht farbecht dargestellt sind.
-
-				\begin{figure}
-					\centering\includegraphics[width=.8\textwidth]{panel3d}
-					\caption{Gelötetes Panel}
+				
+				\begin{center}
+					\includegraphics[width=.8\textwidth]{panel3d}
+					\captionof{figure}{3D-Illustration des gelöteten Panels}
 					\label{fig:panel3d}
-				\end{figure}
+				\end{center}
+			
 
 				Anschließend müssen die restlichen Löcher in der Platine gefüllt werden:
 
@@ -246,13 +248,17 @@
 
 				Beim dreipoligen Crimpgehäuse zunächst die drei kurzen Schrumpfschlauchstücke des Durchmessers \SI{6,4}{\milli\metre} über die losen Kabelenden bis zum Gehäuse schieben. Die Zuordnung zwischen Kabeln und Kontakten ist: Rotes Kabel an den äußeren silbernen Kontakt des Hauptschalters, weißes Kabel an den Mittelkontakt und graues Kabel an den goldenen Kontakt. Dann aus dem abisolierten Teil des Kabels ein \enquote{U} formen, das Kabel durch den zugehörigen Kontakt fädeln und vor dem Verlöten mit einer Zange auf beiden Seiten die Litze an den Kontakt drücken, dann verlöten. Kontakte danach mit den vorher aufgeschobenen Schrumpfschläuchen isolieren.
 
-				Beim achtpoligen Crimpgehäuse zunächst das blaue Kabel mit den beiden inneren Kontakten des Displays verbinden, das benachbarte schwarze Kabel mit dem Außenkontakt (siehe Abbildung~REFERENZ).
-				
+				Beim achtpoligen Crimpgehäuse zunächst das blaue Kabel mit den beiden inneren Kontakten des Displays verbinden, das benachbarte schwarze Kabel mit dem Außenkontakt wie in Abbildung~\ref{fig:displayloetung} im roten Kreis gezeigt. Hierzu das Litzenbündel beim blauen Kabel in zwei gleich starke Äste aufspalten, verdrillen und vor dem Verlöten sauber in die beiden Löcher einführen. Gut darauf achten, dass zwischen dem mittleren und äußeren Pad kein Kurzschluss entsteht. Zur Sicherheit kann vorsichtig mit dem Cuttermesser zwischen den beiden Pads gekratzt werden.
+
+				\begin{figure}
+					\centering\includegraphics[width=.5\textwidth]{displayloetung}
+					\caption{Anschluss des Displays zur Spannungsanzeige}
+					\label{fig:displayloetung}
+				\end{figure}
+
 				Anschließend Schrumpfschläuche des Durchmessers \SI{3,2}{\milli\metre} über die gelben, violetten sowie das rote und übrige schwarze Kabel bis zum Gehäuse schieben, die Durchfädeltechnik wie beim Hauptschalter anwenden und folgendermaßen verlöten: Rotes Kabel an den L-förmigen Kontakt der Ladebuchse, welcher mit dem Stift verbunden ist, schwarzes dickes Kabel an den anderen Kontakt der Ladebuchse. Die beiden violetten Kabel gehören an den Schlüsselschalter, die beiden gelben Kabel an den Testschalter, wobei die Pinzuordnung hier egal ist. Kontakte anschließend mit Schrumpfschlauch isolieren.
 
-				
-
-				\newpage
+				\clearpage
 		\section{Basis}
 			\subsection*{Bauteilindex}
 
@@ -363,36 +369,37 @@
 				\begin{enumerate}
 					\item Die kleinen Widerstände \texttt{R1}, \texttt{R2}, \texttt{R5}, \texttt{R6}, \texttt{R7}, \texttt{R8}, \texttt{R9}, \texttt{R10}, \texttt{R11}, \texttt{R12}, \texttt{R13}, \texttt{R14}, \texttt{R15} in der Bauform 0207. Hier spielt die Polarität keine Rolle, allerdings ist auf die Werte zu achten, die anhand der Farbringe festgestellt werden können\footnote{Falls sich jemand genauer für die Kennzeichnung der Widerstände interessiert: jede Farben symbolisiert eine Zahl, nämlich schwarz=0, braun=1, rot=2, orange=3, gelb=4, grün=5, blau=6, violett=7, grau=8, weiß=9. Der Widerstandswert in Ohm ist bei fünf Ringen folgendermaßen zu lesen: (100*Ring1 + 10*Ring2 + Ring3) * 10$^{\text{Ring4}}$ mit einer Toleranz von Ring5, wobei bei Ring 5 braun=\SI{1}{\percent}, rot=\SI{2}{\percent}, grün=\SI{0,5}{\percent}, blau=\SI{0,25}{\percent}, violett=\SI{0,1}{\percent}, gold=\SI{5}{\percent} und silber=\SI{10}{\percent} bedeutet. Gold und silber können auch als Farben des Rings 4 auftreten, gold=-1, silber=-2. Der kleinste darstellbare Widerstandswert größer \SI{0}{\ohm} mit 1-\%-Toleranz wäre also die Kombination schwarz-schwarz-braun-silber-braun, dies entspricht \SI{0,01}{\ohm}, der größte so darstellbare Wert wäre weiß-weiß-weiß-weiß-braun, also \SI{999}{\giga\ohm}.}. Tabelle~\ref{tab:widerstandswerte} zeigt die Widerstandswerte und ihre farbliche Kennzeichnung.
 
-				    Der \enquote{erste} Ring ist derjenige, der am weitesten außen am Gehäuse angebracht ist, ansonsten den Widerstand so drehen, dass die Farbreihenfolge einer in der Tabelle genannten entspricht, rechts muss immer ein brauner Ring sein.
-			
-				    Besondere Vorsicht ist bei den Werten geboten, die sich nur um Zehnerpotenzen, also nur im vierten Ring unterschieden: (\SI{1}{\kilo\ohm} und \SI{10}{\kilo\ohm}, \SI{1,5}{\kilo\ohm} und \SI{150}{\kilo\ohm} sowie \SI{4,7}{\kilo\ohm} und \SI{47}{\kilo\ohm}). Hier darauf achten, dass bei den jeweils kleineren Werten der vierte und fünfte Ring dieselbe Farbe besitzen.
+					      Der \enquote{erste} Ring ist derjenige, der am weitesten außen am Gehäuse angebracht ist, ansonsten den Widerstand so drehen, dass die Farbreihenfolge einer in der Tabelle genannten entspricht, rechts muss immer ein brauner Ring sein.
 
-				      \begin{table}
-					      \begin{center}
-						      \begin{minipage}[b]{.6\textwidth}
-							      \begin{tabu}
-								      {|r@{\,}l|ccccc|}\hline
-								      \multicolumn{2}{|c|}{Wert} & 1. Ring        & 2. Ring              & 3. Ring               & 4. Ring & 5. Ring                                   \\ \hline\hline
-								      270                        & \si{\ohm}      & \color{red}rot       & \color{violet}violett & schwarz & schwarz              & \color{brown}braun \\ \hline
-								      330                        & \si{\ohm}      & \color{orange}orange & \color{orange}orange  & schwarz & schwarz              & \color{brown}braun \\ \hline
-								      1                          & \si{\kilo\ohm} & \color{brown}braun   & schwarz               & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
-								      1,5                        & \si{\kilo\ohm} & \color{brown}braun   & \color{green}grün     & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
-								      4,7                        & \si{\kilo\ohm} & \color{yellow}gelb   & \color{violet}violett & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
-								      10                         & \si{\kilo\ohm} & \color{brown}braun   & schwarz               & schwarz & \color{red}rot       & \color{brown}braun \\ \hline
-								      47                         & \si{\kilo\ohm} & \color{yellow}gelb   & \color{violet}violett & schwarz & \color{red}rot       & \color{brown}braun \\ \hline
-								      150                        & \si{\kilo\ohm} & \color{brown}braun   & \color{green}grün     & schwarz & \color{orange}orange & \color{brown}braun \\ \hline
-							      \end{tabu}
-							      \vspace{0pt}
-						      \end{minipage}%
-						      \begin{minipage}[b]{.2\textwidth}
-							      \vspace{0pt}
-							      \includegraphics[height=40mm]{Widerstaende}
-						      \end{minipage}
-					      \end{center}
-					      \caption{Identifizierung der Widerstandswerte}
-					      \label{tab:widerstandswerte}
-				      \end{table}
-				    Drähte nach dem Einlöten kürzen.
+					      Besondere Vorsicht ist bei den Werten geboten, die sich nur um Zehnerpotenzen, also nur im vierten Ring unterschieden: (\SI{1}{\kilo\ohm} und \SI{10}{\kilo\ohm}, \SI{1,5}{\kilo\ohm} und \SI{150}{\kilo\ohm} sowie \SI{4,7}{\kilo\ohm} und \SI{47}{\kilo\ohm}). Hier darauf achten, dass bei den jeweils kleineren Werten der vierte und fünfte Ring dieselbe Farbe besitzen.
+
+					      \begin{table}
+						      \begin{center}
+							      \begin{minipage}[b]{.6\textwidth}
+								      \begin{tabu}
+									      {|r@{\,}l|ccccc|}\hline
+									      \multicolumn{2}{|c|}{Wert} & 1. Ring        & 2. Ring              & 3. Ring               & 4. Ring & 5. Ring                                   \\ \hline\hline
+									      270                        & \si{\ohm}      & \color{red}rot       & \color{violet}violett & schwarz & schwarz              & \color{brown}braun \\ \hline
+									      330                        & \si{\ohm}      & \color{orange}orange & \color{orange}orange  & schwarz & schwarz              & \color{brown}braun \\ \hline
+									      1                          & \si{\kilo\ohm} & \color{brown}braun   & schwarz               & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
+									      1,5                        & \si{\kilo\ohm} & \color{brown}braun   & \color{green}grün     & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
+									      4,7                        & \si{\kilo\ohm} & \color{yellow}gelb   & \color{violet}violett & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
+									      10                         & \si{\kilo\ohm} & \color{brown}braun   & schwarz               & schwarz & \color{red}rot       & \color{brown}braun \\ \hline
+									      47                         & \si{\kilo\ohm} & \color{yellow}gelb   & \color{violet}violett & schwarz & \color{red}rot       & \color{brown}braun \\ \hline
+									      150                        & \si{\kilo\ohm} & \color{brown}braun   & \color{green}grün     & schwarz & \color{orange}orange & \color{brown}braun \\ \hline
+								      \end{tabu}
+								      \vspace{0pt}
+							      \end{minipage}
+							      %
+							      \begin{minipage}[b]{.2\textwidth}
+								      \vspace{0pt}
+								      \includegraphics[height=40mm]{Widerstaende}
+							      \end{minipage}
+						      \end{center}
+						      \caption{Identifizierung der Widerstandswerte}
+						      \label{tab:widerstandswerte}
+					      \end{table}
+					      Drähte nach dem Einlöten kürzen.
 
 					\item Die beiden Dioden \texttt{D1} und \texttt{D2}, wobei die Orientierung wichtig ist. Drähte nach dem Einlöten kürzen.
 					\item Die kleinen 100-nF-Kondensatoren \texttt{C1}, \texttt{C2}, \texttt{C3}, \texttt{C4}, \texttt{C5}, \texttt{C6}, \texttt{C7}, \texttt{C8}, \texttt{C11}, \texttt{C12}, \texttt{C15}, Orientierung spielt keine Rolle. Drähte nach dem Einlöten kürzen.
@@ -413,8 +420,8 @@
 
 				Abbildung~\ref{fig:base3d} zeigt auch die korrekte Orientierung der Bauteile, allerdings sind die Widerstände ohne Farbcode dargestellt.
 
-				\begin{figure}
-					\centering\includegraphics[width=\textwidth]{base3d}
+				\begin{figure}[H]
+					\centering\includegraphics[width=.7\textwidth]{base3d}
 					\caption{3D-Modell der bestückten Basisplatine}
 					\label{fig:base3d}
 				\end{figure}
@@ -431,7 +438,6 @@
 
 			Nun noch das rote mit dem Stecker verbundene Kabel an BATTERY+ und das schwarze an BATTERY- anlöten. Schrumpfschlauch mit Durchmesser \SI{6,4}{\milli\metre} über die Kabelschuhe schieben, Kabelschuhe auf die passenden Batteriekontakte aufschieben (rot an +, schwarz an -), mit etwas Lötzinn fixieren und Kontakte mit Schrumpfschlauch isolieren. Die beiden Deans-Verbinder-Teile jetzt noch nicht zusammenstecken!
 
-
 		\section{Zusammenbau}
 			Nun werden die Einzelteile verbunden, dazu zunächst die Stiftleiste des Panels mit der Buchsenleiste der Basis zusammenstecken.
 
@@ -446,7 +452,7 @@
 			\end{figure}
 
 			Nachdem eine stabile mechanische Verbindung besteht, die beiden Crimpbuchsen und den USB-Stecker an der Basisplatine befestigen. Beim USB-Kabel darauf achten, dass möglichst wenig Zug auf die Platinenbuchse ausgeübt wird; am besten wie in Abbildung~\ref{fig:usbknoten} einen Knoten ins Kabel machen, um es entsprechend kurz zu halten und nicht dauerhaften Zug auszuüben. Die Kabel der Crimpbuchsen und die Batteriekabel können per Kabelbinder zu einem Strang zusammegefasst werden, das erleichtert das spätere Verstauen zwischen Akku und Kofferwand.
-			
+
 			\begin{figure}
 				\begin{center}
 					\includegraphics[width=.8\textwidth]{usb-knoten}
@@ -566,7 +572,8 @@
 
 					\begin{figure}
 						\begin{center}
-							\begin{longtabu} [c]{c|*{11}c}
+							\begin{longtabu}
+								[c]{c|*{11}c}
 								Schalterposition & 1   & 2   & 3   & 4    & 5    & 6    & 7    & 8    & 9    & 10   & 11   \\ \hline
 								Intervall (s)    & 2.5 & 5.0 & 7.5 & 10.0 & 12.5 & 15.0 & 17.5 & 20.0 & 25.0 & 30.0 & 40.0
 							\end{longtabu}
@@ -598,9 +605,9 @@
 						\caption{Beispielsequenz}
 						\label{fig:beispielsequenz}
 					\end{figure}
-				
+
 				\subsubsection*{Sequenz feuern oder fortsetzen}
-					
+
 					Mit dieser Taste ist es möglich, die derzeit aktive Einstellung auszulösen, das Verhalten des Steppers ist dabei absolut identisch zu einem tatsächlichen Triggersignal: Ist der Stepper nicht scharf geschaltet, hat ein Druck dieser Taste keinen Effekt, ist er scharf geschaltet, wird die aktuelle Sequenz gestartet oder fortgesetzt und die Kanäle auch tatsächlich ausgelöst. Für einen reinen Testlauf also unbedingt vorher alle Anzünder entfernen!
 
 			\subsection{Zusatzfenster Absolutzeiten}
@@ -614,7 +621,9 @@
 				Für die getriggerten Kanäle 1, 5, 9 und 13 wurden hier vor dem Klick auf \enquote{Werte aus Hauptfenster} Zeiten vorgeben, um die absoluten Zündzeiten mit der imaginären Showdatei abgleichen zu können. Ohne Zeitvorgabe würde standardmäßig ein Intervall von einer Minute auf die Absolutzeit des Vorgängers addiert, was für die korrekte Intervallberechnung aber keine Rolle spielt, da Zeitabstände nur bei nicht durch Trigger ausgelösten Kanälen von Bedeutung sind und die Absolutzeiten lediglich der Veranschaulichung für den Anwender dienen.
 
 				\begin{figure}[tb]
-					\begin{center}\includegraphics[width=.8\textwidth]{beispielzeitvorgabe}{\\}\includegraphics[width=.8\textwidth]{beispielabsolut}\end{center}
+					\begin{center}
+						\includegraphics[width=.8\textwidth]{beispielzeitvorgabe}{\\}\includegraphics[width=.8\textwidth]{beispielabsolut}
+					\end{center}
 					\caption{Beispiel für die Verwendung des Absolutfensters mit Zeitvorgabe und Intervallberechnung}
 					\label{fig:beispielabsolut}
 				\end{figure}
