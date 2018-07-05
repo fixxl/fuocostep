@@ -12,6 +12,7 @@
 \usepackage[autostyle]{csquotes}
 \usepackage[margin=20mm, bottom=15mm, includefoot]{geometry}
 \usepackage{graphicx, xcolor}
+\usepackage{datetime, float}
 %\usepackage[section]{placeins}
 \usepackage[unicode=true, colorlinks=false, breaklinks=true, pdfborder={0 0 0}]{hyperref}
 \usepackage{bookmark}
@@ -43,6 +44,8 @@
 \newfontfamily\Gost{Gost}
 \defaultfontfeatures{Ligatures=TeX}
 
+\renewcommand{\dateseparator}{.}
+
 % Einstellungen für den Zeilenumbruch von URLs
 \def\UrlBreaks{\do\=\do\.\do\?\do\&\do\a\do\b\do\c\do\d\do\e\do\f\do\g\do\h\do\i\do\j\do\k\do\l\do\m\do\n\do\o\do\p\do\q\do\r\do\s\do\t\do\u\do\v\do\w\do\x\do\y\do\z\do\A\do\B\do\C\do\D\do\E\do\F\do\G\do\H\do\I\do\J\do\K\do\L\do\M\do\N\do\O\do\P\do\Q\do\R\do\S\do\T\do\U\do\V\do\W\do\X\do\Y\do\Z\do\1\do\2\do\3\do\4\do\5\do\6\do\7\do\8\do\9\do\0}
 \Urlmuskip = 0mu plus 1mu
@@ -56,11 +59,13 @@
 \begin{titlepage}
 	\vspace*{\fill}
 	\begin{center}
-		\includegraphics[width=\textwidth]{logo}
+		\includegraphics[width=.9\textwidth]{logo}
 	\end{center}
 	\vfill
-	\begin{center}{\fontsize{40pt}{40pt} \Commons{Aufbau- und Bedienungsanleitung}} \\ \vfill
-		{\fontsize{24pt}{24pt} \Gost{Felix Pflaum}}
+	\begin{center}{\fontsize{40pt}{40pt} \Commons{Aufbau- und Bedienungsanleitung}} \vspace{5mm} \\
+		{\fontsize{24pt}{24pt} \Gost{Felix Pflaum}} \vspace{3mm} \\
+		{\fontsize{20pt}{20pt} \Gost{f.pflaum@gmail.com}} \vspace{5mm} \\
+		{\fontsize{16pt}{16pt} \Gost{Stand: \ddmmyyyydate\today}}
 	\end{center}
 	\vfill
 \end{titlepage}
@@ -79,8 +84,9 @@
 			\item Drehschalter mit elf Widerständen und drei Kabeln (rot, gelb, schwarz)
 			\item Crimpbuchse mit drei Kabeln (rot, weiß, grau)
 			\item Crimpbuchse mit acht Kabeln (blau, schwarz, rot, schwarz, violett, violett, gelb, gelb)
-			\item Je ein rotes und ein schwarzes Kabel mit und ohne Kabelschuh (also insg. vier Kabel)
-			\item Ein Paar Deans-Steckverbinder (Buchse für Anschluss an Batterie, Stecker an PCB)
+			\item Je ein rotes und ein schwarzes Kabel mit Kabelschuh
+			\item Je ein rotes und ein schwarzes Kabel ohne Kabelschuh
+			\item Ein Paar Deans-Steckverbinder (Buchse für Anschluss an Batterie, Stecker an PCB) mit Lötanschlüssen
 			\item Isolationsabdeckung für Lötkontakte auf der Paneloberseite
 			\item Vier Distanzhülsen der Länge \SI{11}{\milli\metre} als Abstandshalter zwischen Basis und Panel
 			\item Vier Gewindeschrauben M3x16 mit Muttern zur Verschraubung der beiden Platinen
@@ -108,8 +114,9 @@
 		\section{Wichtige Hinweise}
 			Wenig ist frustrierender als umsonst verrichtete harte Arbeit, vom im wahrsten Sinne des Wortes verbrannten Geld bei Zerstörung von Platine oder Bauteilen ganz zu schweigen. Daher bitte beachten:
 			\begin{itemize}
-				\item Beim Löten Zeit lassen, gewissenhaft und gründlich arbeiten. Auf eine saubere Trennung der Lötstellen achten, speziell bei enger Nachbarschaft (Stift- und Buchsenleisten, integrierte Schaltungen, \dots). Ein sehr gutes, wenn auch leider englischsprachiges Lehrvideo zum korrekten Löten gibt es unter \url{https://www.youtube.com/watch?v=IpkkfK937mU}, bei die Löttemperatur sollte bei Verwendung von bleihaltigem Lötzinn nicht höher als \SI{350}{\degreeCelsius} liegen\footnote{Der Grund dafür ist, dass das Flussmittel, welches im Lötzinn enthalten ist und Oxidation in der Lötstelle verhindern soll, bei höheren Temperaturen zu schnell verdampft und seine Aufgabe nicht mehr erfüllen kann.}.
-				\item Es kann sich als hilfreich erweisen, Bauteile zunächst mit einer einzigen Lötstelle in der Platine zu fixieren, damit sie nicht mehr herausfallen können. Anschließend dann die Lötstelle noch einmal erhitzen und, wenn das Zinn flüssig ist, das Bauteil mit der freien Hand in die korrekte Position drücken und festhalten, während man den Lötkolben entfernt und die Lötstelle erkalten lässt. Nun kann man die restlichen Stellen löten und sollte abschließend auch noch einmal die erste Lötstelle mit frischem Zinn versorgen.
+				\item Anleitung vor dem Löten lesen und bei Unklarheiten nachfragen!
+				\item Beim Löten Zeit lassen, gewissenhaft und gründlich arbeiten. Auf eine saubere Trennung der Lötstellen achten, speziell bei enger Nachbarschaft (Stift- und Buchsenleisten, integrierte Schaltungen, \dots). Ein sehr gutes, wenn auch leider englischsprachiges Lehrvideo zum korrekten Löten gibt es unter \url{https://www.youtube.com/watch?v=IpkkfK937mU}, die Löttemperatur sollte bei Verwendung von bleihaltigem Lötzinn nicht höher als \SI{350}{\degreeCelsius} liegen\footnote{Der Grund dafür ist, dass das Flussmittel, welches im Lötzinn enthalten ist und Oxidation in der Lötstelle verhindern soll, bei höheren Temperaturen zu schnell verdampft und seine Aufgabe nicht mehr erfüllen kann.}.
+				\item Es kann sich als hilfreich erweisen, Bauteile zunächst mit einer einzigen Lötstelle in der Platine zu fixieren, damit sie nicht mehr herausfallen können. Anschließend dann die Lötstelle noch einmal erhitzen und, wenn das Zinn flüssig ist, das Bauteil mit einem geeigneten Werkzeug oder der freien Hand~(nicht die Finger verbrennen!) in die korrekte Position drücken und festhalten, während man den Lötkolben entfernt und die Lötstelle erkalten lässt. Nun kann man die restlichen Stellen löten und sollte abschließend auch noch einmal die erste Lötstelle mit frischem Zinn versorgen.
 				\item Den Arbeitsbereich übersichtlich halten. Beim Lötkolben ist nicht nur die Spitze heiß, daher alles so arrangieren, dass man auch wirklich nur die Lötstelle berührt und nicht unbeabsichtigt frei hängenden Kabel oder andere Bauteile anbrennt/schmilzt.
 				\item In der Elektronik ist es üblich, identische Gehäuse für unterschiedliche Bauteile zu verwenden, in unserem Fall beispielsweise für die Transistoren \texttt{Q19} und \texttt{Q20} oder die drei Zementwiderstände, welche optisch nur anhand der Beschriftung auf dem Gehäuse unterscheidbar sind. Daher erst genau schauen, dann löten, denn gerade bei den integrierten Schaltungen mit vier oder mehr Kontakten ist ein nachträgliches Auslöten ziemlich kompliziert und führt häufig zu Schäden an Bauteil und/oder Platine. Immer genau die Bezeichnung überprüfen, damit alles seinen korrekten Platz findet, um eine funktionsfähige Schaltung zu garantieren.
 				\item Was für den Bauteiltyp gilt, gilt auch für die Orientierung. Mit wenigen Ausnahmen muss diese entweder aus Platz- oder Funktionsgründen beachtet werden. Verpolte Elektrolytkondensatoren können zudem sehr spektakulär explodieren und das wollen wir doch lieber den pyrotechnischen Gegenständen überlassen!
@@ -188,12 +195,12 @@
 					\item Die 5-mm-LEDs, hier hinsichtlich Polarität analog zu den 3-mm-LEDs vorgehen. Die Farbzuordnung lautet:
 					      \begin{itemize}
 						      \item ARMED: rot
-						      \item DATA: geld
+						      \item DATA: gelb
 						      \item ACTIVE: orange
 						      \item TRIGGERED: grün
 					      \end{itemize}
 					      Drähte nach dem Einlöten kürzen.
-					\item Die Klemmen, welche logischerweise mit ihren Öffnungen nach vorne zeigen sollen
+					\item Die Klemmen, welche logischerweise mit ihren Öffnungen nach vorne zeigen sollen. Hier bitte aufgrund der späteren mechanischen Belastung durch das Drücken der Hebel besonders darauf achten, dass die Unterseite auf der Platine aufliegt und die Klemme nicht in der Luft hängt.
 					\item Die Stiftleiste, die im Gegensatz zu den anderen Bauteilen von der Unterseite zu stecken und von der Oberseite zu löten ist
 				\end{enumerate}
 
@@ -216,13 +223,13 @@
 						      \label{fig:drehschalter}
 					      \end{figure}
 
-					      Zunächst müssen die elf kleinen Widerstände von innen nach außen zwischen den Kontakten 1 und 2, 2 und 3, 3 und 4, \dots, 11 und 12 gesteckt werden, rur die Lücke zwischen 1 und 12 bleibt frei (Bild links oben). Anschließend werden die Drahtpaare an den Pins 2 bis 11 gelötet; 1, 12 noch nicht verlöten, erst Kabel anbringen (Bild rechts oben). Am Pin 1 ist das kurze schwarze, am Pin 12 das kurze rote und zusätzlich am inneren Pin das kurze gelbe Kabel anzulöten (Bild links unten). Falls ein Multimeter zur Verfügung steht, sollte jetzt kontrolliert werden, ob zwischen rotem und schwarzem Kabelende ein Widerstand im Bereich von \SI{110}{\kilo\ohm} gemessen wird. Falls nicht, alle Lötstellen noch einmal genau überprüfen bzw. nacharbeiten und neu messen. Liegt der Widerstand schließlich im angestrebten Bereich, kann man abschließend den grünen Schrumpfschlauch auf den Schalter ziehen und per Fön erhitzen, wobei die Kabel noch herausstehen sollen (Bild rechts unten).
+					      Zunächst müssen die elf kleinen Widerstände von innen nach außen zwischen den Kontakten 1 und 2, 2 und 3, 3 und 4, \dots, 11 und 12 gesteckt werden, rur die Lücke zwischen 1 und 12 bleibt frei (Bild links oben). Anschließend werden die Drahtpaare an den Pins 2 bis 11 gelötet; 1 und 12 noch nicht verlöten, erst Kabel anbringen (Bild rechts oben). Am Pin 1 ist das kurze schwarze, am Pin 12 das kurze rote und zusätzlich am inneren Pin das kurze gelbe Kabel anzulöten (Bild links unten). Falls ein Multimeter zur Verfügung steht, sollte jetzt kontrolliert werden, ob zwischen rotem und schwarzem Kabelende ein Widerstand im Bereich von \SI{110}{\kilo\ohm} gemessen wird. Falls nicht, alle Lötstellen noch einmal genau überprüfen bzw. nacharbeiten und neu messen. Liegt der Widerstand schließlich im angestrebten Bereich, kann man abschließend den grünen Schrumpfschlauch auf den Schalter ziehen und per Fön erhitzen, wobei die Kabel noch herausstehen sollen (Bild rechts unten).
 
-					      Nun den Schalter in die Platine stecken, festschrauben und die Schalterkappe befestigen. Am Ende müssen dann die drei Kabel auf der Platine festgelötet werden. Hierzu zunächst die Pads kräftig mit Lötzinn vorverzinnen, die Kabel am Ende der Isolierung abknicken, Pad erhitzen und Kabelende in den Zinn drücken: rot bei Pad \enquote{3,3V}, gelb bei Pad \enquote{ADC} und schwarz bei Pad \enquote{GND}.
+					      Nun den Schalter in die Platine stecken, festschrauben und die Schalterkappe befestigen. Am Ende müssen dann die drei Kabel auf der Platine festgelötet werden. Hierzu zunächst die Pads kräftig mit Lötzinn vorverzinnen, die Kabel am Ende der Isolierung abknicken, Pad erhitzen und Kabelende in den Zinn drücken: rot bei Pad \enquote{3,3V}, gelb bei Pad \enquote{ADC} und schwarz bei Pad \enquote{GND}. Das Erkalten des Zinns kann ein paar Sekunden dauern, daher das Kabel nicht zu früh loslassen.
 					\item [Testschalter] In die Platine stecken und festschrauben
 					\item [Schlüsselschalter] In die Platine stecken und festschrauben, dabei darauf achten, dass der rote Punkt am Schalter bei \enquote{Inactive}, der grüne bei \enquote{Armed} liegt.
-					\item [Ladebuchse] Den mittleren Kontakt auf der Unterseite abzwicken, dann in die Platine stecken und festschrauben. Vor dem späteren Löten (siehe weiter unten) die Gummiabdeckung öffnen, damit der Gummi durch die Hitze keinen Schaden nimmt!
-					\item [Spannungsanzeige] In die Platine stecken und mit den M2-Schrauben und zugehörigen Muttern festschrauben
+					\item [Ladebuchse] In die Platine stecken und festschrauben. Vor dem späteren Löten (siehe weiter unten) die Gummiabdeckung öffnen, damit der Gummi durch die Hitze keinen Schaden nimmt!
+					\item [Spannungsanzeige] In die Platine stecken und mit den M2-Schrauben und zugehörigen Muttern festschrauben. Orientierung beachten, so dass die Dezimalpunkte, wie in Abbildung~\ref{fig:paneldescription} gezeigt, nach unten weisen.
 					\item [Hauptschalter] In die Platine stecken, bis er einrastet (erfordert mehr als nur sanften Druck)
 					\item [Micro-USB-Anschluss] Mit den zugehörigen Schrauben festschrauben
 					\item [Abdeckung der Lötstellen] Mit den beiden M3x6-Schrauben und passenden Muttern befestigen
@@ -237,11 +244,13 @@
 					\item Aus dem Schrumpfschlauch mit \SI{3,2}{\milli\metre} Durchmesser sechs gleichlange Teile herstellen (für Ladebuchse, Schlüssel- und Testschalter)
 				\end{itemize}
 
-				Beim dreipoligen Crimpgehäuse zunächst die drei kurzen Schrumpfschlauchstücke des Durchmessers \SI{6,4}{\milli\metre} über die losen Kabelenden bis zum Gehäuse schieben und folgendermaßen verlöten: Rotes Kabel an den äußeren silbernen Kontakt des Hauptschalters, weißes Kabel an den Mittelkontakt und graues Kabel an den goldenen Kontakt. Kontakte danach mit den vorher aufgeschobenen Schrumpfschläuchen isolieren.
+				Beim dreipoligen Crimpgehäuse zunächst die drei kurzen Schrumpfschlauchstücke des Durchmessers \SI{6,4}{\milli\metre} über die losen Kabelenden bis zum Gehäuse schieben. Die Zuordnung zwischen Kabeln und Kontakten ist: Rotes Kabel an den äußeren silbernen Kontakt des Hauptschalters, weißes Kabel an den Mittelkontakt und graues Kabel an den goldenen Kontakt. Dann aus dem abisolierten Teil des Kabels ein \enquote{U} formen, das Kabel durch den zugehörigen Kontakt fädeln und vor dem Verlöten mit einer Zange auf beiden Seiten die Litze an den Kontakt drücken, dann verlöten. Kontakte danach mit den vorher aufgeschobenen Schrumpfschläuchen isolieren.
 
-				Beim achtpoligen Crimpgehäuse zunächst Schrumpfschläuche des Durchmessers \SI{3,2}{\milli\metre} über die gelben, violetten sowie das dicke rote und schwarze Kabel bis zum Gehäuse schieben und folgendermaßen verlöten: Rotes dickes Kabel an den L-förmigen Kontakt der Ladebuchse, welcher mit dem Stift verbunden ist, schwarzes dickes Kabel an den Außenkontakt. Die beiden violetten Kabel gehören an den Schlüsselschalter, die beiden gelben Kabel an den Testschalter. Kontakte anschließend mit Schrumpfschlauch isolieren.
+				Beim achtpoligen Crimpgehäuse zunächst das blaue Kabel mit den beiden inneren Kontakten des Displays verbinden, das benachbarte schwarze Kabel mit dem Außenkontakt (siehe Abbildung~REFERENZ).
+				
+				Anschließend Schrumpfschläuche des Durchmessers \SI{3,2}{\milli\metre} über die gelben, violetten sowie das rote und übrige schwarze Kabel bis zum Gehäuse schieben, die Durchfädeltechnik wie beim Hauptschalter anwenden und folgendermaßen verlöten: Rotes Kabel an den L-förmigen Kontakt der Ladebuchse, welcher mit dem Stift verbunden ist, schwarzes dickes Kabel an den anderen Kontakt der Ladebuchse. Die beiden violetten Kabel gehören an den Schlüsselschalter, die beiden gelben Kabel an den Testschalter, wobei die Pinzuordnung hier egal ist. Kontakte anschließend mit Schrumpfschlauch isolieren.
 
-				Das dünne blaue Kabel muss mit den beiden inneren Kontakten des Displays verbunden werden, das dünne schwarze Kabel mit dem Außenkontakt (siehe Abbildung~REFERENZ).
+				
 
 				\newpage
 		\section{Basis}
@@ -350,46 +359,46 @@
 				\label{tab:bauteilebasis}
 
 			\subsection*{Vorgehensweise}
-				Die Bauteile sollten auch hier von klein nach groß eingelötet werden und jeweils bündig auf der Platine aufliegen, sofern nichts anderes vermerkt ist:
+				Die Bauteile sollten auch hier von klein nach groß eingelötet werden und jeweils bündig auf der Platine aufliegen, sofern nichts anderes vermerkt ist. Eine fertig bestückte Variante ist in Abbildung~\ref{fig:base-eingebaut} auf Seite~\pageref{fig:base-eingebaut} zu sehen:
 				\begin{enumerate}
-					\item Die kleinen Widerstände \texttt{R1}, \texttt{R2}, \texttt{R5}, \texttt{R6}, \texttt{R7}, \texttt{R8}, \texttt{R9}, \texttt{R10}, \texttt{R11}, \texttt{R12}, \texttt{R13}, \texttt{R14}, \texttt{R15} in der Bauform 0207. Hier spielt die Polarität keine Rolle, allerdings ist auf die Werte zu achten, die anhand der Farbringe festgestellt werden können\footnote{Falls sich jemand genauer für die Kennzeichnung der Widerstände interessiert: jede Farben symbolisiert eine Zahl, nämlich schwarz=0, braun=1, rot=2, orange=3, gelb=4, grün=5, blau=6, violett=7, grau=8, weiß=9. Der Widerstandswert in Ohm ist bei fünf Ringen folgendermaßen zu lesen: (100*Ring1 + 10*Ring2 + Ring3) * 10$^{\text{Ring4}}$ mit einer Toleranz von Ring5, wobei bei Ring 5 braun=\SI{1}{\percent}, rot=\SI{2}{\percent}, grün=\SI{0,5}{\percent}, blau=\SI{0,25}{\percent}, violett=\SI{0,1}{\percent}, gold=\SI{5}{\percent} und silber=\SI{10}{\percent} bedeutet. Gold und silber können auch als Farben des Toleranzrings 4 auftreten, gold=-1, silber=-2. Der kleinste darstellbare Widerstandswert größer \SI{0}{\ohm} mit 1-\%-Toleranz wäre also die Kombination schwarz-schwarz-braun-silber-braun, dies entspricht \SI{0,01}{\ohm}, der größte so darstellbare Wert wäre weiß-weiß-weiß-weiß-braun, also \SI{999}{\giga\ohm}.}. Tabelle~\ref{tab:widerstandswerte}
+					\item Die kleinen Widerstände \texttt{R1}, \texttt{R2}, \texttt{R5}, \texttt{R6}, \texttt{R7}, \texttt{R8}, \texttt{R9}, \texttt{R10}, \texttt{R11}, \texttt{R12}, \texttt{R13}, \texttt{R14}, \texttt{R15} in der Bauform 0207. Hier spielt die Polarität keine Rolle, allerdings ist auf die Werte zu achten, die anhand der Farbringe festgestellt werden können\footnote{Falls sich jemand genauer für die Kennzeichnung der Widerstände interessiert: jede Farben symbolisiert eine Zahl, nämlich schwarz=0, braun=1, rot=2, orange=3, gelb=4, grün=5, blau=6, violett=7, grau=8, weiß=9. Der Widerstandswert in Ohm ist bei fünf Ringen folgendermaßen zu lesen: (100*Ring1 + 10*Ring2 + Ring3) * 10$^{\text{Ring4}}$ mit einer Toleranz von Ring5, wobei bei Ring 5 braun=\SI{1}{\percent}, rot=\SI{2}{\percent}, grün=\SI{0,5}{\percent}, blau=\SI{0,25}{\percent}, violett=\SI{0,1}{\percent}, gold=\SI{5}{\percent} und silber=\SI{10}{\percent} bedeutet. Gold und silber können auch als Farben des Rings 4 auftreten, gold=-1, silber=-2. Der kleinste darstellbare Widerstandswert größer \SI{0}{\ohm} mit 1-\%-Toleranz wäre also die Kombination schwarz-schwarz-braun-silber-braun, dies entspricht \SI{0,01}{\ohm}, der größte so darstellbare Wert wäre weiß-weiß-weiß-weiß-braun, also \SI{999}{\giga\ohm}.}. Tabelle~\ref{tab:widerstandswerte} zeigt die Widerstandswerte und ihre farbliche Kennzeichnung.
 
-					      Der \enquote{erste} Ring ist derjenige, der am weitesten außen am Gehäuse angebracht ist, ansonsten den Widerstand so drehen, dass die Farbreihenfolge einer in der Tabelle genannten entspricht, rechts muss immer ein brauner Ring sein.
+				    Der \enquote{erste} Ring ist derjenige, der am weitesten außen am Gehäuse angebracht ist, ansonsten den Widerstand so drehen, dass die Farbreihenfolge einer in der Tabelle genannten entspricht, rechts muss immer ein brauner Ring sein.
+			
+				    Besondere Vorsicht ist bei den Werten geboten, die sich nur um Zehnerpotenzen, also nur im vierten Ring unterschieden: (\SI{1}{\kilo\ohm} und \SI{10}{\kilo\ohm}, \SI{1,5}{\kilo\ohm} und \SI{150}{\kilo\ohm} sowie \SI{4,7}{\kilo\ohm} und \SI{47}{\kilo\ohm}). Hier darauf achten, dass bei den jeweils kleineren Werten der vierte und fünfte Ring dieselbe Farbe besitzen.
 
-					      Besondere Vorsicht ist bei den Werten geboten, die sich nur um Zehnerpotenzen, also nur im vierten Ring unterschieden (\SI{1}{\kilo\ohm} und \SI{10}{\kilo\ohm}, \SI{1,5}{\kilo\ohm} und \SI{150}{\kilo\ohm} sowie \SI{4,7}{\kilo\ohm} und \SI{47}{\kilo\ohm}). Hier darauf achten, dass bei den jeweils kleineren Werten der vierte und fünfte Ring dieselbe Farbe besitzen.
-
-					      \begin{table}
-						      \begin{center}
-							      \begin{minipage}[b]{.6\textwidth}
-								      \begin{tabu}
-									      {|r@{\,}l|ccccc|}\hline
-									      \multicolumn{2}{|c|}{Wert} & 1. Ring        & 2. Ring              & 3. Ring               & 4. Ring & 5. Ring                                   \\ \hline\hline
-									      270                        & \si{\ohm}      & \color{red}rot       & \color{violet}violett & schwarz & schwarz              & \color{brown}braun \\ \hline
-									      330                        & \si{\ohm}      & \color{orange}orange & \color{orange}orange  & schwarz & schwarz              & \color{brown}braun \\ \hline
-									      1                          & \si{\kilo\ohm} & \color{brown}braun   & schwarz               & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
-									      1,5                        & \si{\kilo\ohm} & \color{brown}braun   & \color{green}grün     & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
-									      4,7                        & \si{\kilo\ohm} & \color{yellow}gelb   & \color{violet}violett & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
-									      10                         & \si{\kilo\ohm} & \color{brown}braun   & schwarz               & schwarz & \color{red}rot       & \color{brown}braun \\ \hline
-									      47                         & \si{\kilo\ohm} & \color{yellow}gelb   & \color{violet}violett & schwarz & \color{red}rot       & \color{brown}braun \\ \hline
-									      150                        & \si{\kilo\ohm} & \color{brown}braun   & \color{green}grün     & schwarz & \color{orange}orange & \color{brown}braun \\ \hline
-								      \end{tabu}
-								      \vspace{0pt}
-							      \end{minipage}%
-							      \begin{minipage}[b]{.2\textwidth}
-								      \vspace{0pt}
-								      \includegraphics[height=40mm]{Widerstaende}
-							      \end{minipage}
-						      \end{center}
-						      \caption{Identifizierung der Widerstandswerte}
-						      \label{tab:widerstandswerte}
-					      \end{table}
-					      Drähte nach dem Einlöten kürzen.
+				      \begin{table}
+					      \begin{center}
+						      \begin{minipage}[b]{.6\textwidth}
+							      \begin{tabu}
+								      {|r@{\,}l|ccccc|}\hline
+								      \multicolumn{2}{|c|}{Wert} & 1. Ring        & 2. Ring              & 3. Ring               & 4. Ring & 5. Ring                                   \\ \hline\hline
+								      270                        & \si{\ohm}      & \color{red}rot       & \color{violet}violett & schwarz & schwarz              & \color{brown}braun \\ \hline
+								      330                        & \si{\ohm}      & \color{orange}orange & \color{orange}orange  & schwarz & schwarz              & \color{brown}braun \\ \hline
+								      1                          & \si{\kilo\ohm} & \color{brown}braun   & schwarz               & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
+								      1,5                        & \si{\kilo\ohm} & \color{brown}braun   & \color{green}grün     & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
+								      4,7                        & \si{\kilo\ohm} & \color{yellow}gelb   & \color{violet}violett & schwarz & \color{brown}braun   & \color{brown}braun \\ \hline
+								      10                         & \si{\kilo\ohm} & \color{brown}braun   & schwarz               & schwarz & \color{red}rot       & \color{brown}braun \\ \hline
+								      47                         & \si{\kilo\ohm} & \color{yellow}gelb   & \color{violet}violett & schwarz & \color{red}rot       & \color{brown}braun \\ \hline
+								      150                        & \si{\kilo\ohm} & \color{brown}braun   & \color{green}grün     & schwarz & \color{orange}orange & \color{brown}braun \\ \hline
+							      \end{tabu}
+							      \vspace{0pt}
+						      \end{minipage}%
+						      \begin{minipage}[b]{.2\textwidth}
+							      \vspace{0pt}
+							      \includegraphics[height=40mm]{Widerstaende}
+						      \end{minipage}
+					      \end{center}
+					      \caption{Identifizierung der Widerstandswerte}
+					      \label{tab:widerstandswerte}
+				      \end{table}
+				    Drähte nach dem Einlöten kürzen.
 
 					\item Die beiden Dioden \texttt{D1} und \texttt{D2}, wobei die Orientierung wichtig ist. Drähte nach dem Einlöten kürzen.
 					\item Die kleinen 100-nF-Kondensatoren \texttt{C1}, \texttt{C2}, \texttt{C3}, \texttt{C4}, \texttt{C5}, \texttt{C6}, \texttt{C7}, \texttt{C8}, \texttt{C11}, \texttt{C12}, \texttt{C15}, Orientierung spielt keine Rolle. Drähte nach dem Einlöten kürzen.
 					\item Den ATmega328P-PU, die beiden 74HC595, den SFH620A-3, den MCP6002 und den MCP2221-I-P, dabei unbedingt auf korrekte Orientierung achten. Die größeren Gehäuse besitzen an einer der kurzen Seiten eine halbkreisförmige Vertiefung, die im Bestückungsdruck auf der Platine nachempfunden ist, beim Optokoppler~(U5) ist Pin~1 durch einen Punkt auf dem Gehäuse markiert und gehört ins quadratische der vier Pads.
 					\item Die Buchsenleiste, die im Gegensatz zu den anderen Bauteilen von der Unterseite zu stecken und von der Oberseite zu löten ist
-					\item Die Widerstandsnetzwerke (RN). Wichtig: Der Punkt auf dem schwarzen Gehäuse muss jeweils am quadratischen Lötpad liegen. Aufschrift beachten, die beiden Netzwerke mit der Aufschrift \enquote{A472G} gehören an den Rand der Platine neben der Buchsenleiste, die Netzwerke mit der Aufschrift \enquote{A103G} neben die Schieberegister.
+					\item Die Widerstandsnetzwerke \texttt{RN1}, \texttt{RN2}, \texttt{RN3}, \texttt{RN4}. Wichtig: Der Punkt auf dem schwarzen Gehäuse muss jeweils am quadratischen Lötpad liegen. Aufschrift beachten, die beiden Netzwerke mit der Aufschrift \enquote{$\bullet$A472G} gehören an den Rand der Platine neben der Buchsenleiste, die Netzwerke mit der Aufschrift \enquote{$\bullet$A103G} neben die Schieberegister.
 					\item Die drei Transistoren \texttt{Q17}, \texttt{Q19} und \texttt{Q20} im Package TO-92. Auf korrekte Zuordnung achten, da \texttt{Q20} trotz gleichem Gehäuse ein anderes Modell, nämlich ein BC3\textbf{2}7 ist als die beiden anderen, bei denen es sich um BC3\textbf{3}7 handelt. Ebenso korrekte Orientierung sicherstellen und nicht mit Gewalt in die Platine drücken. Es sollen ruhig noch ein paar Millimeter Draht auf der Oberseite herausschauen, das schwarze Gehäuse soll nicht aufliegen. Drähte nach dem Einlöten kürzen.
 					\item Die Molexkonnektoren \texttt{J2} und \texttt{J3}, die Plastikwand muss jeweils zur Platinenmitte weisen
 					\item Das Boost-Modul \texttt{U8}: Zunächst die Stiftleiste in vier einzelne Pins zerlegen, indem mit dem Cuttermesser an den verjüngten Stellen der Stiftleiste Druck ausgeübt wird, und diese von der Oberseite in die vier vorgesehenen Löcher in der Platine stecken, so dass der längere Teil des Stifts nach oben zeigt. Beschriftung auf dem Modul mit Beschriftung auf der Platine abgleichen, das Boost-Modul korrekt orientiert in die vier Stifte einfädeln und auf der Oberseite des Moduls verlöten. Anschließend noch die kurzen Enden der Pins auf der Unterseite der Platine anlöten.
@@ -402,7 +411,7 @@
 
 				Die Micro-USB-Buchse J7 sollte bereits vorbestückt gewesen sein, die beiden Stiftleisten J4 und J6, müssen nicht bestückt werden. Auch der Wannenstecker J5 wird im Normalfall nicht benötigt. Keineswegs verbunden werden dürfen die Kontakte von JP1, da man sonst Ein- und Ausgang des Step-Up-Konverters kurzschließt!
 
-				Abbildung~\ref{fig:base3d} zeigt auch die korrekte Orientierung der Bauteile.
+				Abbildung~\ref{fig:base3d} zeigt auch die korrekte Orientierung der Bauteile, allerdings sind die Widerstände ohne Farbcode dargestellt.
 
 				\begin{figure}
 					\centering\includegraphics[width=\textwidth]{base3d}
@@ -410,13 +419,12 @@
 					\label{fig:base3d}
 				\end{figure}
 
-
 		\section{Batterie}
 
 			Schrumpfschlauchstück mit Durchmesser \SI{4,8}{\milli\metre} über das offene Ende des roten Kabels mit Kabelschuh schieben, Kabel an den oberen T-Balken der Deans-Buchse löten, Lötstelle mit Schrumpfschlauch isolieren. Analog geht man mit dem schwarzen Kabel mit Kabelschuh und dem zweiten Kontakt der Deans-Buchse vor und wiederholt die Prozedur mit den Kabeln ohne Kabelschuhe und dem Deans-Stecker, so dass es folgendermaßen aussehen sollte wie in Abbildung~\ref{fig:deans}.
 
 			\begin{figure}
-				\centering\includegraphics[width=.4\textwidth]{deans}
+				\centering\includegraphics[width=.35\textwidth]{deans}
 				\caption{Korrekte Verwendung des Deans-Verbinder\-paares}
 				\label{fig:deans}
 			\end{figure}
@@ -429,7 +437,23 @@
 
 			Anschließend unter Verwendung der 11-mm-Distanzhülsen die beiden Platinen über die vier Löcher an den Ecken der Basis mit M3x16-Schrauben und zugehörigen Muttern verschrauben. Die Schrauben aus optischen Gründen von der Panelseite stecken, so dass die Muttern später im Gehäuse verschwinden und auf dem Panel die Schraubenköpfe zu sehen sind.
 
-			Nachdem eine stabile mechanische Verbindung besteht, die beiden Crimpbuchsen und den USB-Stecker an der Basisplatine befestigen. Beim USB-Kabel darauf achten, dass möglichst wenig Zug auf die Platinenbuchse ausgeübt wird; am besten einen Knoten ins Kabel machen, um es entsprechend kurz zu halten und nicht dauerhaften Zug auszuüben. Die Kabel der Crimpbuchsen und die Batteriekabel können per Kabelbinder zu einem Strang zusammegefasst werden, das erleichtert das spätere Verstauen zwischen Akku und Kofferwand.
+			\begin{figure}
+				\begin{center}
+					\includegraphics[width=\textwidth]{base-eingebaut}
+				\end{center}
+				\caption{Fertig gelötete und verschraubte Basis}
+				\label{fig:base-eingebaut}
+			\end{figure}
+
+			Nachdem eine stabile mechanische Verbindung besteht, die beiden Crimpbuchsen und den USB-Stecker an der Basisplatine befestigen. Beim USB-Kabel darauf achten, dass möglichst wenig Zug auf die Platinenbuchse ausgeübt wird; am besten wie in Abbildung~\ref{fig:usbknoten} einen Knoten ins Kabel machen, um es entsprechend kurz zu halten und nicht dauerhaften Zug auszuüben. Die Kabel der Crimpbuchsen und die Batteriekabel können per Kabelbinder zu einem Strang zusammegefasst werden, das erleichtert das spätere Verstauen zwischen Akku und Kofferwand.
+			
+			\begin{figure}
+				\begin{center}
+					\includegraphics[width=.8\textwidth]{usb-knoten}
+				\end{center}
+				\caption{Verlegen des USB-Anschlusskabels}
+				\label{fig:usbknoten}
+			\end{figure}
 
 			Die Batterie in den Koffer legen, so dass die Kontakte auf der linken Seite an der vorderen Wand liegen und die verbundenen Platinen passend eingelegt werden können. Die Position des Akkus bezogen auf den Koffer ist in Abbildung~\ref{fig:akkuposition} zu sehen. Zwischen Wand und Akku beträgt der Abstand \SI{37}{\milli\metre}.
 
@@ -574,6 +598,10 @@
 						\caption{Beispielsequenz}
 						\label{fig:beispielsequenz}
 					\end{figure}
+				
+				\subsubsection*{Sequenz feuern oder fortsetzen}
+					
+					Mit dieser Taste ist es möglich, die derzeit aktive Einstellung auszulösen, das Verhalten des Steppers ist dabei absolut identisch zu einem tatsächlichen Triggersignal: Ist der Stepper nicht scharf geschaltet, hat ein Druck dieser Taste keinen Effekt, ist er scharf geschaltet, wird die aktuelle Sequenz gestartet oder fortgesetzt und die Kanäle auch tatsächlich ausgelöst. Für einen reinen Testlauf also unbedingt vorher alle Anzünder entfernen!
 
 			\subsection{Zusatzfenster Absolutzeiten}
 				\label{sec:absolutzeiten}
