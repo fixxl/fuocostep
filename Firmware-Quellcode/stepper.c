@@ -12,6 +12,7 @@
 // Global Variables
 static volatile uint8_t  trigger_flag = 0;
 static volatile uint8_t  key_flag = 0;
+static volatile uint8_t  intstate_new = 0, intstate_old = 0;
 static volatile uint8_t  channel_monitor = 0;
 static volatile uint16_t timerval = 0;
 static volatile uint16_t active_channels = 0;
@@ -165,6 +166,7 @@ int main(void) {
     // ------------------------------------------------------------------------------
 
     // Manually trigger a key event to ensure proper states
+    intstate_old = ((OPTO_PIN & (1 << OPTO)) ? 2 : 0) | ((KEY_PIN & (1 << KEY)) ? 1 : 0);
     key_flag      = 1;
 
     // Enable Interrupts
@@ -187,17 +189,29 @@ int main(void) {
             cli();
             key_flag  = 0;
 
+			#if DEBUGMODE
+				uart_puts_P(PSTR("Schluesselereignis\r\n"));
+			#endif
+
             // Box armed: armed = 1, Box not armed: armed = 0
             armed     = debounce(&KEY_PIN, KEY);
 
             if (armed) {
+				#if DEBUGMODE
+					uart_puts_P(PSTR("Kanal-Reset, Schalter einlesen, Trigger erlauben\r\n"));
+				#endif
+
                 fire_channel = 1;                           // Reset fire channel to the start
                 stepper_mode = adc_read(4);                 // Read current mode setting
                 OPTOMSK     |= (1 << OPTO);                 // Allow fire events to be triggered
                 led_red_on();                               // Signalize armed status
             }
             else {
-                MOSSWITCH_PORT        &= ~(1 << MOSSWITCH); // Block conducting path of the P-FET
+				#if DEBUGMODE
+					uart_puts_P(PSTR("Schalter oeffnen, Flags zuruecksetzen\r\n"));
+				#endif
+
+            	MOSSWITCH_PORT        &= ~(1 << MOSSWITCH); // Block conducting path of the P-FET
                 OPTOMSK               &= ~(1 << OPTO);      // Disallow fire events to be triggered
                 flags.b.fire           = 0;                 // Clear fire status
                 flags.b.step           = 0;                 // Stop running step sequences
@@ -414,6 +428,12 @@ int main(void) {
             cli();
             trigger_flag = 0;                                           // Clear flag
 
+			#if DEBUGMODE
+				uart_puts_P(PSTR("Trigger f. Kanal "));
+				uart_shownum(fire_channel, 'd');
+				uart_puts_P(PSTR("\r\n\n"));
+			#endif
+
             // Check if we are not in a sequence yet
             if(!flags.b.step) {
                 led_green_on();
@@ -455,6 +475,16 @@ int main(void) {
                 // after the upcoming sequence of one or more channels
                 next_channel           = fire_channel + additional_channels + 1;
 
+                // Debugging
+				#if DEBUGMODE
+					uart_puts_P(PSTR("Feuern Kanal "));
+					uart_shownum(fire_channel, 'd');
+					uart_puts_P(PSTR(" und "));
+					uart_shownum(additional_channels, 'd');
+					uart_puts_P(PSTR(" weitere."));
+					uart_puts_P(PSTR("\r\n\n"));
+				#endif
+
                 for (uint8_t i = 16; i; i--) {
                     scheme <<= 1;                                       // Left-shift mask-variable
 
@@ -467,6 +497,12 @@ int main(void) {
                 }
 
                 scheme                |= active_channels;               // Combine newly and already active channels
+                // Debugging
+				#if DEBUGMODE
+					uart_puts_P(PSTR("Schema: 0b"));
+					uart_shownum(scheme, 'b');
+					uart_puts_P(PSTR("\r\n\n"));
+				#endif
 
                 MOSSWITCH_PORT        |= (1 << MOSSWITCH);              // Open or leave open P-FET-channel
                 sr_shiftout(scheme);                                    // Write pattern to shift-register
@@ -518,6 +554,12 @@ int main(void) {
 
             // Lock respective MOSFETs
             sr_shiftout(anti_scheme);                                   // Perform the necessary shift-register changes
+			#if DEBUGMODE
+				uart_puts_P(PSTR("Anti-Schema: 0b"));
+				uart_shownum(anti_scheme, 'b');
+				uart_puts_P(PSTR("\r\n\n"));
+			#endif
+
             active_channels       = anti_scheme;                        // Re-write the list of currently active channels
 
             if (!anti_scheme) {                                         // If no more channels are active at the moment
@@ -561,8 +603,26 @@ ISR(TIMER1_COMPA_vect) {
 
 #if (COMMONINT)
     ISR(KEYINT) {
-        if ((OPTO_PIN & (1 << OPTO)) && !(KEY_PIN & (1 << KEY))) trigger_flag = 1;
-        else key_flag = 1;
+    	intstate_new = ((OPTO_PIN & (1 << OPTO)) ? 2 : 0) | ((KEY_PIN & (1 << KEY)) ? 1 : 0);
+
+    	switch (intstate_new ^ intstate_old) {
+    		// Case 1 + 3: Toggling key, don't care for trigger
+    		case 1:
+    		case 3: {
+    			key_flag = 1;
+    			break;
+    		}
+    		// Case 2: Toggling trigger, no toggling key
+    		case 2: {
+    			if ((OPTO_PIN & (1 << OPTO)) && !(KEY_PIN & (1 << KEY))) trigger_flag = 1;
+    			break;
+    		}
+    		default: {
+    			break;
+    		}
+    	}
+
+    	intstate_old = intstate_new;
     }
 #else
     ISR(KEYINT) {

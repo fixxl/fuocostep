@@ -8,6 +8,8 @@
 #ifndef STEPPER_H_
 #define STEPPER_H_
 
+#define DEBUGMODE		   0
+
 #define MAX_ARRAYSIZE      30
 
 // Key switch location
