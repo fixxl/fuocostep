@@ -454,6 +454,10 @@ int main(void) {
                     // Nothing will be done if we're not armed
                     else led_green_off();
                 }
+                // If a key-event is pending, restore trigger flag for evaluation after key-event
+                else {
+                	trigger_flag = 1;
+                }
             }
 
             SREG         = temp_sreg;
@@ -606,14 +610,19 @@ ISR(TIMER1_COMPA_vect) {
     	intstate_new = ((OPTO_PIN & (1 << OPTO)) ? 2 : 0) | ((KEY_PIN & (1 << KEY)) ? 1 : 0);
 
     	switch (intstate_new ^ intstate_old) {
-    		// Case 1 + 3: Toggling key, don't care for trigger
-    		case 1:
-    		case 3: {
+    		// Case 1: Toggling key, no trigger
+    		case 1: {
     			key_flag = 1;
     			break;
     		}
     		// Case 2: Toggling trigger, no toggling key
     		case 2: {
+    			if ((OPTO_PIN & (1 << OPTO)) && !(KEY_PIN & (1 << KEY))) trigger_flag = 1;
+    			break;
+    		}
+    		// Case 3: Both toggling
+    		case 3: {
+    			key_flag = 1;
     			if ((OPTO_PIN & (1 << OPTO)) && !(KEY_PIN & (1 << KEY))) trigger_flag = 1;
     			break;
     		}
