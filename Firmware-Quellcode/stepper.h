@@ -97,6 +97,7 @@ typedef union {
 
 #if (KEY_NUMERIC == OPTO_NUMERIC)
     #define COMMONINT  1
+	#define INTERRUPT_PIN   OPTO_PIN
 #else
     #define COMMONINT  0
 #endif

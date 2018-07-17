@@ -12,10 +12,14 @@
 // Global Variables
 static volatile uint8_t  trigger_flag = 0;
 static volatile uint8_t  key_flag = 0;
-static volatile uint8_t  intstate_new = 0, intstate_old = 0;
 static volatile uint8_t  channel_monitor = 0;
 static volatile uint16_t timerval = 0;
 static volatile uint16_t active_channels = 0;
+
+#if(COMMONINT)
+	static volatile uint8_t  intstate_old = 0;
+#endif
+
 
 void wdt_init(void) {
     MCUSR = 0;
@@ -166,7 +170,9 @@ int main(void) {
     // ------------------------------------------------------------------------------
 
     // Manually trigger a key event to ensure proper states
-    intstate_old  = ((OPTO_PIN & (1 << OPTO)) | (KEY_PIN & (1 << KEY)));
+	#if (COMMONINT)
+		intstate_old  = (INTERRUPT_PIN & ((1 << OPTO) | (1 << KEY)));
+	#endif
     key_flag      = 1;
 
     // Enable Interrupts
@@ -607,9 +613,9 @@ ISR(TIMER1_COMPA_vect) {
 
 #if (COMMONINT)
     ISR(KEYINT) {
-        intstate_new = ((OPTO_PIN & (1 << OPTO)) | (KEY_PIN & (1 << KEY)));
+        uint8_t intstate_new = (INTERRUPT_PIN & ((1 << OPTO) | (1 << KEY)));
 
-        switch (intstate_new ^ intstate_old) {
+        switch (intstate_old ^ intstate_new) {
             // Case 1: Toggling key, no trigger
             case (1 << KEY): {
                 key_flag = 1;
@@ -617,7 +623,8 @@ ISR(TIMER1_COMPA_vect) {
             }
             // Case 2: Toggling trigger, no toggling key
             case (1 << OPTO): {
-                if ((OPTO_PIN & (1 << OPTO)) && !(KEY_PIN & (1 << KEY))) trigger_flag = 1;
+                // Trigger needs OPTO-PIN high and KEY-PIN low
+            	if (intstate_new == (1 << OPTO)) trigger_flag = 1;
 
                 break;
             }
@@ -625,7 +632,8 @@ ISR(TIMER1_COMPA_vect) {
             case ((1 << OPTO) | (1 << KEY)): {
                 key_flag = 1;
 
-                if ((OPTO_PIN & (1 << OPTO)) && !(KEY_PIN & (1 << KEY))) trigger_flag = 1;
+                // Trigger needs OPTO-PIN high and KEY-PIN low
+                if (intstate_new == (1 << OPTO)) trigger_flag = 1;
 
                 break;
             }
