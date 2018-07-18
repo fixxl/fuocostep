@@ -649,6 +649,6 @@ ISR(TIMER1_COMPA_vect) {
         key_flag = 1;
     }
     ISR(OPTOINT) {
-        if (!(OPTOPIN & (1 << OPTO))) trigger_flag = 1;
+        if ((OPTOPIN & (1 << OPTO)) && !(KEYPIN & (1 << KEY))) trigger_flag = 1;
     }
 #endif
