@@ -276,7 +276,7 @@ class COM_Port_Lister():
             def on_mode_write_clicked(self, event):
                 self.perform_changes = True
                 if (self.t1.GetString(self.t1.GetSelection()) != ""):
-                    # print("Verbinde mit " + self.t1.GetString(self.t1.GetSelection()))
+                    #print("Verbinde mit " + self.t1.GetString(self.t1.GetSelection()))
                     
                     ser = serial.Serial(self.t1.GetString(self.t1.GetSelection()), 9600, timeout=.2)
                     self.serialtransfer(ser, '\redit\r')
@@ -305,23 +305,23 @@ class COM_Port_Lister():
                     self.btn_cancel.Disable()
                     self.btn_mode_write.Disable()
                     
-                    print("Setting intervals")
-                    print("Opening serial port")
+                    #print("Setting intervals")
+                    #print("Opening serial port")
                     ser = serial.Serial(self.t1.GetString(self.t1.GetSelection()), 9600, timeout=.2)
                     
                     for ii in range(1, 16):                       
                         # if(self.intfields_storage[ii] != self.intfields["Int%s"%(ii)].GetValue()):
-                        print(("Setting interval %s..."%(str(ii))))
+                        #print(("Setting interval %s..."%(str(ii))))
                         ser.write('\redit\r')
                         test = self.serialtransfer(ser, 'i')
-                        print((' '.join(test)))
+                        #print((' '.join(test)))
                         
                         # Case for fixed interval
                         if (ii == 1):
                             if ("Neuer Wert" in ' '.join(test)):
                                 ival = str(self.intfields["Int%s"%(ii)].GetValue())
                                 if ival.lower() in ["trigger", "t", "tr", "tri", "trig", "trigg", "trigge", "triggere", "triggered"]:
-                                    print("Setze Trigger-Mode!")
+                                    #print("Setze Trigger-Mode!")
                                     self.serialtransfer(ser, 't')
                                 else:
                                     self.serialtransfer(ser, (ival + '\r'))
@@ -339,7 +339,7 @@ class COM_Port_Lister():
                         self.serialtransfer(ser, (ival + '\r'))
                         self.serialtransfer(ser, '\r')
                     
-                    print("Closing serial port")
+                    #print("Closing serial port")
                     ser.close()
                     
                     self.btn_mode_write.Enable()
@@ -354,10 +354,10 @@ class COM_Port_Lister():
             def on_read_clicked(self, event):
                 self.perform_changes = True
                 if (self.t1.GetString(self.t1.GetSelection()) != ""):
-                    print("Read current settings")
-                    print("Open serial port")
+                    #print("Read current settings")
+                    #print("Open serial port")
                     ser = serial.Serial(self.t1.GetString(self.t1.GetSelection()), 9600, timeout=.2)
-                    print("Get data")
+                    #print("Get data")
                     ser.write('\redit\r')
                     num_of_lines = 2
                     
@@ -376,7 +376,7 @@ class COM_Port_Lister():
                     self.serialtransfer(ser, 'x')
                     self.serialtransfer(ser, '\rcls\r')
                     
-                    print("Processing data")
+                    #print("Processing data")
                     if num_of_lines == 2:
                         tval = x.split(': ', 1)[1]
                         self.t2.SetSelection(0)
@@ -397,7 +397,7 @@ class COM_Port_Lister():
                                 self.intfields_storage[fieldctr] = tval
                                 fieldctr += 1
                    
-                    print("Closing serial port")
+                    #print("Closing serial port")
                     ser.close()
                     self.btn_mode_write.Enable()
                     self.btn_intervals_write.Enable()
