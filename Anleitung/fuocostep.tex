@@ -699,6 +699,54 @@
 
 				Das Fenster \enquote{Absolutzeiten} kann auch dazu genutzt werden, Einstellungen von einer Schalterstellung auf eine andere zu übertragen. Hierzu die Einstellungen bei der zu kopierenden Schalterposition auslesen und dann nacheinander die Buttons \enquote{Absolutzeiten}, \enquote{Werte aus Hauptfenster} und \enquote{Berechne Intervalle} klicken. Nun die neue Schalterposition auswählen, auslesen, falls nötig den passenden Modus setzen und schließlich durch Klick auf \enquote{Werte ins Hauptfenster} die zu kopierenden Einstellungen setzen.
 
+		\section{Terminal}
+
+			Kann oder will man die graphische Oberfläche nicht nutzen, besteht auch die Möglichkeit, über ein einfaches Terminalprogramm wie \texttt{Putty}\footnote{\url{https://the.earth.li/~sgtatham/putty/latest/w32/putty.exe}} eine serielle Verbindung zu FUOCO STEP aufzubauen und Stepsequenzen zu programmieren. Hierzu ist der Name des COM-Ports zu ermitteln~(COM1, COM2, \dots), unter dem sich FUOCO STEP am Rechner anmeldet, die nötigen Parameter der seriellen Verbindung sind in Tabelle~\ref{tab:seriell} aufgeführt.
+
+			\begin{table}
+				\begin{center}
+					\begin{tabu}
+						to 7cm [c]{X|l}
+						\hline
+						Einstellung      & Wert  \\
+						\hline
+						Bits pro Sekunde & 9600  \\
+						Datenbits        & 8     \\
+						Parität          & keine \\
+						Stoppbits        & 1     \\
+						Flusssteuerung   & keine \\ \hline
+					\end{tabu}
+					\caption{Konfiguration der seriellen Schnittstelle}
+					\label{tab:seriell}
+				\end{center}
+			\end{table}
+
+			Diese Einstellungen können händisch in Putty vorgenommen werden, alternativ ist es auch möglich, sie in einer Verknüpfung direkt auf der Kommandozeile zu übergeben, wobei Anwendungspfad und Nummer des COM-Ports (hier 1) entsprechend angepasst werden müssen:
+			\begin{center}
+				\verb|"c:\programme\putty\putty.exe" -serial com1 -sercfg 9600,8,1|
+			\end{center}
+
+			Die Befehle, um FUOCO STEP via Terminal bedienen zu können, lauten:
+
+			\begin{center}
+				\begin{tabu}
+					to \textwidth [c]{p{2.5cm}X}
+					\hline
+					Befehl  & Bedeutung                                                                                                       \\
+					\hline
+					list    & Auflisten der aktuellen Einstellungen für alle Stepsequenzen, aktuell aktive Schalterstellung ist gelb markiert \\
+					edit    & Verändern der Einstellungen~-- Modus oder Intervall(e)~-- für die aktuelle Schalterstellung                     \\
+					trigger & Auslösen eines Software-Triggers, startet, sofern scharfgeschaltet, die aktuell aktive Sequenz                  \\
+					igniter & Auswahl des Anzündertyps                                                                                        \\
+					cls     & Terminalbildschirm leeren                                                                                       \\
+					kill    & Reboot von FUOCO STEP                                                                                           \\
+					default & Zurücksetzen der Stepperintervalle auf die Standardeinstellung                                                  \\
+					\hline
+				\end{tabu}
+				\captionof{table}{Terminalbefehle zur Bedienung von FUOCO STEP}
+				\label{tab:commands}
+			\end{center}
+
 	\chapter{Softwarepaket}
 
 		\section{Herunterladen der Dateien}
