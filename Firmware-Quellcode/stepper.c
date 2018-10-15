@@ -256,14 +256,6 @@ int main(void) {
             // React according to first char (ignition command or not?)
             // Ignition command is always 4 chars long
             switch (uart_field[0]) {
-                case 0xFF: {
-                    uart_field[1] = uart_getc();
-                    uart_field[2] = uart_getc();
-                    uart_field[3] = uart_getc();
-                    uart_field[4] = '\0';
-                    break;
-                }
-
                 // Any other command is received as long as it doesn't start with enter or backspace
                 case 8:
                 case 10:
@@ -292,11 +284,6 @@ int main(void) {
 
             // "list" gives a overview over current settings
             if (uart_strings_equal(uart_field, "list")) flags.b.list = 1;
-
-            // "sim" or "simulate" simulates the current fire pattern if not armed
-            if (uart_strings_equal(uart_field, "sim") || uart_strings_equal(uart_field, "simulate")) {
-                flags.b.simulate = 1;
-            }
 
             // "igniter" starts the igniter selection tool
             if (uart_strings_equal(uart_field, "igniter")) {
