@@ -255,8 +255,8 @@ void list_complete(uint16_t *variable_intervalls, uint16_t *fixed_intervalls, ui
         }
         else {
             if(fixed_intervalls[i] != TRIGGERVAL) {
-        		timedisplay(fixed_intervalls[i], darstellung);
-        		uart_puts(darstellung);
+                timedisplay(fixed_intervalls[i], darstellung);
+                uart_puts(darstellung);
             }
             else uart_puts_P(PSTR("Trigger"));
             uart_puts_P(PSTR("\r\n\n"));

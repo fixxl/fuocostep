@@ -8,7 +8,7 @@
 #ifndef STEPPER_H_
 #define STEPPER_H_
 
-#define DEBUGMODE		   0
+#define DEBUGMODE          0
 
 #define MAX_ARRAYSIZE      30
 
@@ -29,7 +29,7 @@
 #define TALON_TIME         200
 #define IGNITER_TIME       EMATCH_TIME
 
-#define TRIGGERVAL		   60000
+#define TRIGGERVAL         60000
 
 // Ceiled duration of byte transmission in microseconds
 #define   BYTE_DURATION_US (8 * (1000000UL + BITRATE) / BITRATE)
@@ -97,7 +97,7 @@ typedef union {
 
 #if (KEY_NUMERIC == OPTO_NUMERIC)
     #define COMMONINT  1
-	#define INTERRUPT_PIN   OPTO_PIN
+    #define INTERRUPT_PIN   OPTO_PIN
 #else
     #define COMMONINT  0
 #endif

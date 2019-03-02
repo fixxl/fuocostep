@@ -17,7 +17,7 @@ static volatile uint16_t timerval = 0;
 static volatile uint16_t active_channels = 0;
 
 #if(COMMONINT)
-	static volatile uint8_t  intstate_old = 0;
+    static volatile uint8_t  intstate_old = 0;
 #endif
 
 
@@ -84,6 +84,7 @@ int main(void) {
     // Local Variables
     uint16_t  scheme = 0;
     uint16_t  anti_scheme = 0;
+    uint16_t  controlvar;
     uint8_t   temp_sreg;
     uint8_t   armed = 0;
     uint8_t   stepper_mode = 0;
@@ -170,9 +171,9 @@ int main(void) {
     // ------------------------------------------------------------------------------
 
     // Manually trigger a key event to ensure proper states
-	#if (COMMONINT)
-		intstate_old  = (INTERRUPT_PIN & ((1 << OPTO) | (1 << KEY)));
-	#endif
+    #if (COMMONINT)
+        intstate_old  = (INTERRUPT_PIN & ((1 << OPTO) | (1 << KEY)));
+    #endif
     key_flag      = 1;
 
     // Enable Interrupts
@@ -525,7 +526,7 @@ int main(void) {
             channel_monitor = 0;                                        // Clear the monitoring flag
             anti_scheme     = 0;                                        // Reset the delete scheme
 
-            uint16_t controlvar = 1;
+            controlvar = 1;
             for (uint8_t i = 0; i < 16; i++) {
                 if(active_channels & controlvar) {                      // If a given channel is currently active
                     channel_timeout[i]++;                               // Increment the timeout-value for that channel
@@ -611,7 +612,7 @@ ISR(TIMER1_COMPA_vect) {
             // Case 2: Toggling trigger, no toggling key
             case (1 << OPTO): {
                 // Trigger needs OPTO-PIN high and KEY-PIN low
-            	if (intstate_new == (1 << OPTO)) trigger_flag = 1;
+                if (intstate_new == (1 << OPTO)) trigger_flag = 1;
 
                 break;
             }
