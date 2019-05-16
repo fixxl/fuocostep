@@ -157,7 +157,7 @@ void channel_setup(uint16_t *variable_intervalls, uint16_t *fixed_intervalls, ui
                     uart_puts_P(PSTR("\r\nNeuer Wert (Step: 0:00.00 - 9:59.99, t für getriggerten Betrieb): "));
                     ivaltime = entertime();
 
-                    if(ivaltime != 0xFFFF) {
+                    if(ivaltime != RETURNERROR) {
                         uart_puts_P(PSTR("\r\nSetze Intervall auf: "));
 
                         if(ivaltime != TRIGGERVAL) {

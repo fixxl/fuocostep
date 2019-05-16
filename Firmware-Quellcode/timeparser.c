@@ -7,8 +7,6 @@
 
 #include "global.h"
 
-#define RETURNERROR 0xFFFF
-
 uint16_t timecalc(char* timestring) {
     uint8_t len, cols = 0, dots = 0, form = 0, dotpos = 20;
     uint16_t min = 0, sec = 0, hun = 0;

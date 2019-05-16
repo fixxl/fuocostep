@@ -4,6 +4,51 @@ import time
 import os
 import serial.tools.list_ports
 
+def parse_to_timestring(hunval=0):
+    try:
+        hunval = int(hunval)                
+        if(hunval < 0):
+            hunval = 0
+    except ValueError:
+        return "FEHLER"
+    
+    mins = 0
+    secs = 0.0
+    
+    mins = int(hunval/6000)
+    secs = (hunval - mins*6000.0)/100.0
+    
+    return("%02d:%05.2f"%(mins,secs))
+    
+    
+def parse_to_float(tstamp):
+    mins = 0
+    secs = 0.0
+    if len(tstamp) == 0:
+        return 65535
+    tstamp = tstamp.replace(',', '.')
+    try:
+        if(tstamp.count(':') == 1):
+            if(tstamp.find(':') != 0):
+                [mins, secs] = tstamp.split(':', 1)
+                mins = int(mins)
+                secs = float(secs)
+            else:
+                tstamp = tstamp.replace(':', '0')
+                secs = float(tstamp)
+        if(tstamp.count(':') == 0):
+            secs = float(tstamp)
+            
+        if(tstamp.count(':') > 1):
+            return 65535
+    except ValueError:
+        return 65535
+    
+    if (mins * 6000 + int((secs + 0.005)*100)) > 60000:
+        return 60000
+    
+    return (mins * 6000 + int((secs + 0.005)*100))
+
 class COM_Port_Lister():
     def Run(self):
         class SecondFrame(wx.Dialog):
@@ -62,51 +107,7 @@ class COM_Port_Lister():
 
                 self.Show() 
                 #self.Fit()
-
-            def parse_to_float(self, tstamp):
-                mins = 0
-                secs = 0.0
-                if len(tstamp) == 0:
-                    return 65535
-                tstamp = tstamp.replace(',', '.')
-                try:
-                    if(tstamp.count(':') == 1):
-                        if(tstamp.find(':') != 0):
-                            [mins, secs] = tstamp.split(':', 1)
-                            mins = int(mins)
-                            secs = float(secs)
-                        else:
-                            tstamp = tstamp.replace(':', '0')
-                            secs = float(tstamp)
-                    if(tstamp.count(':') == 0):
-                        secs = float(tstamp)
-                        
-                    if(tstamp.count(':') > 1):
-                        return 65535
-                except ValueError:
-                    return 65535
-                
-                if (mins * 6000 + int((secs + 0.005)*100)) > 60000:
-                    return 60000
-                
-                return (mins * 6000 + int((secs + 0.005)*100))
-            
-            def parse_to_timestring(self, hunval):
-                try:
-                    hunval = int(hunval)                
-                    if(hunval < 0):
-                        hunval = 0
-                except ValueError:
-                    return "FEHLER"
-                
-                mins = 0
-                secs = 0.0
-                
-                mins = int(hunval/6000)
-                secs = (hunval - mins*6000.0)/100.0
-                
-                return("%02d:%05.2f"%(mins,secs))
-                
+                            
             def on_reset_clicked(self, event):
                 for ii in range(0, 16):
                     self.absfields["Abstime%s"%(ii)].SetValue("")
@@ -120,10 +121,10 @@ class COM_Port_Lister():
                         if self.is_triggered["IsTrig%s"%(ii+1)].GetValue():
                             self.intfields["Int%s"%(ii+1)].SetValue( "Trigger" )
                         else:
-                            tempvar1 = self.parse_to_float(self.absfields["Abstime%s"%(ii+1)].GetValue())
-                            tempvar2 = self.parse_to_float(self.absfields["Abstime%s"%(ii)].GetValue())
+                            tempvar1 = parse_to_float(self.absfields["Abstime%s"%(ii+1)].GetValue())
+                            tempvar2 = parse_to_float(self.absfields["Abstime%s"%(ii)].GetValue())
                             if(tempvar1 != 65535 and tempvar2 != 65535 and tempvar1 >= tempvar2 and tempvar1-tempvar2 < 60000):
-                                self.intfields["Int%s"%(ii+1)].SetValue( self.parse_to_timestring(tempvar1 - tempvar2) )
+                                self.intfields["Int%s"%(ii+1)].SetValue( parse_to_timestring(tempvar1 - tempvar2) )
                             else:
                                 self.intfields["Int%s"%(ii+1)].SetValue( "" )
                 else:
@@ -131,10 +132,10 @@ class COM_Port_Lister():
                     if self.is_triggered["IsTrig1"].GetValue():
                         self.intfields["Int1"].SetValue( "Trigger" )    
                     else:
-                        tempvar1 = self.parse_to_float(self.absfields["Abstime%s"%(ii+1)].GetValue())
-                        tempvar2 = self.parse_to_float(self.absfields["Abstime%s"%(ii)].GetValue())
+                        tempvar1 = parse_to_float(self.absfields["Abstime%s"%(ii+1)].GetValue())
+                        tempvar2 = parse_to_float(self.absfields["Abstime%s"%(ii)].GetValue())
                         if(tempvar1 != 65535 and tempvar2 != 65535 and tempvar1 >= tempvar2 and tempvar1-tempvar2 < 60000):
-                            self.intfields["Int%s"%(ii+1)].SetValue( self.parse_to_timestring(tempvar1 - tempvar2) )
+                            self.intfields["Int%s"%(ii+1)].SetValue( parse_to_timestring(tempvar1 - tempvar2) )
                         else:
                             self.intfields["Int%s"%(ii+1)].SetValue( "" )
             
@@ -150,36 +151,36 @@ class COM_Port_Lister():
                             self.objMain.intfields["Int1"].SetValue(self.intfields["Int1"].GetValue())
                             
             def on_takeover_clicked(self, event):
-                if self.parse_to_float(self.absfields["Abstime0"].GetValue()) != 65535:
-                    self.absfields["Abstime0"].SetValue( self.parse_to_timestring(self.parse_to_float(self.absfields["Abstime0"].GetValue())) )
+                if parse_to_float(self.absfields["Abstime0"].GetValue()) != 65535:
+                    self.absfields["Abstime0"].SetValue( parse_to_timestring(parse_to_float(self.absfields["Abstime0"].GetValue())) )
                 else:
-                    self.absfields["Abstime0"].SetValue( self.parse_to_timestring(0) )
+                    self.absfields["Abstime0"].SetValue( parse_to_timestring(0) )
                 for x in range(1,16):
                     if self.objMain.t2.GetSelection() == 1:
                         if(self.objMain.intfields["Int%s"%(x)].GetValue().lower() in ["trigger", "t", "tr", "tri", "trig", "trigg", "trigge", "triggere", "triggered"]):
                             self.is_triggered["IsTrig%s"%(x)].SetValue(True)
                             
-                            if self.parse_to_float(self.absfields["Abstime%s"%(x)].GetValue()) != 65535:
-                                self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( self.parse_to_float(self.absfields["Abstime%s"%(x)].GetValue()) ))
+                            if parse_to_float(self.absfields["Abstime%s"%(x)].GetValue()) != 65535:
+                                self.absfields["Abstime%s"%(x)].SetValue(parse_to_timestring( parse_to_float(self.absfields["Abstime%s"%(x)].GetValue()) ))
                             else:
-                                self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( 6000 + self.parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
+                                self.absfields["Abstime%s"%(x)].SetValue(parse_to_timestring( 6000 + parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
                             
                         else:
-                            self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( self.parse_to_float(self.objMain.intfields["Int%s"%(x)].GetValue()) + self.parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
+                            self.absfields["Abstime%s"%(x)].SetValue(parse_to_timestring( parse_to_float(self.objMain.intfields["Int%s"%(x)].GetValue()) + parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
                     else:
                         if(self.objMain.intfields["Int1"].GetValue().lower() in ["trigger", "t", "tr", "tri", "trig", "trigg", "trigge", "triggere", "triggered"]):
                             self.is_triggered["IsTrig%s"%(x)].SetValue(True)
                             
                             if x == 1:                              
-                                if self.parse_to_float(self.absfields["Abstime0"].GetValue()) != 65535:
-                                    self.absfields["Abstime0"].SetValue(self.parse_to_timestring( self.parse_to_float(self.absfields["Abstime0"].GetValue()) ))
+                                if parse_to_float(self.absfields["Abstime0"].GetValue()) != 65535:
+                                    self.absfields["Abstime0"].SetValue(parse_to_timestring( parse_to_float(self.absfields["Abstime0"].GetValue()) ))
                                 else:
-                                    self.absfields["Abstime0"].SetValue(self.parse_to_timestring(0))
+                                    self.absfields["Abstime0"].SetValue(parse_to_timestring(0))
                             
-                            self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( 6000 + self.parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
+                            self.absfields["Abstime%s"%(x)].SetValue(parse_to_timestring( 6000 + parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
                             
                         else:
-                            self.absfields["Abstime%s"%(x)].SetValue(self.parse_to_timestring( self.parse_to_float(self.objMain.intfields["Int1"].GetValue()) + self.parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
+                            self.absfields["Abstime%s"%(x)].SetValue(parse_to_timestring( parse_to_float(self.objMain.intfields["Int1"].GetValue()) + parse_to_float(self.absfields["Abstime%s"%(x-1)].GetValue()) ))
             
         class displayDialog(wx.Dialog):
             def __init__(self, parent):
@@ -310,34 +311,34 @@ class COM_Port_Lister():
                     ser = serial.Serial(self.t1.GetString(self.t1.GetSelection()), 9600, timeout=.2)
                     
                     for ii in range(1, 16):                       
-                        # if(self.intfields_storage[ii] != self.intfields["Int%s"%(ii)].GetValue()):
-                        #print(("Setting interval %s..."%(str(ii))))
-                        ser.write('\redit\r')
-                        test = self.serialtransfer(ser, 'i')
-                        #print((' '.join(test)))
+                        if(parse_to_float(self.intfields_storage[ii]) != parse_to_float(self.intfields["Int%s"%(ii)].GetValue())):
+                            print(("Setting interval %s to "%(str(ii).zfill(2)) + parse_to_timestring(parse_to_float(self.intfields["Int%s"%(ii)].GetValue()))))
+                            ser.write('\redit\r')
+                            test = self.serialtransfer(ser, 'i')
+                            #print((' '.join(test)))
                         
-                        # Case for fixed interval
-                        if (ii == 1):
-                            if ("Neuer Wert" in ' '.join(test)):
-                                ival = str(self.intfields["Int%s"%(ii)].GetValue())
-                                if ival.lower() in ["trigger", "t", "tr", "tri", "trig", "trigg", "trigge", "triggere", "triggered"]:
-                                    #print("Setze Trigger-Mode!")
-                                    self.serialtransfer(ser, 't')
-                                else:
-                                    self.serialtransfer(ser, (ival + '\r'))
-                                self.serialtransfer(ser, '\r')
-                                break   
-                            if ("Schalterstellung S" in  ' '.join(test)):
-                                self.serialtransfer(ser, '\r')
-                                break
-                        
-                        # Case for variable interval
-                        self.serialtransfer(ser, str(str(ii) + '\r'))
-                        ival = str(self.intfields["Int%s"%(ii)].GetValue())
-                        if ival.lower() in ["trigger", "t", "tr", "tri", "trig", "trigg", "trigge", "triggere", "triggered"]:
-                            ival = "t"
-                        self.serialtransfer(ser, (ival + '\r'))
-                        self.serialtransfer(ser, '\r')
+                            # Case for fixed interval
+                            if (ii == 1):
+                                if ("Neuer Wert" in ' '.join(test)):
+                                    ival = str(self.intfields["Int%s"%(ii)].GetValue())
+                                    if ival.lower() in ["trigger", "t", "tr", "tri", "trig", "trigg", "trigge", "triggere", "triggered"]:
+                                        #print("Setze Trigger-Mode!")
+                                        self.serialtransfer(ser, 't')
+                                    else:
+                                        self.serialtransfer(ser, (ival + '\r'))
+                                    self.serialtransfer(ser, '\r')
+                                    break   
+                                if ("Schalterstellung S" in  ' '.join(test)):
+                                    self.serialtransfer(ser, '\r')
+                                    break
+                            
+                            # Case for variable interval
+                            self.serialtransfer(ser, str(str(ii) + '\r'))
+                            ival = str(self.intfields["Int%s"%(ii)].GetValue())
+                            if ival.lower() in ["trigger", "t", "tr", "tri", "trig", "trigg", "trigge", "triggere", "triggered"]:
+                                ival = "t"
+                            self.serialtransfer(ser, (ival + '\r'))
+                            self.serialtransfer(ser, '\r')
                     
                     #print("Closing serial port")
                     ser.close()
@@ -354,10 +355,11 @@ class COM_Port_Lister():
             def on_read_clicked(self, event):
                 self.perform_changes = True
                 if (self.t1.GetString(self.t1.GetSelection()) != ""):
-                    #print("Read current settings")
-                    #print("Open serial port")
+                    print("Read current settings")
+                    print("Open serial port")
                     ser = serial.Serial(self.t1.GetString(self.t1.GetSelection()), 9600, timeout=.2)
-                    #print("Get data")
+                    print("Get data")
+                    print("------------------------")
                     ser.write('\redit\r')
                     num_of_lines = 2
                     
@@ -376,12 +378,12 @@ class COM_Port_Lister():
                     self.serialtransfer(ser, 'x')
                     self.serialtransfer(ser, '\rcls\r')
                     
-                    #print("Processing data")
                     if num_of_lines == 2:
                         tval = x.split(': ', 1)[1]
                         self.t2.SetSelection(0)
                         self.intfields["Int1"].SetValue(tval)
                         self.intfields["Int1"].Enable()
+                        print("Fixed Interval: " + tval)
                         
                         for ii in range(2, 16):
                             self.intfields["Int%s"%(ii)].Disable()
@@ -395,9 +397,12 @@ class COM_Port_Lister():
                                 self.intfields["Int%s"%(fieldctr)].SetValue(tval)
                                 self.intfields["Int%s"%(fieldctr)].Enable()
                                 self.intfields_storage[fieldctr] = tval
+                                print("Interval " + str(fieldctr).zfill(2) + ": " + tval)
                                 fieldctr += 1
                    
-                    #print("Closing serial port")
+                    print("------------------------")
+                    print("Done getting data")
+                    print("Closing serial port")
                     ser.close()
                     self.btn_mode_write.Enable()
                     self.btn_intervals_write.Enable()
