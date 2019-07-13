@@ -10,7 +10,7 @@
 
 #define RETURNERROR 0xFFFF
 
-uint16_t timecalc(char* timestring);
-uint8_t timedisplay(uint16_t timerval, char *output_string);
+uint16_t timecalc( char *timestring );
+uint8_t timedisplay( uint16_t timerval, char *output_string );
 
 #endif /* TIMEPARSER_H_ */

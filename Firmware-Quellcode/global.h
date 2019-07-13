@@ -9,12 +9,12 @@
 #define GLOBAL_H_
 
 #ifndef MCU
- #define MCU    "atmega328p"
+    #define MCU "atmega328p"
 #endif
 
 
-#define STRINGIZE(x)             # x
-#define STRINGIZE_VALUE_OF(x)    STRINGIZE(x)
+#define STRINGIZE( x )          # x
+#define STRINGIZE_VALUE_OF( x ) STRINGIZE( x )
 
 // Includes und Defines
 #include <avr/io.h>
@@ -37,6 +37,6 @@
 #include "shiftregister.h"
 
 // Global Variables
-//extern volatile uint8_t transmit_flag, key_flag;
-//extern volatile uint16_t clear_lcd_tx_flag, clear_lcd_rx_flag, hist_del_flag;
+// extern volatile uint8_t transmit_flag, key_flag;
+// extern volatile uint16_t clear_lcd_tx_flag, clear_lcd_rx_flag, hist_del_flag;
 #endif /* GLOBAL_H_ */

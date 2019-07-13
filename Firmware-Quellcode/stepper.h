@@ -32,7 +32,7 @@
 #define TRIGGERVAL         60000
 
 // Ceiled duration of byte transmission in microseconds
-#define   BYTE_DURATION_US (8 * (1000000UL + BITRATE) / BITRATE)
+#define   BYTE_DURATION_US ( 8 * ( 1000000UL + BITRATE ) / BITRATE )
 
 // Bitflags
 typedef union {
@@ -56,62 +56,62 @@ typedef union {
     uint16_t complete;
 } bitfeld_t;
 
-#define KEY_DDR        DDR(KEYPORT)
-#define KEY_PIN        PIN(KEYPORT)
-#define KEY_PORT       PORT(KEYPORT)
-#define KEY_NUMERIC    NUMPORT(KEYPORT)
-#define KEY            KEYNUM
+#define KEY_DDR           DDR( KEYPORT )
+#define KEY_PIN           PIN( KEYPORT )
+#define KEY_PORT          PORT( KEYPORT )
+#define KEY_NUMERIC       NUMPORT( KEYPORT )
+#define KEY               KEYNUM
 
 #if KEY_NUMERIC == DPORT
-    #define KEYINT     PCINT2_vect
-    #define KEYMSK     PCMSK2
-    #define KEYPCIE    PCIE2
+    #define KEYINT        PCINT2_vect
+    #define KEYMSK        PCMSK2
+    #define KEYPCIE       PCIE2
 #elif KEY_NUMERIC == BPORT
-    #define KEYINT     PCINT0_vect
-    #define KEYMSK     PCMSK0
-    #define KEYPCIE    PCIE0
+    #define KEYINT        PCINT0_vect
+    #define KEYMSK        PCMSK0
+    #define KEYPCIE       PCIE0
 #else
-    #define KEYINT     PCINT1_vect
-    #define KEYMSK     PCMSK1
-    #define KEYPCIE    PCIE1
+    #define KEYINT        PCINT1_vect
+    #define KEYMSK        PCMSK1
+    #define KEYPCIE       PCIE1
 #endif
 
-#define OPTO_DDR       DDR(OPTOPORT)
-#define OPTO_PIN       PIN(OPTOPORT)
-#define OPTO_PORT      PORT(OPTOPORT)
-#define OPTO_NUMERIC   NUMPORT(OPTOPORT)
-#define OPTO           OPTONUM
+#define OPTO_DDR          DDR( OPTOPORT )
+#define OPTO_PIN          PIN( OPTOPORT )
+#define OPTO_PORT         PORT( OPTOPORT )
+#define OPTO_NUMERIC      NUMPORT( OPTOPORT )
+#define OPTO              OPTONUM
 #if OPTO_NUMERIC == DPORT
-    #define OPTOINT    PCINT2_vect
-    #define OPTOMSK    PCMSK2
-    #define OPTOPCIE   PCIE2
+    #define OPTOINT       PCINT2_vect
+    #define OPTOMSK       PCMSK2
+    #define OPTOPCIE      PCIE2
 #elif OPTO_NUMERIC == BPORT
-    #define OPTOINT    PCINT0_vect
-    #define OPTOMSK    PCMSK0
-    #define OPTOPCIE   PCIE0
+    #define OPTOINT       PCINT0_vect
+    #define OPTOMSK       PCMSK0
+    #define OPTOPCIE      PCIE0
 #else
-    #define OPTOINT    PCINT1_vect
-    #define OPTOMSK    PCMSK1
-    #define OPTOPCIE   PCIE1
+    #define OPTOINT       PCINT1_vect
+    #define OPTOMSK       PCMSK1
+    #define OPTOPCIE      PCIE1
 #endif
 
-#if (KEY_NUMERIC == OPTO_NUMERIC)
-    #define COMMONINT  1
-    #define INTERRUPT_PIN   OPTO_PIN
+#if ( KEY_NUMERIC == OPTO_NUMERIC )
+    #define COMMONINT     1
+    #define INTERRUPT_PIN OPTO_PIN
 #else
-    #define COMMONINT  0
+    #define COMMONINT     0
 #endif
 
-#define MOSSWITCH_DDR  DDR(MOSSWITCHPORT)
-#define MOSSWITCH_PIN  PIN(MOSSWITCHPORT)
-#define MOSSWITCH_PORT PORT(MOSSWITCHPORT)
-#define MOSSWITCH      MOSSWITCHNUM
+#define MOSSWITCH_DDR     DDR( MOSSWITCHPORT )
+#define MOSSWITCH_PIN     PIN( MOSSWITCHPORT )
+#define MOSSWITCH_PORT    PORT( MOSSWITCHPORT )
+#define MOSSWITCH         MOSSWITCHNUM
 
 
 // Funktionsprototypen
-void    wdt_init(void) __attribute__((naked)) __attribute__((section(".init1")));
-void    create_symbols(void);
-uint8_t asciihex(char inp);
-void    key_init(void);
-uint8_t debounce(volatile uint8_t *port, uint8_t pin);
-#endif                      /* STEPPER_H_ */
+void    wdt_init( void ) __attribute__( ( naked ) ) __attribute__( ( section( ".init1" ) ) );
+void    create_symbols( void );
+uint8_t asciihex( char inp );
+void    key_init( void );
+uint8_t debounce( volatile uint8_t *port, uint8_t pin );
+#endif /* STEPPER_H_ */
