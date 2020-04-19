@@ -12,7 +12,7 @@ uint16_t timecalc( char *timestring ) {
     uint16_t min = 0, sec = 0, hun = 0;
     uint16_t timerval;
 
-    timestring[10] = 0;
+    timestring[9] = 0;
 
     len = strlen( timestring );
 

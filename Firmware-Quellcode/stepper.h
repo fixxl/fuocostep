@@ -10,7 +10,7 @@
 
 #define DEBUGMODE          0
 
-#define MAX_ARRAYSIZE      30
+#define MAX_COM_ARRAYSIZE      30
 
 // Key switch location
 #define KEYPORT            D

@@ -42,7 +42,7 @@ void fixedspace( int32_t zahl, uint8_t type, uint8_t space ) {
 // GUI-Routine to change IDs (allows numbers from 01 to 30)
 static uint8_t enternumber( void ) {
     uint16_t number   = 0;
-    uint8_t  num      = 0;
+    uint8_t  num;
     char     entry[4] = { 0 };
 
     for ( uint8_t i = 0; i < 3; i++ ) {
