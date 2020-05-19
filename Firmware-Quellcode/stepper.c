@@ -119,7 +119,7 @@ int main( void )
     bitfeld_t flags;
     flags.complete = 0;
 
-    char uart_field[30] = { 0 };
+    char uart_field[36] = { 0 };
 
     /* For security reasons the shift registers are initialised right at the beginning to guarantee a low level at the
      * gate pins of the MOSFETs and beware them from conducting directly after turning on the device.
@@ -316,6 +316,16 @@ int main( void )
                 flags.b.edit = 1;
             }
 
+            // "qr" gives current settings in machine-readable format
+            if ( uart_strings_equal( uart_field, "qr" ) ) {
+                flags.b.quickread = 1;
+            }
+
+            // "qw" gives new settings in a quick way
+            if ( uart_field[ 0 ] == 'q' && uart_field[ 1 ] == 'w' && uart_field[ 2 ] == 161 && uart_field[ 34 ] == 145 ) {
+                flags.b.quickwrite = 1;
+            }
+
             // "trigger" triggers!
             if ( uart_strings_equal( uart_field, "trigger" ) ) {
                 trigger_flag = 1;
@@ -377,6 +387,29 @@ int main( void )
             channel_setup( variable_intervals, fixed_intervals, use_variable_intervals );
 
             SREG = temp_sreg;
+        }
+
+        // -------------------------------------------------------------------------------------------------------
+
+        // List current settings
+        if ( flags.b.quickread ) {
+            temp_sreg = SREG;
+            cli();
+
+            flags.b.quickread = 0;
+            stepper_mode = adc_read( 4 );
+            quickread( variable_intervals, fixed_intervals, use_variable_intervals );
+
+            SREG = temp_sreg;
+        }
+
+        // Write new settings
+        if ( flags.b.quickwrite ) {
+            temp_sreg = SREG;
+            cli();
+
+            flags.b.quickwrite = 0;
+            quickwrite( uart_field + 3, variable_intervals, fixed_intervals, use_variable_intervals );
         }
 
         // -------------------------------------------------------------------------------------------------------

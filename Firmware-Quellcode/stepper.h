@@ -47,10 +47,10 @@ typedef union {
         unsigned setup          : 1;
         unsigned adc            : 1;
         unsigned edit           : 1;
-        unsigned show_only      : 1;
+        unsigned quickread      : 1;
         unsigned reset_device   : 1;
         unsigned clear_list     : 1;
-        unsigned simulate       : 1;
+        unsigned quickwrite     : 1;
         unsigned remote         : 1;
     }        b;
     uint16_t complete;

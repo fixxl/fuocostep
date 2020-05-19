@@ -41,7 +41,7 @@ void fixedspace( int32_t zahl, uint8_t type, uint8_t space ) {
 
 // GUI-Routine to change IDs (allows numbers from 01 to 30)
 static uint8_t enternumber( void ) {
-    uint16_t number   = 0;
+    uint16_t number = 0;
     uint8_t  num;
     char     entry[4] = { 0 };
 
@@ -230,6 +230,75 @@ void channel_setup( uint16_t *variable_intervalls, uint16_t *fixed_intervalls, u
         uart_puts_P( PSTR( "\r\n" ) );
     }
 }
+
+void quickread( uint16_t *variable_intervalls, uint16_t *fixed_intervalls, uint8_t *use_variable_intervalls ) {
+    uint8_t swpos          = 0;
+    uint8_t data_out[ 34 ] = { 0 };
+
+    swpos = adc_read( 4 );
+
+    if ( !swpos ) {
+        data_out[ 1 ] = 0;
+
+        for ( uint8_t i = 0; i < 15; i++ ) {
+            data_out[ 2 + 2 * i ] = 0xEA;
+            data_out[ 3 + 2 * i ] = 0x60;
+        }
+    }
+    else {
+        swpos--;                                                                                  // Settings for switch at X are stored at X-1
+        data_out[ 1 ] = ( ( swpos + 1 ) & 0x0F ) + ( use_variable_intervalls[swpos] && 1 ) * 128; // MSB shows variable/not fixed, 4 LSBs show switch position
+
+        if ( !use_variable_intervalls[swpos] ) {
+            data_out[ 2 ] = fixed_intervalls[ swpos ] >> 8;
+            data_out[ 3 ] = fixed_intervalls[ swpos ] & 0xFF;
+
+            for ( uint8_t i = 0; i < 14; i++ ) {
+                data_out[ 4 + 2 * i ] = data_out[ 1 ];
+                data_out[ 5 + 2 * i ] = data_out[ 2 ];
+            }
+        }
+        else {
+            for ( uint8_t i = 0; i < 15; i++ ) {
+                data_out[ 2 * i + 2 ] = variable_intervalls[swpos * 15 + i] >> 8;
+                data_out[ 2 * i + 3 ] = variable_intervalls[swpos * 15 + i] & 0xFF;
+            }
+        }
+    }
+
+    data_out[ 0 ]  = 161;
+    data_out[ 32 ] = 145;
+    data_out[ 33 ] = 0;
+
+    for ( uint8_t i = 0; i < 34; i++ ) {
+        uart_putc( data_out[ i ] );
+    }
+}
+
+void quickwrite( char *datain, uint16_t *variable_intervalls, uint16_t *fixed_intervalls, uint8_t *use_variable_intervalls ) {
+    uint8_t swpos = 0;
+
+    swpos = adc_read( 4 );
+
+    // Only allow to write to the current channel and to channels different from 0
+    if ( !swpos || ( swpos > 11 ) || ( ( datain[0] & 0x0F ) != swpos ) ) {
+        return;
+    }
+
+    swpos--;
+
+    if ( datain[0] & 0x80 ) {
+        use_variable_intervalls[ swpos ] = 1;
+        for ( uint8_t i = 0; i < 15; i++ ) {
+            variable_intervalls[swpos * 15 + i] = 256UL * datain[ 1 + 2 * i ] + datain[ 2 + 2 * i ];
+        }
+    }
+    else {
+        use_variable_intervalls[ swpos ] = 0;
+        fixed_intervalls[swpos]          = 256UL * datain[ 1 ] + datain[ 2 ];
+    }
+}
+
 
 // List ignition devices
 void list_complete( uint16_t *variable_intervalls, uint16_t *fixed_intervalls, uint8_t *use_variable_intervalls ) {

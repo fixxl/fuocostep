@@ -27,4 +27,7 @@ uint8_t aesconf( void );
 void list_complete( uint16_t *variable_intervalls, uint16_t *fixed_intervalls, uint8_t *use_variable_intervalls );
 void channel_setup( uint16_t *variable_intervalls, uint16_t *fixed_intervalls, uint8_t *use_variable_intervalls );
 uint8_t igniter_setup( uint8_t ignition_setting );
+
+void quickread( uint16_t *variable_intervalls, uint16_t *fixed_intervalls, uint8_t *use_variable_intervalls );
+void quickwrite( char *datain, uint16_t *variable_intervalls, uint16_t *fixed_intervalls, uint8_t *use_variable_intervalls );
 #endif /* TERMINAL_H_ */
