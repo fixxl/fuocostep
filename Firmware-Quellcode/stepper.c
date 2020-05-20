@@ -279,6 +279,20 @@ int main( void )
                     break;
                 }
 
+                case 'Q': {
+                    uart_putc( uart_field[0] );
+                    uart_field[ 1 ] = uart_getc();
+                    uart_field[ 2 ] = uart_getc();
+                    if( uart_field[1] == 'w' && uart_field[2] == 161) {
+                        for ( uint8_t i = 3; i < 35; i++ ) {
+                            uart_field[i] = uart_getc();
+                        }
+                        uart_field[35] = 0;
+                        flags.b.quickwrite = 1;
+                    }
+                    break;
+                }
+
                 default: {
                     #if !CASE_SENSITIVE
                         uart_field[0] = uart_lower_case( uart_field[0] );
@@ -319,11 +333,6 @@ int main( void )
             // "qr" gives current settings in machine-readable format
             if ( uart_strings_equal( uart_field, "qr" ) ) {
                 flags.b.quickread = 1;
-            }
-
-            // "qw" gives new settings in a quick way
-            if ( uart_field[ 0 ] == 'q' && uart_field[ 1 ] == 'w' && uart_field[ 2 ] == 161 && uart_field[ 34 ] == 145 ) {
-                flags.b.quickwrite = 1;
             }
 
             // "trigger" triggers!
