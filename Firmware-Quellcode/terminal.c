@@ -297,6 +297,15 @@ void quickwrite( char *datain, uint16_t *variable_intervalls, uint16_t *fixed_in
         use_variable_intervalls[ swpos ] = 0;
         fixed_intervalls[swpos]          = 256UL * datain[ 1 ] + datain[ 2 ];
     }
+    eewrite( use_variable_intervalls[swpos], swpos + 2 );
+    if(use_variable_intervalls[swpos]) {
+        for (uint8_t ivalnr = 0; ivalnr < 15; ivalnr++ ) {
+            eewrite16( variable_intervalls[swpos * 15 + ivalnr], 35 + 30 * swpos + 2 * ivalnr );
+        }
+    }
+    else {
+        eewrite16( fixed_intervalls[swpos], 13 + 2 * swpos );
+    }
 }
 
 
