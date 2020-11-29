@@ -21,16 +21,14 @@ static volatile uint16_t active_channels = 0;
 #endif
 
 
-void wdt_init( void )
-{
+void wdt_init( void ) {
     MCUSR = 0;
     wdt_disable();
     return;
 }
 
 // Initialise Key-Switch
-void key_init( void )
-{
+void key_init( void ) {
     KEY_PORT |= ( 1 << KEY );
     KEY_DDR  &= ~( 1 << KEY );
 
@@ -48,8 +46,7 @@ void key_init( void )
 }
 
 // Switch debouncing
-uint8_t debounce( volatile uint8_t *port, uint8_t pin )
-{
+uint8_t debounce( volatile uint8_t *port, uint8_t pin ) {
     uint8_t keystate = 0x55, ctr = 0, timer0_regb = TCCR0B;
 
     // Reset Timer 0
@@ -84,8 +81,7 @@ uint8_t debounce( volatile uint8_t *port, uint8_t pin )
 // ------------------------------------------------------------------------------------------------------------------------
 
 // Main programme
-int main( void )
-{
+int main( void ) {
     wdt_disable();
     // Keep low-impedance path between ignition voltage and clamps closed
     MOSSWITCH_PORT &= ~( 1 << MOSSWITCH );
@@ -283,13 +279,15 @@ int main( void )
                     uart_putc( uart_field[0] );
                     uart_field[ 1 ] = uart_getc();
                     uart_field[ 2 ] = uart_getc();
-                    if( uart_field[1] == 'w' && uart_field[2] == 161) {
+
+                    if ( ( uart_field[1] == 'w' ) && ( uart_field[2] == 161 ) ) {
                         for ( uint8_t i = 3; i < 35; i++ ) {
                             uart_field[i] = uart_getc();
                         }
-                        uart_field[35] = 0;
+                        uart_field[35]     = 0;
                         flags.b.quickwrite = 1;
                     }
+
                     break;
                 }
 
@@ -406,7 +404,7 @@ int main( void )
             cli();
 
             flags.b.quickread = 0;
-            stepper_mode = adc_read( 4 );
+            stepper_mode      = adc_read( 4 );
             quickread( variable_intervals, fixed_intervals, use_variable_intervals );
 
             SREG = temp_sreg;
@@ -419,6 +417,8 @@ int main( void )
 
             flags.b.quickwrite = 0;
             quickwrite( uart_field + 3, variable_intervals, fixed_intervals, use_variable_intervals );
+
+            SREG = temp_sreg;
         }
 
         // -------------------------------------------------------------------------------------------------------
@@ -517,7 +517,7 @@ int main( void )
                         }
                     }
                     // Nothing will be done if we're not armed
-                    else{
+                    else {
                         led_green_off();
                     }
                 }
@@ -654,7 +654,8 @@ int main( void )
 
             if ( !flags.b.step ) {                            // If stepping is over
                 led_green_off();                              // Turn off the "triggered" LED
-                OPTOMSK |= ( 1 << OPTO );                     // Allow triggering again
+                intstate_old &= ~( 1 << OPTO );
+                OPTOMSK      |= ( 1 << OPTO );                // Allow triggering again
             }
 
             SREG = temp_sreg;
