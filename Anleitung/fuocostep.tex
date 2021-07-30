@@ -3,7 +3,7 @@
 \usepackage[hang]{caption}
 \usepackage{microtype}
 \usepackage[intlimits]{mathtools}
-\usepackage{amsfonts, amssymb, longtable, array, tabu, scrlayer-scrpage}
+\usepackage{amsfonts, amssymb, longtable, array, xltabular, scrlayer-scrpage}
 \usepackage[per-mode=fraction, locale=DE, detect-all=true]{siunitx}
 \usepackage{unicode-math, icomma}
 \usepackage{fontspec}
@@ -168,8 +168,8 @@
 
 				Die in der Platine zu verlötenden Teile sind in der folgenden Tabelle aufgeführt:
 
-				\begin{longtabu}
-					to \textwidth[l]{lX[-1]X}
+				\begin{xltabular}
+					[l]{\textwidth}{llX}
 					Reference & Value/Name             & Package                            \\ \hline\hline
 					\endhead
 					CH        &                        &                                    \\*
@@ -221,7 +221,7 @@
 					TR        &                        &                                    \\*
 					TR1       & CH                     & LMZFL\_7-2-135-3.5                 \\
 					\hline
-				\end{longtabu}
+				\end{xltabular}
 				\captionof{table}{Bauteile des Panels}
 				\label{tab:bauteilepanel}
 
@@ -270,7 +270,7 @@
 						      \label{fig:drehschalter}
 					      \end{figure}
 
-					      Zunächst müssen die elf kleinen Widerstände von innen nach außen zwischen den Kontakten 1 und 2, 2 und 3, 3 und 4, \dots, 11 und 12 gesteckt werden, rur die Lücke zwischen 1 und 12 bleibt frei (Bild links oben). Anschließend werden die Drahtpaare an den Pins 2 bis 11 gelötet; 1 und 12 noch nicht verlöten, erst Kabel anbringen (Bild rechts oben). Am Pin 1 ist das kurze schwarze, am Pin 12 das kurze rote und zusätzlich am inneren Pin das kurze gelbe Kabel anzulöten (Bild links unten). Falls ein Multimeter zur Verfügung steht, sollte jetzt kontrolliert werden, ob zwischen rotem und schwarzem Kabelende ein Widerstand im Bereich von \SI{110}{\kilo\ohm} gemessen wird. Falls nicht, alle Lötstellen noch einmal genau überprüfen bzw. nacharbeiten und neu messen. Liegt der Widerstand schließlich im angestrebten Bereich, kann man abschließend den grünen Schrumpfschlauch auf den Schalter ziehen und per Fön erhitzen, wobei die Kabel noch herausstehen sollen (Bild rechts unten).
+					      Zunächst müssen die elf kleinen Widerstände von innen nach außen zwischen den Kontakten 1 und 2, 2 und 3, 3 und 4, \dots, 11 und 12 gesteckt werden, nur die Lücke zwischen 1 und 12 bleibt frei (Bild links oben). Anschließend werden die Drahtpaare an den Pins 2 bis 11 gelötet; 1 und 12 noch nicht verlöten, erst Kabel anbringen (Bild rechts oben). Am Pin 1 ist das kurze schwarze, am Pin 12 das kurze rote und zusätzlich am inneren Pin das kurze gelbe Kabel anzulöten (Bild links unten). Falls ein Multimeter zur Verfügung steht, sollte jetzt kontrolliert werden, ob zwischen rotem und schwarzem Kabelende ein Widerstand im Bereich von \SI{110}{\kilo\ohm} gemessen wird. Falls nicht, alle Lötstellen noch einmal genau überprüfen bzw. nacharbeiten und neu messen. Liegt der Widerstand schließlich im angestrebten Bereich, kann man abschließend den grünen Schrumpfschlauch auf den Schalter ziehen und per Fön erhitzen, wobei die Kabel noch herausstehen sollen (Bild rechts unten).
 
 					      Nun den Schalter in die Platine stecken, festschrauben und die Schalterkappe befestigen. Am Ende müssen dann die drei Kabel auf der Platine festgelötet werden. Hierzu zunächst die Pads kräftig mit Lötzinn vorverzinnen, die Kabel am Ende der Isolierung abknicken, Pad erhitzen und Kabelende in den Zinn drücken: rot bei Pad \enquote{3,3V}, gelb bei Pad \enquote{ADC} und schwarz bei Pad \enquote{GND}. Das Erkalten des Zinns kann ein paar Sekunden dauern, daher das Kabel nicht zu früh loslassen.
 					\item
@@ -319,8 +319,8 @@
 
 				Die in der Platine zu verlötenden Teile sind in der folgenden Tabelle aufgeführt:
 
-				\begin{longtabu}
-					to \textwidth[l]{lX[-1]X}
+				\begin{xltabular}
+					[l]{\textwidth}{llX}
 					Reference & Value/Name             & Package                                                 \\ \hline\hline
 					\endhead
 					C         &                        &                                                         \\*
@@ -415,7 +415,7 @@
 					U7        & MCP2221\_IP            & DIP-14\_W7.62mm                                         \\
 					U8        & XL6009\_Module         & XL6009\_STEP-UP-MODULE                                  \\
 					\hline
-				\end{longtabu}
+				\end{xltabular}
 				\captionof{table}{Bauteile der Basis}
 				\label{tab:bauteilebasis}
 
@@ -432,7 +432,7 @@
 					      \begin{table}
 						      \begin{center}
 							      \begin{minipage}[b]{.6\textwidth}
-								      \begin{tabu}
+								      \begin{tabular}
 									      {|r@{\,}l|ccccc|}\hline
 									      \multicolumn{2}{|c|}{Wert} & 1. Ring              & 2. Ring               & 3. Ring & 4. Ring              & 5. Ring            \\ \hline\hline
 									      270 & \si{\ohm}            & \color{red}rot       & \color{violet}violett & schwarz & schwarz              & \color{brown}braun \\ \hline
@@ -443,7 +443,7 @@
 									      10  & \si{\kilo\ohm}       & \color{brown}braun   & schwarz               & schwarz & \color{red}rot       & \color{brown}braun \\ \hline
 									      47  & \si{\kilo\ohm}       & \color{yellow}gelb   & \color{violet}violett & schwarz & \color{red}rot       & \color{brown}braun \\ \hline
 									      150 & \si{\kilo\ohm}       & \color{brown}braun   & \color{green}grün     & schwarz & \color{orange}orange & \color{brown}braun \\ \hline
-								      \end{tabu}
+								      \end{tabular}
 								      \vspace{0pt}
 							      \end{minipage}
 							      %
@@ -641,11 +641,11 @@
 
 					\begin{figure}
 						\begin{center}
-							\begin{longtabu}
-								[c]{c|*{11}c}
+							\begin{xltabular}
+								[c]{\textwidth}{c|*{11}c}
 								Schalterposition & 1   & 2   & 3   & 4    & 5    & 6    & 7    & 8    & 9    & 10   & 11   \\ \hline
 								Intervall (s)    & 2.5 & 5.0 & 7.5 & 10.0 & 12.5 & 15.0 & 17.5 & 20.0 & 25.0 & 30.0 & 40.0
-							\end{longtabu}
+							\end{xltabular}
 						\end{center}
 						\caption{Standardintervalle des Steppers}
 						\label{tab:standardintervalle}
@@ -705,8 +705,7 @@
 
 			\begin{table}
 				\begin{center}
-					\begin{tabu}
-						to 7cm [c]{X|l}
+					\begin{xltabular}[c]{7cm}{X|l}
 						\hline
 						Einstellung      & Wert  \\
 						\hline
@@ -715,7 +714,7 @@
 						Parität          & keine \\
 						Stoppbits        & 1     \\
 						Flusssteuerung   & keine \\ \hline
-					\end{tabu}
+					\end{xltabular}
 					\caption{Konfiguration der seriellen Schnittstelle}
 					\label{tab:seriell}
 				\end{center}
@@ -729,8 +728,8 @@
 			Die Befehle, um FUOCO STEP via Terminal bedienen zu können, lauten:
 
 			\begin{center}
-				\begin{tabu}
-					to \textwidth [c]{p{2.5cm}X}
+				\begin{xltabular}
+					[c]{\textwidth}{p{2.5cm}X}
 					\hline
 					Befehl  & Bedeutung                                                                                                       \\
 					\hline
@@ -742,7 +741,7 @@
 					kill    & Reboot von FUOCO STEP                                                                                           \\
 					default & Zurücksetzen der Stepperintervalle auf die Standardeinstellung                                                  \\
 					\hline
-				\end{tabu}
+				\end{xltabular}
 				\captionof{table}{Terminalbefehle zur Bedienung von FUOCO STEP}
 				\label{tab:commands}
 			\end{center}
