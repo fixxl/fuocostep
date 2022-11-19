@@ -170,8 +170,7 @@
 
 				Die in der Platine zu verlötenden Teile sind in der folgenden Tabelle aufgeführt:
 
-				\begin{xltabular}
-					[l]{\textwidth}{llX}
+				\begin{xltabular}[l]{\textwidth}{llX}
 					Reference & Value/Name             & Package                            \\ \hline\hline
 					\endhead
 					CH        &                        &                                    \\*
@@ -321,8 +320,7 @@
 
 				Die in der Platine zu verlötenden Teile sind in der folgenden Tabelle aufgeführt:
 
-				\begin{xltabular}
-					[l]{\textwidth}{llX}
+				\begin{xltabular}[l]{\textwidth}{llX}
 					Reference & Value/Name             & Package                                                 \\ \hline\hline
 					\endhead
 					C         &                        &                                                         \\*
@@ -545,10 +543,127 @@
 			Nun die beiden Teile des Deans-Steckverbinders zusammenstecken, die Kabel der Crimpbuchsen zwischen Akku und oberer Wand hindurch führen und das Panel vorsichtig absenken, bis es komplett auf dem Rand zum Liegen kommt und keine Kabel zwischen Panel und Rand eingeklemmt sind. Nun das Panel mit den sechs 3x10-Spaxschrauben am Koffer befestigen.
 
 			\begin{center}
-				Der Stepper ist nun einsatzbereit!
+				Der Stepper ist nun -- vorbehaltlich der Programmierung -- einsatzbereit!
 			\end{center}
 
-			\cleardoublepage
+	\chapter{Programmierung}
+
+		Um den Stepper nutzen zu können, müssen der Microcontroller sowie der USB-Transceiver für die Anwendung programmiert sein. Hierzu sind folgende Schritte nötig.
+
+		\section{Softwaredownload}
+			\label{sec:softwarepaket}
+
+			Alle Dateien zu FUOCO STEP, welche nicht dem Urheberrecht Dritter unterliegen, liegen in einem Git-Repository unter \url{https://github.com/fixxl/fuocostep}. Um den aktuellen Stand von Firmware, Bootloader, Bedienoberfläche und Handbuch herunterzuladen, kann folgender Link genutzt werden:
+			\begin{center}
+				\url{https://github.com/fixxl/fuocostep/archive/master.zip}
+			\end{center}
+			Im Paket sind zusätzlich der komplette Quellcode sowie das Aktualisierungsprogramm für die Firmware enthalten.
+
+			Wer mit der Nutzung des Versionierungstools Git vertraut ist, kann natürlich das Repository auf seine Festplatte klonen und hat dann den Vorteil, nicht immer das komplette Paket herunterladen zu müssen, sondern gezielt nur die aktualisierten Dateien zu beziehen.
+
+		\section{MCP2221}
+
+			\subsection{Treiberinstallation}
+				Idealerweise erkennt Windows beim Anschließen das Gerät von selbst, installiert einen Treiber und stellt es als COM-Port (Serielles USB-Gerät) zur Verfügung.
+
+				Sofern kein Treiber installiert werden kann und das Gerät als \enquote{MCP2221 USB-I2C/UART Combo} unter andere Geräte einsortiert wird und das Ausrufezeichen auf gelbem Grund signalisiert, dass es nicht korrekt funktioniert, muss der entsprechende Treiber einmalig folgendermaßen manuell installiert werden:
+				\begin{enumerate}
+					\item Die gepackten Treiber von \url{https://ww1.microchip.com/downloads/en/DeviceDoc/MCP2221_Windows_Driver_2021-02-22.zip} herunterladen und in einen bekannten Ordner entpacken, den man sich merken sollte
+					\item Den Geräte-Manager mit Administratorrechten öffnen
+					\item Einen Rechtsklick auf \enquote{MCP2221 USB-I2C/UART Combo} tätigen und \enquote{Treibersoftware aktualisieren} wählen.
+					\item Option \enquote{Auf dem Computer nach Treibersoftware suchen} wählen
+					\item Auf \enquote{Aus einer Liste von Gerätetreibern auf dem Computer auswählen} klicken
+					\item Falls sich nun ein Fenster öffnet, welches sagt \enquote{Wählen Sie den Gerätetyp aus der Liste aus.}, einfach \enquote{Alle Geräte anzeigen} wählen und \enquote{Weiter} klicken
+					\item Unten rechts auf die Schaltfläche \enquote{Datenträger\dots} klicken
+					\item Im sich nun öffnenden Fenster auf \enquote{Durchsuchen\dots} klicken und zum Ordner, welcher die beiden Treiberdateien enthält, navigieren
+					\item Die Datei \enquote{mchpcdc.inf} auswählen und auf \enquote{Öffnen} klicken, im anschließenden Fenster den gewählten Pfad mit \enquote{OK} bestätigen.
+					\item Jetzt den Eintrag \enquote{USB-Serial-Port} im Fenster auswählen, auf \enquote{Weiter} klicken und sämtliche Nachfragen bestätigen bzw. Installationen erlauben.
+					\item Man sollte die Meldung \enquote{Installation abgeschlossen} erhalten und den Chip fortan ansprechen können.
+				\end{enumerate}
+
+			\subsection{Konfiguration}
+
+				Da der MCP2221 als Taktquelle für den ATmega328P-PU fungieren soll, muss über das von Microchip unter \url{https://ww1.microchip.com/downloads/en/DeviceDoc/MCP2221Utility.zip} bereitgestellte Konfigurationstool die in Abbildung~\ref{fig:microchipGui} in den Chip geschrieben werden. Hierzu ist eine USB-Verbindung zwischen PC und Platine nötig, das Tool sollte den Chip selbst erkennen. Die bestehende Seriennummer kann beibehalten werden, wichtigste Punkte sind die Art der Spannungsversorgung sowie die Konfiguration von GP1 als \enquote{CLK\_OUT} mit einem Teiler von \enquote{8} und einem Duty-Cycle von \enquote{\SI{50}{\percent}}.
+
+				\begin{figure}
+					\begin{center}
+						\includegraphics[height=15cm]{Bilder/MCP2221gui}
+					\end{center}
+					\caption{Einstellung für das Microchip-Utility}
+					\label{fig:microchipGui}
+				\end{figure}
+
+				Die Konfiguration muss per Klick auf \enquote{Configure Device} abgeschlossen werden.
+
+		\section{ATmega328P}
+
+			Die Programmierung des Controllers setzt sich aus zwei Teilen zusammen, dem Schreiben des Bootloaders und dem Einspielen der eigentlichen Firmware (was letztlich der Bootloader erledigt).
+
+			\subsection{Bootloader}
+				\label{ch:bootloader}
+
+				Bevor Firmwareupdates über die serielle Schnittstelle eingespielt werden können, muss zunächst ein Programm auf den Controller gespielt werden, dessen Aufgabe es ist, die eigentliche Firmware in den Speicher zu laden und zu starten. Dieses Programm ist der so genannte Bootloader, welcher beim Start des Devices für eine Sekunde überprüft, ob ein Firmwareupdate vorgenommen werden oder die Firmware normal ausgeführt werden soll.
+
+				\begin{figure}[!h]
+					\centering
+					\includegraphics[width=.35\textwidth]{Bilder/isp}
+					\caption{Pinbelegung des ISP-Platinensteckers: Ansicht von oben, Gehäuseaussparung an Pin~5. Quelle: \href{http://www.mikrocontroller.net}{\texttt{mikrocontroller.net}}}
+					\label{fig:isp}
+				\end{figure}
+
+				Um den Bootloader auf den Controller zu brennen und einige Grundeinstellungen des Controllers, die so genannten Fuses, welche neben den Einstellungen, welche die Verwendung eines Bootloaders ermöglichen, auch Funktionen wie die Brown-Out-Detektion oder die Taktquelle regeln, wird ein spezielles Programmiergerät zur In-System-Programmierung (ISP) benötigt, welches den Controller in den Resetzustand versetzt und anschließend den Bootloader über die SPI-Schnittstelle an eine festgelegte Stelle im Flash-Speicher des Controllers schreibt -- dieses Programmiergerät wird als Programmer bezeichnet. Auf der Platine ist für ISP ein zehnpoliger zweireihiger Wannenstecker vorgesehen, an den gängige Programmiergeräte wie der weit verbreitete \emph{AVRISP mkII} angeschlossen werden. Seine Pinbelegung ist in Abbildung~\ref{fig:isp} gezeigt.
+
+				Der Markt an Programmiergeräten ist unübersichtlich, sie existieren in unzähligen Varianten und für die verschiedensten Programmierverfahren. Beim Kauf sollte darauf geachtet werden, dass der gewählte Programmer das ISP-Verfahren beherrscht und beim System-Logik-Spannungspegel von \SI{3{,}3}{\volt} arbeitet. Zusätzlich sollte darauf geachtet werden, dass die VCC-Leitung vom Programmer nicht aktiv mit Spannung versorgt wird.
+
+				Nach einmaligem Flashen des Bootloaders und EEPROMs wird die ISP-Schnittstelle nicht wieder benötigt, alle weiteren Änderungen können über die serielle Schnittstelle und den Bootloader vorgenommen werden.
+
+				\subsubsection{Über raspEasyFire}
+
+					Über den Abschnitt \enquote{Fuoco Step flashen} in der raspEasyFire-Oberfläche ist es relativ einfach möglich, den Bootloader mittels eines geeigneten Programmers auf den Mikrocontroller zu schreiben. Hierzu müssen zunächst die aktuellsten Dateien heruntergeladen werden, anschließend ist über ein Dropdownmenü der verwendete Programmer~-- einige der am weitesten verbreiteten Programmer sind wählbar, weitere Geräte fügt der Autor auf Anfrage gerne hinzu~-- auszuwählen.
+
+					Ist mit dem Programmer eine Verbindung zwischen zu flashendem Device und raspEasyFire hergestellt, kann der Bootloader-Schreibvorgang mit der Schaltfläche \enquote{Bootloader flashen} gestartet werden. Bei diesem Vorgang werden auch die passenden Fuseeinstellungen geschrieben.
+
+				\subsubsection{Über den PC}
+
+					Wichtig für die ordnungsgemäße Funktion des Bootloaders sowie später der Firmware ist neben einer fehlerfreien Programmierung auch das korrekte Setzen der Fuse-Bits, welches bei Einsatz eines alternativen Programmieradapters manuell vorgenommen werden muss.
+
+					Für den Stepper müssen die Fusebits beim ATmega328P gemäß Tabelle \ref{tab:fuses} gesetzt werden.
+
+					\begin{table}
+						\centering
+						\begin{xltabular}[c]{.9\textwidth}{lXX}
+							\hline\hline
+							\textbf{Fuse} & \textbf{Wert}           & \textbf{Bedeutung}                                                                                                                                                                             \\ \hline
+							Low Fuse      & 0xE0                    & Kein Taktteiler, kein Clock-Output, Ext. Clock Source als Taktquelle                                                                                                                     \\
+							High Fuse     & 0xD6                    & Reset-Pin nicht als I/O-Pin, kein Debug-Wire, SPI-Download erlaubt, Watchdog aus, EEPROM nicht löschen, Bootbereich~=~256~Wörter, Boot-Reset-Vektor aktiviert (=nach Reset Bootloader starten) \\
+							Extended Fuse & 0x05/ 0xFD\footnotemark & Brown-Out bei Versorgungsspannung unter $\SI{2,7}{\volt}$                                                                                                                                      \\ \hline\hline
+						\end{xltabular}
+						\caption{Fuse-Einstellungen beim \texttt{ATmega328P}}
+						\label{tab:fuses}
+					\end{table}
+					\footnotetext{Bei der Extended Fuse werden nur die unteren drei Bit verwendet, die oberen fünf sind nicht in Gebrauch und können daher beliebig jeweils mit 1 oder 0 beschrieben und gelesen werden. Werden die nicht-relevanten Bits mit 0 beschrieben, ergibt sich der Wert 0x05, bei Beschreibung mit 1 der Wert 0xFD. AVRDUDE ist in bestimmten Versionen leider nicht imstande, die oberen fünf Bits zu ignorieren und meldet daher einen Verifizierungsfehler, falls die Bits mit 0 geschrieben und mit 1 gelesen bzw. mit 1 geschrieben und mit 0 gelesen werden.}
+
+					Wird das Tool \emph{AVRDUDE} verwendet, müssen der Programmername als Parameter hinter \enquote{-c} und die Verbindung zum Computer~-- mögliche Werte sind unter anderem usb oder comXY, wobei XY eine Zahl bezeichnet~-- hinter \enquote{-P} angegeben und an der entsprechenden Stelle in folgenden Befehl eingefügt werden:
+
+					\begin{center}
+						\emph{avrdude -p m328p -c \textbf{PROGRAMMER} -P \textbf{VERBINDUNG} -u -Uflash:w:Bootloader\_Fuocostep.hex:a -Ulfuse:w:0xe0:m -Uhfuse:w:0xd6:m -Uefuse:w:0xfd:m -v}
+					\end{center}
+
+			\subsection{Firmware}
+
+				Die Firmware ist das \enquote{Betriebssystem} von FUOCO STEP. Wie bei allen Systemen kann es hin und wieder nötig sein, neue Funktionen, welche dem Bedienkomfort und/oder der Sicherheit dienen, einzubauen oder Fehler, welche erst im Betrieb bemerkt werden, auszumerzen. Damit dafür der Koffer nicht hin und her geschickt und aufgeschraubt werden muss, ist eine Aktualisierung der Firmware bequem über USB möglich. Eingestellte Stepsequenzen bleiben beim Update üblicherweise erhalten, sollten allerdings vor dem erneuten Einsatz des Steppers sicherheitshalber überprüft werden.
+
+				\subsubsection{raspEasyFire}
+
+					Besitzer des raspEasyFire können das erstmalige Aufspielen sowie eine eventuelle Aktualisierung der Firmware über den Abschnitt \enquote{Fuoco Step flashen} in der raspEasyFire-Oberfläche vornehmen. Nach dem Herunterladen der neuesten Dateien kann der Schreibprozess mit \enquote{Firmware schreiben} gestartet werden.
+
+				\subsubsection{PC}
+
+					Im Softwarepaket ist für ein Update über den PC im Unterverzeichnis \enquote{Firmware-Updater} die Anwendung \enquote{UpdateLoader-win32} enthalten, die Ausführung eines Updates funktioniert folgendermaßen:
+
+					Vor dem Start von \enquote{UpdateLoader-win32} sollte FUOCO STEP mit dem PC verbunden werden. Die Firmware-Datei wird automatisch geladen, es muss nur überprüft werden, ob der korrekte Port für den Stepper eingestellt ist, sofern mehrere COM-Ports vorhanden sind. Nach einem Klick auf \enquote{Update starten!} sollten Update und Verifizierung in unter einer Minute abgeschlossen und die neue Firmware einsatzbereit sein.
+
+					\cleardoublepage
 \part{Bedienungsanleitung}
 
 	\chapter{Funktionsübersicht}
@@ -616,23 +731,6 @@
 
 	\chapter{Programmierung}
 		\label{sec:gui}
-		\section{Treiberinstallation}
-			Idealerweise erkennt Windows beim Anschließen das Gerät von selbst, installiert einen Treiber und stellt es als COM-Port (Serielles USB-Gerät) zur Verfügung.
-
-			Sofern kein Treiber installiert werden kann und das Gerät als \enquote{MCP2221 USB-I2C/UART Combo} unter andere Geräte einsortiert wird und das Ausrufezeichen auf gelbem Grund signalisiert, dass es nicht korrekt funktioniert, muss der entsprechende Treiber einmalig folgendermaßen manuell installiert werden:
-			\begin{enumerate}
-				\item Die gepackten Treiber von \url{http://ww1.microchip.com/downloads/en/DeviceDoc/MCP2221 Windows Driver 2014-10-09.zip} herunterladen und in einen bekannten Ordner entpacken, den man sich merken sollte
-				\item Den Geräte-Manager mit Administratorrechten öffnen
-				\item Einen Rechtsklick auf \enquote{MCP2221 USB-I2C/UART Combo} tätigen und \enquote{Treibersoftware aktualisieren} wählen.
-				\item Option \enquote{Auf dem Computer nach Treibersoftware suchen} wählen
-				\item Auf \enquote{Aus einer Liste von Gerätetreibern auf dem Computer auswählen} klicken
-				\item Falls sich nun ein Fenster öffnet, welches sagt \enquote{Wählen Sie den Gerätetyp aus der Liste aus.}, einfach \enquote{Alle Geräte anzeigen} wählen und \enquote{Weiter} klicken
-				\item Unten rechts auf die Schaltfläche \enquote{Datenträger\dots} klicken
-				\item Im sich nun öffnenden Fenster auf \enquote{Durchsuchen\dots} klicken und zum Ordner, welcher die beiden Treiberdateien enthält, navigieren
-				\item Die Datei \enquote{mchpcdc.inf} auswählen und auf \enquote{Öffnen} klicken, im anschließenden Fenster den gewählten Pfad mit \enquote{OK} bestätigen.
-				\item Jetzt den Eintrag \enquote{USB-Serial-Port} im Fenster auswählen, auf \enquote{Weiter} klicken und sämtliche Nachfragen bestätigen bzw. Installationen erlauben.
-				\item Man sollte die Meldung \enquote{Installation abgeschlossen} erhalten und den Stepper fortan ansprechen können
-			\end{enumerate}
 
 		\section{Oberfläche}
 			\subsection{Hauptfenster}
@@ -730,8 +828,7 @@
 			Die Befehle, um FUOCO STEP via Terminal bedienen zu können, lauten:
 
 			\begin{center}
-				\begin{xltabular}
-					[c]{\textwidth}{p{2.5cm}X}
+				\begin{xltabular}[c]{\textwidth}{p{2.5cm}X}
 					\hline
 					Befehl  & Bedeutung                                                                                                       \\
 					\hline
@@ -747,24 +844,4 @@
 				\captionof{table}{Terminalbefehle zur Bedienung von FUOCO STEP}
 				\label{tab:commands}
 			\end{center}
-
-	\chapter{Softwarepaket}
-
-		\section{Herunterladen der Dateien}
-
-			Alle Dateien zu FUOCO STEP liegen in einem Git-Repository unter \url{https://github.com/fixxl/fuocostep}. Um den aktuellen Stand von Firmware, Bootloader, Bedienoberfläche und Handbuch herunterzuladen, kann folgender Link genutzt werden:
-			\begin{center}
-				\url{https://github.com/fixxl/fuocostep/archive/master.zip}
-			\end{center}
-			Im Paket sind zusätzlich der komplette Quellcode sowie das Aktualisierungsprogramm für die Firmware enthalten.
-
-			Wer mit der Nutzung des Versionierungstools Git vertraut ist, kann natürlich das Repository auf seine Festplatte klonen und hat dann den Vorteil, nicht immer das komplette Paket herunterladen zu müssen, sondern gezielt nur die aktualisierten Dateien zu beziehen.
-
-		\section{Firmware-Update}
-
-			Die Firmware ist das \enquote{Betriebssystem} von FUOCO STEP. Wie bei allen Systemen kann es hin und wieder nötig sein, neue Funktionen, welche dem Bedienkomfort und/oder der Sicherheit dienen, einzubauen oder Fehler, welche erst im Betrieb bemerkt werden, auszumerzen. Damit dafür der Koffer nicht hin und her geschickt und aufgeschraubt werden muss, ist eine Aktualisierung der Firmware bequem über USB möglich.
-
-			Im Softwarepaket ist hierfür im Unterverzeichnis \enquote{Firmware-Updater} die Anwendung \enquote{UpdateLoader-win32} enthalten, die Ausführung eines Updates funktioniert folgendermaßen:
-
-			Vor dem Start von \enquote{UpdateLoader-win32} sollte FUOCO STEP mit dem PC verbunden werden. Die Firmware-Datei wird automatisch geladen, es muss nur überprüft werden, ob der korrekte Port für den Stepper eingestellt ist, sofern mehrere COM-Ports vorhanden sind. Nach einem Klick auf \enquote{Update starten!} sollten Update und Verifizierung in unter einer Minute abgeschlossen und die neue Firmware einsatzbereit sein. Eingestellte Stepsequenzen bleiben beim Update üblicherweise erhalten, sollten allerdings vor dem erneuten Einsatz des Steppers sicherheitshalber überprüft werden.
 \end{document}
